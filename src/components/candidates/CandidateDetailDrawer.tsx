@@ -142,10 +142,10 @@ interface CandidateDetailDrawerProps {
 
 
 const academicLabels: Record<string, string> = {
-  '10th': '10th Standard',
-  '12th': '12th Standard',
-  graduation: 'Graduation',
-  post_graduation: 'Post Graduation',
+  '10th': 'Ensino Fundamental (10th)',
+  '12th': 'Ensino Médio (12th)',
+  graduation: 'Graduação',
+  post_graduation: 'Pós-Graduação',
 };
 
 const proficiencyColors: Record<string, string> = {
@@ -157,18 +157,18 @@ const proficiencyColors: Record<string, string> = {
 const categoryLabels: Record<string, string> = {
   frontend: 'Frontend',
   backend: 'Backend',
-  database: 'Database',
+  database: 'Banco de Dados',
   devops: 'DevOps',
-  cloud: 'Cloud',
+  cloud: 'Nuvem / Cloud',
   mobile: 'Mobile',
-  design: 'Design',
-  testing: 'Testing',
-  data_science: 'Data Science',
-  ai_ml: 'AI/ML',
-  security: 'Security',
-  project_management: 'PM',
-  soft_skills: 'Soft Skills',
-  other: 'Other',
+  design: 'Design / UI / UX',
+  testing: 'Testes / QA',
+  data_science: 'Ciência de Dados',
+  ai_ml: 'IA / ML',
+  security: 'Segurança',
+  project_management: 'Gestão de Projetos',
+  soft_skills: 'Competências Interpessoais',
+  other: 'Outros',
 };
 
 function ScoreRingSmall({
@@ -276,15 +276,15 @@ function JobFitBreakdownRing({
             }
           }}
         >
-          <ScoreRingSmall value={value} label="Job Fit" showInfo />
+          <ScoreRingSmall value={value} label="Compatibilidade" showInfo />
         </button>
       </HoverCardTrigger>
       <HoverCardContent ref={contentRef} className="w-64 p-3 space-y-2" side="bottom">
-        <p className="text-xs font-semibold text-foreground">Job Fit Breakdown</p>
+        <p className="text-xs font-semibold text-foreground">Detalhamento da Compatibilidade</p>
         {[
-          { label: 'Skills Match', value: analysis.skills_match },
-          { label: 'Experience', value: analysis.experience_match },
-          { label: 'Role Relevance', value: analysis.role_relevance },
+          { label: 'Habilidades', value: analysis.skills_match },
+          { label: 'Experiência', value: analysis.experience_match },
+          { label: 'Relevância do Cargo', value: analysis.role_relevance },
         ].map(({ label, value: v }) => v != null && (
           <div key={label}>
             <div className="flex justify-between text-xs mb-0.5">
@@ -298,7 +298,7 @@ function JobFitBreakdownRing({
         ))}
         {analysis.missing_skills && analysis.missing_skills.length > 0 && (
           <div className="pt-1 border-t">
-            <p className="text-[10px] text-muted-foreground font-medium mb-1">Skill gaps</p>
+            <p className="text-[10px] text-muted-foreground font-medium mb-1">Lacunas de habilidades</p>
             <div className="flex flex-wrap gap-1">
               {analysis.missing_skills.slice(0, 5).map((s: string) => (
                 <span key={s} className="text-[10px] bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-1.5 py-0.5 rounded">{s}</span>
@@ -319,7 +319,7 @@ function CommsRatingBadge({ rating }: { rating: number }) {
         ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border-yellow-200'
         : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200';
 
-  const label = rating >= 8 ? 'Excellent' : rating >= 6 ? 'Good' : rating >= 4 ? 'Average' : 'Below Average';
+  const label = rating >= 8 ? 'Excelente' : rating >= 6 ? 'Bom' : rating >= 4 ? 'Médio' : 'Abaixo da Média';
 
   return (
     <div className={`inline-flex items-center gap-2 text-sm font-semibold px-3 py-1.5 rounded-lg border ${color}`}>
@@ -534,7 +534,7 @@ function SkillMatchSection({ structuredSkills, jobId, suitabilityAnalysis }: {
         }
       } else if (result === 'alias') {
         // Matched via domain alias — show as partial since it's inferred
-        partial.push({ skill: reqSkill, via: 'inferred from related skills' });
+        partial.push({ skill: reqSkill, via: 'inferido de habilidades relacionadas' });
       } else {
         missing.push(reqSkill);
       }
@@ -551,28 +551,28 @@ function SkillMatchSection({ structuredSkills, jobId, suitabilityAnalysis }: {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-            Job-Skill Match
+            Compatibilidade com a Vaga
           </h3>
           <div className="flex items-center gap-2">
             {usingAi && (
               <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">AI</span>
             )}
             <Badge variant={matchScore >= 75 ? 'default' : matchScore >= 50 ? 'secondary' : 'destructive'} className="text-xs">
-              {matchScore}% Match
+              {matchScore}% Compatível
             </Badge>
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          vs {job.title} requirements
+          em relação aos requisitos de {job.title}
           {!usingAi && structuredSkills.length > 0 && (
-            <span className="ml-1 text-amber-500">(run "Analyze Job Match" for AI-powered matching)</span>
+            <span className="ml-1 text-amber-500">(execute "Analisar Compatibilidade" para análise via IA)</span>
           )}
         </p>
 
         {matched.length > 0 && (
           <div className="space-y-1">
             <span className="text-xs font-medium text-green-600 dark:text-green-400 flex items-center gap-1">
-              <CheckCircle className="h-3 w-3" /> Matched ({matched.length})
+              <CheckCircle className="h-3 w-3" /> Correspondentes ({matched.length})
             </span>
             <div className="flex flex-wrap gap-1">
               {matched.map(m => (
@@ -587,14 +587,14 @@ function SkillMatchSection({ structuredSkills, jobId, suitabilityAnalysis }: {
         {partial.length > 0 && (
           <div className="space-y-1">
             <span className="text-xs font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1">
-              <AlertTriangle className="h-3 w-3" /> Partial ({partial.length})
+              <AlertTriangle className="h-3 w-3" /> Parciais ({partial.length})
             </span>
             <div className="flex flex-wrap gap-1">
               {partial.map(p => (
                 <Badge key={p.skill} variant="outline" className="text-xs bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-400">
                   {p.skill}
                   {p.proficiency && <span className="ml-1 opacity-60">({p.proficiency})</span>}
-                  {p.via && <span className="ml-1 opacity-60">(~inferred)</span>}
+                  {p.via && <span className="ml-1 opacity-60">(~inferido)</span>}
                 </Badge>
               ))}
             </div>
@@ -604,7 +604,7 @@ function SkillMatchSection({ structuredSkills, jobId, suitabilityAnalysis }: {
         {missing.length > 0 && (
           <div className="space-y-1">
             <span className="text-xs font-medium text-red-600 dark:text-red-400 flex items-center gap-1">
-              <XCircle className="h-3 w-3" /> Missing ({missing.length})
+              <XCircle className="h-3 w-3" /> Ausentes ({missing.length})
             </span>
             <div className="flex flex-wrap gap-1">
               {missing.map(m => (
@@ -682,7 +682,7 @@ export function CandidateDetailDrawer({
     if (!candidate) return;
     const link = `${window.location.origin}/hiring?view=list&profile=${candidate.id}`;
     navigator.clipboard.writeText(link);
-    toast({ title: 'Profile link copied', description: 'Shareable link copied to clipboard' });
+    toast({ title: 'Link do perfil copiado', description: 'Link compartilhável copiado para a área de transferência' });
   }, [candidate, toast]);
   const userTimezone = useUserTimezone();
   const isSmDown = useIsSmDown();
@@ -1311,7 +1311,7 @@ export function CandidateDetailDrawer({
         <div className="min-w-0">
           <p className="text-sm font-semibold flex items-center gap-1.5">
             <NotebookPen className="h-3.5 w-3.5 text-primary shrink-0" />
-            Interview Notes
+            Anotações da Entrevista
           </p>
           <p className="text-xs text-muted-foreground mt-0.5 truncate">
             {(activeInterview?.job_interview_stage as any)?.stage_name}
@@ -1326,7 +1326,7 @@ export function CandidateDetailDrawer({
       <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
         {canEditNotes ? (
           <Textarea
-            placeholder="Jot raw notes during the interview — observations, strengths, concerns…"
+            placeholder="Faça anotações durante a entrevista — observações, pontos fortes, preocupações…"
             className="resize-none text-sm min-h-[120px] sm:min-h-[180px]"
             value={notes}
             onChange={e => {
@@ -1336,7 +1336,7 @@ export function CandidateDetailDrawer({
           />
         ) : (
           <div className="text-sm text-muted-foreground bg-muted/30 rounded-md p-3 min-h-[100px] whitespace-pre-wrap leading-relaxed">
-            {notes || 'No notes recorded yet.'}
+            {notes || 'Nenhuma anotação registrada ainda.'}
           </div>
         )}
 
@@ -1345,10 +1345,10 @@ export function CandidateDetailDrawer({
             'text-[10px] text-center -mt-1',
             notesSaveStatus === 'error' ? 'text-destructive' : 'text-muted-foreground',
           )}>
-            {notesSaveStatus === 'saving' && 'Saving…'}
-            {notesSaveStatus === 'saved' && 'Saved'}
-            {notesSaveStatus === 'error' && 'Save failed — retry by editing'}
-            {notesSaveStatus === 'idle' && 'Auto-saves as you type'}
+            {notesSaveStatus === 'saving' && 'Salvando…'}
+            {notesSaveStatus === 'saved' && 'Salvo'}
+            {notesSaveStatus === 'error' && 'Falha ao salvar — tente editar novamente'}
+            {notesSaveStatus === 'idle' && 'Salva automaticamente conforme você digita'}
           </p>
         )}
 
@@ -1359,7 +1359,7 @@ export function CandidateDetailDrawer({
             className="w-full flex items-center justify-center gap-1.5 text-xs font-medium border rounded-md px-3 py-2 hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             {isDraftingNotes ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5 text-primary" />}
-            {isDraftingNotes ? 'Drafting…' : 'Draft with AI'}
+            {isDraftingNotes ? 'Gerando rascunho…' : 'Gerar Rascunho com IA'}
           </button>
         )}
 
@@ -1367,10 +1367,10 @@ export function CandidateDetailDrawer({
           <div className="space-y-2 border rounded-lg p-3 bg-primary/5 text-xs">
             <p className="font-semibold text-foreground flex items-center gap-1.5">
               <Sparkles className="h-3 w-3 text-primary" />
-              Draft Preview
+              Pré-visualização do Rascunho
             </p>
             <div className="flex items-center gap-1.5">
-              <span className="text-muted-foreground">Verdict:</span>
+              <span className="text-muted-foreground">Veredito:</span>
               <span className={cn('font-semibold capitalize',
                 draftPreview.verdict_suggestion === 'proceeded' ? 'text-emerald-600' :
                 draftPreview.verdict_suggestion === 'rejected' ? 'text-red-600' : 'text-amber-600'
@@ -1404,7 +1404,7 @@ export function CandidateDetailDrawer({
                 className="h-7 text-xs flex-1 btn-gradient text-primary-foreground"
                 onClick={openFeedbackWithDraft}
               >
-                Submit feedback
+                Enviar feedback
               </Button>
             </div>
           </div>
@@ -1412,7 +1412,7 @@ export function CandidateDetailDrawer({
 
         {canEditNotes && !draftPreview && (
           <p className="text-[10px] text-muted-foreground text-center pt-1">
-            Draft with AI to submit feedback here
+            Gere o rascunho com IA para enviar o feedback aqui
           </p>
         )}
       </div>
@@ -1491,7 +1491,7 @@ export function CandidateDetailDrawer({
                     onClick={handleCopyProfileLink}
                   >
                     <LinkIcon className="h-4 w-4" />
-                    Copy profile link
+                    Copiar link do perfil
                   </Button>
                   {isInterviewerOnly && onAddFeedback && !isDatabaseContext && (
                     <Button
@@ -1501,7 +1501,7 @@ export function CandidateDetailDrawer({
                       onClick={() => onAddFeedback(candidate.id)}
                     >
                       <ClipboardEdit className="h-4 w-4" />
-                      Add Feedback
+                      Adicionar Feedback
                     </Button>
                   )}
                 </div>
@@ -1512,7 +1512,7 @@ export function CandidateDetailDrawer({
             {(candidate as any).candidate_status === 'backout' && (
               <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-sm">
                 <UserX className="h-4 w-4 shrink-0" />
-                <span>This candidate has <strong>withdrawn</strong> from the process.</span>
+                <span>Este candidato <strong>desistiu</strong> do processo seletivo.</span>
               </div>
             )}
 
@@ -1523,12 +1523,12 @@ export function CandidateDetailDrawer({
                   suitabilityAnalysis ? (
                     <JobFitBreakdownRing key="job-fit" value={suitabilityScore} analysis={suitabilityAnalysis} />
                   ) : (
-                    <ScoreRingSmall value={suitabilityScore} label="Job Fit" />
+                    <ScoreRingSmall value={suitabilityScore} label="Compatibilidade" />
                   )
                 )}
                 <ScoreRingSmall value={parseScore} label="Parse" />
-                <ScoreRingSmall value={enrichmentScore ?? null} label="Enrichment" />
-                {credentialScore != null && <ScoreRingSmall value={credentialScore} label="Credential" />}
+                <ScoreRingSmall value={enrichmentScore ?? null} label="Enriquecimento" />
+                {credentialScore != null && <ScoreRingSmall value={credentialScore} label="Credenciais" />}
               </div>
 
               {/* Red Flags + Avg Rating — compact inline row */}
@@ -1540,7 +1540,7 @@ export function CandidateDetailDrawer({
                   redFlags.length > 0 && !redFlags.some(f => f.severity === 'high') && 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
                 )}>
                   <AlertTriangle className="h-3 w-3" />
-                  {redFlags.length === 0 ? 'No flags' : `${redFlags.length} flag${redFlags.length !== 1 ? 's' : ''}`}
+                  {redFlags.length === 0 ? 'Sem alertas' : `${redFlags.length} alerta${redFlags.length !== 1 ? 's' : ''}`}
                 </span>
                 {!isDatabaseContext && (
                 <div className="flex items-center gap-1.5 text-xs">
@@ -1551,7 +1551,7 @@ export function CandidateDetailDrawer({
                       <span className="text-muted-foreground">/ 5 · {completedInterviewsWithScore.length} iv{completedInterviewsWithScore.length !== 1 ? 's' : ''}</span>
                     </>
                   ) : (
-                    <span className="text-muted-foreground">No ratings yet</span>
+                    <span className="text-muted-foreground">Sem avaliações ainda</span>
                   )}
                 </div>
                 )}
@@ -1572,10 +1572,10 @@ export function CandidateDetailDrawer({
                   <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-2">
                     <div className="flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wide">
                       <Sparkles className="h-3.5 w-3.5" />
-                      AI Summary
+                      Resumo por IA
                     </div>
                     <p className="text-sm text-muted-foreground italic">
-                      {isCandidateDetailsFetching ? 'Loading summary…' : 'No summary yet — click Generate or run Enrich Profile.'}
+                      {isCandidateDetailsFetching ? 'Carregando resumo…' : 'Nenhum resumo ainda — clique em Gerar ou execute Enriquecer Perfil.'}
                     </p>
                   </div>
                 );
@@ -1595,7 +1595,7 @@ export function CandidateDetailDrawer({
                         disabled={isEnriching}
                         className="text-xs text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
                       >
-                        {isEnriching ? 'Generating...' : aiSummary ? 'Regenerate' : 'Generate'}
+                        {isEnriching ? 'Gerando...' : aiSummary ? 'Regerar' : 'Gerar'}
                       </button>
                     )}
                   </div>
@@ -1603,7 +1603,7 @@ export function CandidateDetailDrawer({
                     <p className="text-sm text-foreground leading-relaxed">{aiSummary}</p>
                   ) : (
                     <p className="text-sm text-muted-foreground italic">
-                      No summary yet — click Generate or run Enrich Profile.
+                      Nenhum resumo ainda — clique em Gerar ou execute Enriquecer Perfil.
                     </p>
                   )}
                 </div>
@@ -1612,7 +1612,7 @@ export function CandidateDetailDrawer({
 
             {/* Contact */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Contact</h3>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Contato</h3>
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm">
                   <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
@@ -1640,7 +1640,7 @@ export function CandidateDetailDrawer({
                     <div className="flex items-center gap-3 text-sm">
                       <Linkedin className="h-4 w-4 text-amber-500 shrink-0" />
                       <span className="italic text-amber-500 font-medium">
-                        No LinkedIn — add via Edit
+                        Sem LinkedIn — adicione em Editar
                         {(candidate as any).linkedin_url && (
                           <span className="ml-1 text-muted-foreground not-italic font-normal text-xs">(parsed: "{(candidate as any).linkedin_url}")</span>
                         )}
@@ -1654,12 +1654,12 @@ export function CandidateDetailDrawer({
             {/* Ownership */}
             <div className="flex items-center gap-2 text-sm">
               <Crown className="h-4 w-4 text-amber-500 fill-amber-400 shrink-0" />
-              <span className="text-muted-foreground">Owner:</span>
+              <span className="text-muted-foreground">Responsável:</span>
               <span className="font-medium text-foreground">
                 {(candidate as any).owner?.full_name
                   || candidate.owner_name
                   || resolvedOwnerName
-                  || (candidate.uploaded_by ? 'Unknown' : 'Unassigned')}
+                  || (candidate.uploaded_by ? 'Desconhecido' : 'Não atribuído')}
               </span>
               {isAdminOrHR && (
                 <Popover open={ownerPopoverOpen} onOpenChange={setOwnerPopoverOpen}>
@@ -1669,15 +1669,15 @@ export function CandidateDetailDrawer({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-64 p-3" align="end">
-                    <p className="text-xs font-medium text-muted-foreground mb-2">Transfer ownership to</p>
+                    <p className="text-xs font-medium text-muted-foreground mb-2">Transferir responsabilidade para</p>
                     {ownerTransferring ? (
                       <div className="flex items-center gap-2 text-sm text-muted-foreground py-1">
-                        <Loader2 className="h-4 w-4 animate-spin" /> Transferring...
+                        <Loader2 className="h-4 w-4 animate-spin" /> Transferindo...
                       </div>
                     ) : (
                       <Select onValueChange={handleOwnerTransfer}>
                         <SelectTrigger className="h-8 text-sm">
-                          <SelectValue placeholder="Select recruiter" />
+                          <SelectValue placeholder="Selecione o recrutador" />
                         </SelectTrigger>
                         <SelectContent>
                           {recruiterOptions.map(r => (
@@ -1707,15 +1707,15 @@ export function CandidateDetailDrawer({
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                     <Briefcase className="h-4 w-4" />
-                    Active on Jobs
+                    Ativo em Vagas
                   </h3>
                   {pipelineEnrollments.length === 0 ? (
                     <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground italic">Not in pipeline</p>
+                      <p className="text-sm text-muted-foreground italic">Fora do pipeline</p>
                       {onAddToJob && (
                         <Button size="sm" variant="outline" className="gap-1.5" onClick={() => onAddToJob(candidate)}>
                           <Briefcase className="h-3.5 w-3.5" />
-                          Add to Job
+                          Vincular à Vaga
                         </Button>
                       )}
                     </div>
@@ -1728,7 +1728,7 @@ export function CandidateDetailDrawer({
                           </span>
                           <Button variant="link" size="sm" className="h-auto shrink-0 px-0 text-xs" asChild>
                             <Link to={`/hiring?view=board&job=${enrollment.jobId}&candidate=${candidate.id}`}>
-                              View in Pipeline
+                              Ver no Pipeline
                             </Link>
                           </Button>
                         </div>
@@ -1743,26 +1743,26 @@ export function CandidateDetailDrawer({
 
             {/* Professional */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Professional</h3>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Profissional</h3>
               <div className="grid grid-cols-2 gap-3">
                 {(candidate as any).candidate_current_role && (
-                  <InfoItem icon={Briefcase} label="Current Role" value={(candidate as any).candidate_current_role} />
+                  <InfoItem icon={Briefcase} label="Cargo Atual" value={(candidate as any).candidate_current_role} />
                 )}
                 {(candidate as any).candidate_current_company && (
-                  <InfoItem icon={Building2} label="Company" value={(candidate as any).candidate_current_company} />
+                  <InfoItem icon={Building2} label="Empresa" value={(candidate as any).candidate_current_company} />
                 )}
                 {careerAnalysis.roles.length > 0 ? (
                   <InfoItem
                     icon={Clock}
-                    label="Experience"
-                    value={`${formatYears(careerAnalysis.relevantYears)} yrs relevant`}
-                    hint={`${formatYears(careerAnalysis.totalProfessionalYears)} yrs professional (trainings excluded)`}
+                    label="Experiência"
+                    value={`${formatYears(careerAnalysis.relevantYears)} anos relevantes`}
+                    hint={`${formatYears(careerAnalysis.totalProfessionalYears)} anos profissionais (treinamentos excluídos)`}
                   />
                 ) : (candidate as any).experience_years != null && (
-                  <InfoItem icon={Clock} label="Experience" value={`${(candidate as any).experience_years} years`} />
+                  <InfoItem icon={Clock} label="Experience" value={`${(candidate as any).experience_years} anos`} />
                 )}
                 {(candidate as any).job?.title && !isDatabaseContext && (
-                  <InfoItem icon={Briefcase} label="Applied For" value={(candidate as any).job.title} />
+                  <InfoItem icon={Briefcase} label="Candidatou-se a" value={(candidate as any).job.title} />
                 )}
               </div>
             </div>
@@ -1778,7 +1778,7 @@ export function CandidateDetailDrawer({
                   </div>
                 )}
                 <CollapsibleWorkSection
-                  title="Work Experience"
+                  title="Experiência Profissional"
                   icon={Briefcase}
                   items={careerAnalysis.timeline.length > 0 ? careerAnalysis.timeline : (enrichedWorkExp ?? (candidate as any).work_experience)}
                   renderItem={(item: any, index: number) => {
@@ -1834,7 +1834,7 @@ export function CandidateDetailDrawer({
                       </div>
                       {(exp.start_date || exp.end_date) && (
                         <div className="text-xs text-muted-foreground flex items-center gap-1">
-                          <span>{exp.start_date} — {exp.end_date || 'Present'}</span>
+                          <span>{exp.start_date} — {exp.end_date || 'Atual'}</span>
                           {formatTenure(exp.start_date, exp.end_date) && (
                             <>
                               <span className="opacity-40">·</span>
@@ -1867,7 +1867,7 @@ export function CandidateDetailDrawer({
                   </div>
                 ))}
                 <CollapsibleWorkSection
-                  title="Education"
+                  title="Formação Acadêmica"
                   icon={GraduationCap}
                   items={(detailsForOpenCandidate as { education?: unknown[] } | null)?.education ?? (candidate as any).education}
                   renderItem={(edu: any) => (
@@ -1876,7 +1876,7 @@ export function CandidateDetailDrawer({
                       <div className="text-sm text-muted-foreground">{edu.institution}</div>
                       {(edu.start_date || edu.end_date) && (
                         <div className="text-xs text-muted-foreground">
-                          {edu.start_date} — {edu.end_date || 'Present'}
+                          {edu.start_date} — {edu.end_date || 'Atual'}
                         </div>
                       )}
                     </div>
@@ -1897,7 +1897,7 @@ export function CandidateDetailDrawer({
               <>
                 <Separator />
                 <CollapsibleWorkSection
-                  title="Certifications"
+                  title="Certificações"
                   icon={ShieldCheck}
                   items={certifications}
                   renderItem={(cert: any, idx: number) => (
@@ -1931,7 +1931,7 @@ export function CandidateDetailDrawer({
               <>
                 <Separator />
                 <CollapsibleWorkSection
-                  title="Awards & Achievements"
+                  title="Prêmios e Conquistas"
                   icon={Award}
                   items={awards}
                   renderItem={(award: any, idx: number) => (
@@ -1985,10 +1985,10 @@ export function CandidateDetailDrawer({
                   </div>
                   {/* Legend */}
                   <div className="flex items-center gap-3 text-[10px] text-muted-foreground pt-1">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500" /> Expert</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500" /> Intermediate</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-400" /> Beginner</span>
-                    <span className="flex items-center gap-1"><CheckCircle className="h-2.5 w-2.5 text-green-500" /> Verified</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500" /> Especialista</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500" /> Intermediário</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-400" /> Iniciante</span>
+                    <span className="flex items-center gap-1"><CheckCircle className="h-2.5 w-2.5 text-green-500" /> Verificado</span>
                   </div>
                 </div>
               </>
@@ -2018,17 +2018,17 @@ export function CandidateDetailDrawer({
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                     <FileText className="h-4 w-4" />
-                    Cover Letter
+                    Carta de Apresentação
                   </h3>
                   {isCoverLetterLoading ? (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading cover letter...
+                      Carregando carta de apresentação...
                     </div>
                   ) : coverLetter ? (
                     <p className="text-sm whitespace-pre-wrap bg-muted/30 rounded-lg p-3">{coverLetter}</p>
                   ) : (
-                    <p className="text-sm text-muted-foreground italic py-2">No cover letter submitted</p>
+                    <p className="text-sm text-muted-foreground italic py-2">Nenhuma carta de apresentação enviada</p>
                   )}
                 </div>
               </>
@@ -2039,7 +2039,7 @@ export function CandidateDetailDrawer({
               <div className="space-y-6">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
                   <MessageSquare className="h-4 w-4" />
-                  Pre-Screen
+                  Pré-Triagem
                 </h3>
 
                 {(candidate?.id || candidate?.email) && candidateJobId && (
@@ -2081,17 +2081,17 @@ export function CandidateDetailDrawer({
                 )}
 
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Recruiter Screening Notes</h4>
+                  <h4 className="text-sm font-medium">Anotações da Triagem do Recrutador</h4>
 
                   {isLoading ? (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading screening notes...
+                      Carregando anotações da triagem...
                     </div>
                   ) : !hasPreScreen ? (
                     <div className="space-y-3">
                     <p className="text-sm text-muted-foreground italic py-2">
-                      Recruiter call notes not recorded yet. Use the &quot;Pre-Screen&quot; option from the candidate menu to add details.
+                      Anotações da chamada de triagem ainda não registradas. Use a opção "Pré-Triagem" no menu do candidato para adicionar detalhes.
                     </p>
                     {!isInterviewerOnly && (
                       <SalaryMarketPanel
@@ -2109,7 +2109,7 @@ export function CandidateDetailDrawer({
                     {careerAnalysis.roles.length > 0 ? (
                       <InfoItem
                         icon={Clock}
-                        label="Total Experience"
+                        label="Experiência Total"
                         value={`${formatYears(careerAnalysis.totalProfessionalYears)} years`}
                         hint={
                           prescreen!.total_experience_years != null
@@ -2124,7 +2124,7 @@ export function CandidateDetailDrawer({
                     {careerAnalysis.roles.length > 0 ? (
                       <InfoItem
                         icon={Clock}
-                        label="Relevant Experience"
+                        label="Experiência Relevante"
                         value={`${formatYears(careerAnalysis.relevantYears)} years`}
                         hint={
                           careerAnalysis.relevantRoleLabels.length
@@ -2139,13 +2139,13 @@ export function CandidateDetailDrawer({
                       <InfoItem icon={Clock} label="Relevant Experience" value={`${prescreen!.relevant_experience_years} years`} />
                     )}
                     {prescreen!.relevant_experience_domain && (
-                      <InfoItem icon={Briefcase} label="Domain" value={prescreen!.relevant_experience_domain} />
+                      <InfoItem icon={Briefcase} label="Área" value={prescreen!.relevant_experience_domain} />
                     )}
                     {!isInterviewerOnly && prescreen!.current_ctc && (
-                      <InfoItem icon={IndianRupee} label="Current CTC" value={`₹${prescreen!.current_ctc} Lakh(s)`} />
+                      <InfoItem icon={IndianRupee} label="Remuneração Atual" value={`₹${prescreen!.current_ctc} Lakh(s)`} />
                     )}
                     {!isInterviewerOnly && prescreen!.expected_ctc && (
-                      <InfoItem icon={IndianRupee} label="Expected CTC" value={`₹${prescreen!.expected_ctc} Lakh(s)`} />
+                      <InfoItem icon={IndianRupee} label="Pretensão Salarial" value={`₹${prescreen!.expected_ctc} Lakh(s)`} />
                     )}
                     {!isInterviewerOnly && (
                       <SalaryMarketPanel
@@ -2156,41 +2156,41 @@ export function CandidateDetailDrawer({
                       />
                     )}
                     {!isInterviewerOnly && prescreen!.notice_period && (
-                      <InfoItem icon={Calendar} label="Notice Period" value={prescreen!.notice_period} />
+                      <InfoItem icon={Calendar} label="Aviso Prévio" value={prescreen!.notice_period} />
                     )}
                     {!isInterviewerOnly && prescreen!.lwd && (() => {
                       const relative = formatLwdRelative(prescreen!.lwd);
                       return (
                         <InfoItem
                           icon={Calendar}
-                          label="Last Working Day"
+                          label="Último Dia de Trabalho"
                           value={relative ? `${prescreen!.lwd} (${relative})` : prescreen!.lwd}
                         />
                       );
                     })()}
                     {prescreen!.current_location && (
-                      <InfoItem icon={MapPin} label="Current Location" value={prescreen!.current_location} />
+                      <InfoItem icon={MapPin} label="Localização Atual" value={prescreen!.current_location} />
                     )}
                     {prescreen!.preferred_location && (
-                      <InfoItem icon={MapPin} label="Preferred Location" value={prescreen!.preferred_location} />
+                      <InfoItem icon={MapPin} label="Localização Preferida" value={prescreen!.preferred_location} />
                     )}
                     {prescreen!.open_to_relocation && (
                       <InfoItem
                         icon={MapPin}
-                        label="Open to Relocation"
+                        label="Disponibilidade para Mudança"
                         value={
-                          prescreen!.open_to_relocation === 'yes' ? '✅ Yes'
-                          : prescreen!.open_to_relocation === 'no' ? '❌ No'
-                          : '🤔 Maybe'
+                          prescreen!.open_to_relocation === 'yes' ? '✅ Sim'
+                          : prescreen!.open_to_relocation === 'no' ? '❌ Não'
+                          : '🤔 Talvez'
                         }
                       />
                     )}
                     {prescreen!.work_mode_preference && (prescreen!.work_mode_preference as string[]).length > 0 && (
                       <InfoItem
                         icon={Building2}
-                        label="Work Mode"
+                        label="Modelo de Trabalho"
                         value={(prescreen!.work_mode_preference as string[]).map(m =>
-                          m === 'wfo' ? 'WFO' : m === 'wfh' ? 'WFH' : m === 'hybrid' ? 'Hybrid' : 'Flexible'
+                          m === 'wfo' ? 'Presencial' : m === 'wfh' ? 'Remoto' : m === 'hybrid' ? 'Híbrido' : 'Flexível'
                         ).join(' · ')}
                       />
                     )}
@@ -2199,7 +2199,7 @@ export function CandidateDetailDrawer({
                   {/* Communication Rating - Highlighted */}
                   {prescreen!.comms_rating != null && (
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 space-y-1">
-                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Communication Rating</span>
+                      <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Avaliação de Comunicação</span>
                       <div>
                         <CommsRatingBadge rating={prescreen!.comms_rating} />
                       </div>
@@ -2211,16 +2211,16 @@ export function CandidateDetailDrawer({
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium flex items-center gap-2">
                         <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                        Academics
+                        Formação Acadêmica
                       </h4>
                       <div className="border rounded-lg overflow-hidden">
                         <table className="w-full text-sm">
                           <thead>
                             <tr className="bg-muted/50">
-                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Level</th>
-                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Institution</th>
-                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Marks</th>
-                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Percentile</th>
+                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Nível</th>
+                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Instituição</th>
+                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Nota / Média</th>
+                              <th className="text-left px-3 py-2 font-medium text-muted-foreground">Percentil</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -2241,7 +2241,7 @@ export function CandidateDetailDrawer({
                   {/* Nutshell */}
                   {prescreen!.nutshell && (
                     <div className="space-y-1">
-                      <h4 className="text-sm font-medium">Nutshell / Summary</h4>
+                      <h4 className="text-sm font-medium">Resumo da Conversa</h4>
                       <p className="text-sm whitespace-pre-wrap bg-muted/30 rounded-lg p-3">
                         {prescreen!.nutshell}
                       </p>
@@ -2253,7 +2253,7 @@ export function CandidateDetailDrawer({
                     const relative = formatRelativeDayLabel(prescreen!.screened_at);
                     return (
                       <p className="text-xs text-muted-foreground">
-                        Screened on {formatDateSafe(prescreen!.screened_at)}
+                        Triagem realizada em {formatDateSafe(prescreen!.screened_at)}
                         {relative && <span className="ml-1">({relative})</span>}
                       </p>
                     );
@@ -2309,7 +2309,7 @@ export function CandidateDetailDrawer({
                           <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" /> {iv.overall_score}/5
                         </span>
                       )}
-                      {iv.interviewer?.full_name && <span>by {iv.interviewer.full_name}</span>}
+                      {iv.interviewer?.full_name && <span>por {iv.interviewer.full_name}</span>}
                       {iv.completed_at && <span>{formatDateSafe(iv.completed_at)}</span>}
                     </div>
                     {Object.keys(ratings).length > 0 && Object.values(ratings).some((val: any) => val != null) && (
@@ -2322,7 +2322,7 @@ export function CandidateDetailDrawer({
                       </div>
                     )}
                     {iv.feedback && <p className="text-xs text-muted-foreground italic border-l-2 border-primary/20 pl-2">"{iv.feedback}"</p>}
-                    {!iv.verdict && !iv.feedback && <p className="text-xs text-muted-foreground italic">Pending feedback</p>}
+                    {!iv.verdict && !iv.feedback && <p className="text-xs text-muted-foreground italic">Feedback pendente</p>}
                     {iv.artifacts && (iv.artifacts as any[]).length > 0 && (
                       <div className="flex flex-wrap gap-1.5 pt-0.5">
                         {(iv.artifacts as any[]).map((a: any) => {
@@ -2365,16 +2365,16 @@ export function CandidateDetailDrawer({
                   <Separator />
                   <div className="space-y-4">
                     <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                      <Users className="h-4 w-4" /> Interview History
+                      <Users className="h-4 w-4" /> Histórico de Entrevistas
                     </h3>
                     {rounds.map(round => (
                       <Collapsible key={round} defaultOpen={round === maxRound}>
                         <CollapsibleTrigger className="flex items-center gap-2 w-full text-left group">
                           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground group-data-[state=open]:rotate-90 transition-transform" />
                           <span className="text-sm font-medium">
-                            Round {round}
-                            {round === maxRound && <span className="ml-1.5 text-xs text-primary font-semibold">Active</span>}
-                            {round < maxRound && <span className="ml-1.5 text-xs text-muted-foreground">(Past)</span>}
+                            Rodada {round}
+                            {round === maxRound && <span className="ml-1.5 text-xs text-primary font-semibold">Ativa</span>}
+                            {round < maxRound && <span className="ml-1.5 text-xs text-muted-foreground">(Concluída)</span>}
                           </span>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-2 space-y-2 pl-5">
@@ -2392,17 +2392,17 @@ export function CandidateDetailDrawer({
             {/* Notes */}
             {c.notes && (
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Notes</h3>
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Observações</h3>
                 <p className="text-sm whitespace-pre-wrap">{c.notes}</p>
               </div>
             )}
 
             {/* Details */}
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Details</h3>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Detalhes</h3>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <div className="text-xs text-muted-foreground">Source</div>
+                  <div className="text-xs text-muted-foreground">Origem</div>
                   <Badge variant="outline" className="mt-1 text-xs capitalize">{candidateSourceLabel(source)}</Badge>
                   {source === 'referral' && (candidate as any).referred_by && (
                     <div className="text-xs text-muted-foreground mt-1">
@@ -2411,12 +2411,12 @@ export function CandidateDetailDrawer({
                   )}
                 </div>
                 <div>
-                  <div className="text-xs text-muted-foreground">Added</div>
+                  <div className="text-xs text-muted-foreground">Cadastrado em</div>
                   <div className="font-medium mt-1">{formatDateSafe((candidate as any).created_at)}</div>
                 </div>
                 {(candidate as any).updated_at && (candidate as any).updated_at !== (candidate as any).created_at && (
                   <div>
-                    <div className="text-xs text-muted-foreground">Last Updated</div>
+                    <div className="text-xs text-muted-foreground">Última Atualização</div>
                     <div className="font-medium mt-1">
                       {formatDateSafe((candidate as any).updated_at)}
                       <span className="text-xs text-muted-foreground ml-1">
@@ -2429,7 +2429,7 @@ export function CandidateDetailDrawer({
                 )}
                 {(candidate as any).last_enriched_at && (
                   <div>
-                    <div className="text-xs text-muted-foreground">Last Enriched</div>
+                    <div className="text-xs text-muted-foreground">Último Enriquecimento</div>
                     <div className="font-medium mt-1">{formatDateSafe((candidate as any).last_enriched_at)}</div>
                   </div>
                 )}
@@ -2444,7 +2444,7 @@ export function CandidateDetailDrawer({
                   className="gap-2 flex-1 min-w-[140px]"
                   onClick={() => openResumeUrl((candidate as any).resume_url)}
                 >
-                  <FileText className="h-4 w-4" /> View Resume
+                  <FileText className="h-4 w-4" /> Ver Currículo
                 </Button>
               )}
               {onEnrich && (() => {
@@ -2453,10 +2453,10 @@ export function CandidateDetailDrawer({
                   ? differenceInDays(new Date(), new Date(lastEnrichedAt))
                   : null;
                 const label = isEnriching
-                  ? 'Enriching...'
+                  ? 'Enriquecendo...'
                   : enrichmentScore != null
-                    ? `Re-enrich${daysAgo === 0 ? ' (today)' : daysAgo === 1 ? ' (1 day ago)' : daysAgo != null ? ` (${daysAgo}d ago)` : ''}`
-                    : 'Enrich Profile';
+                    ? `Reenriquecer${daysAgo === 0 ? ' (hoje)' : daysAgo === 1 ? ' (há 1 dia)' : daysAgo != null ? ` (há ${daysAgo}d)` : ''}`
+                    : 'Enriquecer Perfil';
                 return (
                   <Button
                     variant="outline"
@@ -2475,7 +2475,7 @@ export function CandidateDetailDrawer({
                   className="gap-2 flex-1 min-w-[140px]"
                   onClick={() => onEdit(candidate)}
                 >
-                  <Pencil className="h-4 w-4" /> Edit
+                  <Pencil className="h-4 w-4" /> Editar
                 </Button>
               )}
             </div>
@@ -2491,7 +2491,7 @@ export function CandidateDetailDrawer({
                   onClick={handleViewQuestionKit}
                 >
                   <HelpCircle className="h-3.5 w-3.5" />
-                  View Question Kit
+                  Ver Roteiro de Perguntas
                 </Button>
               ) : (
                 <span />
@@ -2504,7 +2504,7 @@ export function CandidateDetailDrawer({
                   onClick={() => handleNotesOpenChange(!notesOpen)}
                 >
                   <NotebookPen className="h-3.5 w-3.5" />
-                  {notesOpen ? 'Close Notes' : 'Notes'}
+                  {notesOpen ? 'Fechar Anotações' : 'Anotações'}
                 </Button>
               )}
             </div>
@@ -2576,7 +2576,7 @@ function CareerCoherenceCard({ view }: { view: CoherenceView }) {
         <div className="space-y-0.5">
           <div className={SECTION_EYEBROW}>
             <Route className="h-3.5 w-3.5" />
-            Career coherence
+            Coerência de Carreira
           </div>
           <p className="text-xs text-muted-foreground">{view.meaning}</p>
         </div>
@@ -2600,11 +2600,11 @@ function CareerCoherenceCard({ view }: { view: CoherenceView }) {
               {view.hasTarget ? view.trackYears : view.professionalYears}y
             </span>
             <span className="text-xs text-muted-foreground">
-              {view.hasTarget ? 'in target track' : 'professional experience'}
+              {view.hasTarget ? 'na trilha alvo' : 'experiência profissional'}
             </span>
           </div>
           {view.hasTarget && (
-            <span className="text-xs text-muted-foreground tabular-nums">of {view.professionalYears}y professional</span>
+            <span className="text-xs text-muted-foreground tabular-nums">de {view.professionalYears}a profissionais</span>
           )}
         </div>
         {view.hasTarget && <Progress value={view.trackSharePct} className="h-1.5 bg-border/70" />}
@@ -2612,7 +2612,7 @@ function CareerCoherenceCard({ view }: { view: CoherenceView }) {
 
       {view.trackLabels.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] text-muted-foreground">Tracks</span>
+          <span className="text-[11px] text-muted-foreground">Trilhas</span>
           {view.trackLabels.map((label) => (
             <Badge key={label} variant="soft" className="text-[10px]">{label}</Badge>
           ))}
@@ -2645,7 +2645,7 @@ function CareerCoherenceCard({ view }: { view: CoherenceView }) {
         <Collapsible>
           <CollapsibleTrigger className="group inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-primary transition-colors">
             <ChevronRight className="h-3 w-3 transition-transform group-data-[state=open]:rotate-90" />
-            Evidence · {view.roles.length} role{view.roles.length === 1 ? '' : 's'}
+            Evidências · {view.roles.length} cargo{view.roles.length === 1 ? '' : 's'}
           </CollapsibleTrigger>
           <CollapsibleContent className="pt-2 space-y-1">
             {view.roles.map((role) => (
@@ -2706,9 +2706,9 @@ function SalaryMarketPanel({
         <div className="space-y-0.5">
           <div className={SECTION_EYEBROW}>
             <IndianRupee className="h-3.5 w-3.5" />
-            Market check
+            Consulta de Mercado
           </div>
-          <p className="text-[11px] text-muted-foreground">Public web snippets · not an offer band</p>
+          <p className="text-[11px] text-muted-foreground">Fontes públicas da web · não representa faixa de oferta</p>
         </div>
         <Button
           size="sm"
@@ -2722,12 +2722,12 @@ function SalaryMarketPanel({
             : band
               ? <RefreshCw className="h-3 w-3" />
               : <Search className="h-3 w-3" />}
-          {loading ? 'Checking…' : band ? 'Refresh' : failure ? 'Try again' : 'Run check'}
+          {loading ? 'Consultando…' : band ? 'Atualizar' : failure ? 'Tentar novamente' : 'Consultar mercado'}
         </Button>
       </div>
 
       {loading && !band && (
-        <p className="text-[11px] text-muted-foreground">Searching public salary snippets…</p>
+        <p className="text-[11px] text-muted-foreground">Buscando dados salariais públicos na web…</p>
       )}
 
       {band && (

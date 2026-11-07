@@ -60,13 +60,13 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
     if (scoring || trackerLoading) return;
 
     if (!job) {
-      toast({ title: 'Job not found', variant: 'destructive' });
+      toast({ title: 'Vaga não encontrada', variant: 'destructive' });
       return;
     }
     if (rows.length === 0) {
       toast({
-        title: 'Nothing to analyse',
-        description: 'Add candidates to this pipeline first.',
+        title: 'Nada para analisar',
+        description: 'Adicione candidatos a este pipeline primeiro.',
       });
       return;
     }
@@ -111,7 +111,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
         <SheetHeader className="space-y-1.5 border-b border-border px-6 py-6 text-left">
           <SheetTitle className="flex items-center gap-2.5 text-lg font-semibold">
             <Activity className="h-5 w-5 text-primary shrink-0" aria-hidden />
-            Pipeline Health
+            Saúde do Pipeline
           </SheetTitle>
           <SheetDescription className="text-sm truncate">
             {job?.title ?? 'Hiring pipeline analysis'}
@@ -148,7 +148,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
                 ) : (
                   <Sparkles className="h-3.5 w-3.5" aria-hidden />
                 )}
-                {scoring ? 'Analysingâ€¦' : 'Generate Pipeline Health'}
+                {scoring ? 'Analysingâ€¦' : 'Generate Saúde do Pipeline'}
               </Button>
             </div>
           )}
@@ -162,7 +162,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
       <>
         <Button variant="outline" size="sm" disabled className="h-9 gap-1.5">
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
-          Pipeline Health
+          Saúde do Pipeline
         </Button>
         {drawer}
       </>
@@ -179,14 +179,14 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
           className="h-9 gap-1.5"
           onClick={() => void handleAnalyse({ openDrawer: true })}
           disabled={scoring || trackerLoading}
-          aria-label="Generate pipeline health"
+          aria-label="Generate Saúde do Pipeline"
         >
           {scoring ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
           ) : (
             <Sparkles className="size-4 text-primary" strokeWidth={1.5} aria-hidden />
           )}
-          {scoring ? 'Analysingâ€¦' : 'Generate pipeline health'}
+          {scoring ? 'Analysingâ€¦' : 'Generate Saúde do Pipeline'}
         </Button>
         {drawer}
       </>
@@ -199,7 +199,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
         <TooltipTrigger asChild>
           <button
             type="button"
-            aria-label={`Pipeline health grade ${data.grade}, ${data.grade_label}${isStale ? ', stale' : ''}. Open health report.`}
+            aria-label={`Saúde do Pipeline grade ${data.grade}, ${data.grade_label}${isStale ? ', stale' : ''}. Open health report.`}
             onClick={openDrawer}
             className={cn(
               'inline-flex h-9 items-center gap-2 rounded-full bg-card px-3 text-label whitespace-nowrap shadow-border',
@@ -212,7 +212,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
               aria-hidden
             />
             <span className="text-foreground">
-              Health <span className="tabular-nums">{data.grade}</span>
+              Saúde <span className="tabular-nums">{data.grade}</span>
             </span>
             <span className="hidden text-muted-foreground lg:inline">
               {isStale ? 'Stale' : data.grade_label}
@@ -229,7 +229,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
         </TooltipTrigger>
         <TooltipContent side="bottom" className="max-w-xs">
           <p>{lastRefreshedLabel}</p>
-          <p className="text-background/70">{data.grade_label} â€” click for details</p>
+          <p className="text-background/70">{data.grade_label} â€” clique para ver detalhes</p>
         </TooltipContent>
       </Tooltip>
       {drawer}

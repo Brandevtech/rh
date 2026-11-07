@@ -28,3 +28,7 @@ supabase/functions/.env
 *.njsproj
 *.sln
 *.sw?
+
+desktop.ini
+supabase/.branches
+supabase/.temp

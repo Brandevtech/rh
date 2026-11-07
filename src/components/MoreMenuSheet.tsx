@@ -34,7 +34,7 @@ export function MoreMenuSheet({ open, onOpenChange }: MoreMenuSheetProps) {
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="max-h-[85vh]">
         <DrawerHeader className="border-b pb-4 text-left">
-          <DrawerTitle>More</DrawerTitle>
+          <DrawerTitle>Mais Opções</DrawerTitle>
         </DrawerHeader>
         <nav className="overflow-y-auto px-2 pb-safe">
           <ul className="space-y-1 py-2">
@@ -66,10 +66,12 @@ export function MoreMenuSheet({ open, onOpenChange }: MoreMenuSheetProps) {
                 <li key={item.href}>
                   <Link
                     to={item.href}
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => handleItemClick(item)}
                     className={cn(
                       'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-                      active ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted',
+                      active
+                        ? 'bg-primary/10 text-primary font-semibold'
+                        : 'text-foreground hover:bg-muted',
                     )}
                   >
                     <Icon className="h-4 w-4 shrink-0" />

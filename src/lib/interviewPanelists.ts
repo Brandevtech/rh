@@ -5,10 +5,10 @@ import { triggerInterviewKitGeneration } from '@/lib/interviewKit';
 import { notifyStaffEmail } from '@/lib/staffEmail';
 
 export const INTERVIEW_CANCEL_REASONS = [
-  { value: 'panel_unavailable', label: 'Panel unavailable' },
-  { value: 'candidate_emergency', label: 'Candidate emergency' },
-  { value: 'candidate_withdrew_slot', label: 'Candidate withdrew from this slot' },
-  { value: 'other', label: 'Other' },
+  { value: 'panel_unavailable', label: 'Banca / entrevistadores indisponíveis' },
+  { value: 'candidate_emergency', label: 'Emergência do candidato' },
+  { value: 'candidate_withdrew_slot', label: 'Candidato desistiu deste horário' },
+  { value: 'other', label: 'Outro motivo' },
 ] as const;
 
 export type InterviewCancelReason = (typeof INTERVIEW_CANCEL_REASONS)[number]['value'];

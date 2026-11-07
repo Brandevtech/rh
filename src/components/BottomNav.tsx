@@ -43,7 +43,7 @@ export function BottomNav() {
     <>
       {!hasOverlay && (
       <nav
-        aria-label="Main navigation"
+        aria-label="Navegação principal"
         className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-md md:hidden pb-safe"
       >
         <ul className="mx-auto flex h-16 max-w-lg items-stretch justify-around px-1">
@@ -76,12 +76,12 @@ export function BottomNav() {
                 'flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1 text-caption font-medium transition-[color,transform] duration-fast ease-out active:scale-[0.96]',
                 moreActive ? 'text-foreground' : 'text-muted-foreground',
               )}
-              aria-label="More menu"
+              aria-label="Mais opções"
             >
               <span className={cn('flex h-6 w-8 items-center justify-center rounded-full transition-colors duration-fast ease-out', moreActive && 'bg-accent')}>
                 <MoreHorizontal className="h-5 w-5 shrink-0" />
               </span>
-              <span className="leading-none">More</span>
+              <span className="leading-none">Mais</span>
             </button>
           </li>
         </ul>

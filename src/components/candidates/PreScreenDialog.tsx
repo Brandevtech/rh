@@ -37,10 +37,10 @@ const defaultAcademics: AcademicRecord[] = [
 ];
 
 const levelLabels: Record<string, string> = {
-  '10th': '10th Standard',
-  '12th': '12th Standard',
-  'graduation': 'Graduation',
-  'post_graduation': 'Post Graduation',
+  '10th': 'Ensino Fundamental (10th)',
+  '12th': 'Ensino Médio (12th)',
+  'graduation': 'Graduação',
+  'post_graduation': 'Pós-Graduação',
 };
 
 const sectionHeadingClass =
@@ -225,10 +225,10 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
         <DialogHeader className="border-b px-4 pb-3 pt-4 sm:px-6 sm:pt-6">
           <DialogTitle className="flex items-center gap-2 pr-6 text-left">
             <MessageSquare className="h-5 w-5 shrink-0 text-primary" />
-            <span className="truncate">Pre-Screen: {candidateName}</span>
+            <span className="truncate">Pré-Triagem: {candidateName}</span>
           </DialogTitle>
           <DialogDescription className="text-left">
-            Record details gathered during the pre-screening call.
+            Registre as informações obtidas durante a chamada de pré-triagem.
           </DialogDescription>
         </DialogHeader>
 
@@ -237,11 +237,11 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
             {/* Experience & Compensation */}
             <section>
               <h3 className={sectionHeadingClass}>
-                <Briefcase className="h-4 w-4 shrink-0" /> Experience & Compensation
+                <Briefcase className="h-4 w-4 shrink-0" /> Experiência e Remuneração
               </h3>
               <div className={fieldGridClass}>
                 <div className="space-y-2">
-                  <Label>Total Experience (years)</Label>
+                  <Label>Experiência Total (anos)</Label>
                   <Input
                     type="number"
                     step="0.5"
@@ -251,12 +251,12 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                   />
                   {tenureHint && tenureHint.roles.length > 0 && (
                     <p className="text-[11px] text-muted-foreground">
-                      Résumé timeline: {formatYears(tenureHint.totalProfessionalYears)} professional (trainings excluded)
+                      Linha do tempo do CV: {formatYears(tenureHint.totalProfessionalYears)} profissional (treinamentos excluídos)
                     </p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label>Relevant Experience (years)</Label>
+                  <Label>Experiência Relevante (anos)</Label>
                   <Input
                     type="number"
                     step="0.5"
@@ -266,21 +266,21 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                   />
                   {tenureHint && tenureHint.roles.length > 0 && (
                     <p className="text-[11px] text-muted-foreground">
-                      Résumé timeline: {formatYears(tenureHint.relevantYears)} relevant
+                      Linha do tempo do CV: {formatYears(tenureHint.relevantYears)} relevante
                       {tenureHint.relevantRoleLabels.length ? ` (${tenureHint.relevantRoleLabels.join(', ')})` : ''}
                     </p>
                   )}
                 </div>
                 <div className="space-y-2 sm:col-span-2 lg:col-span-1">
-                  <Label>Relevant Experience Domain</Label>
+                  <Label>Área de Experiência Relevante</Label>
                   <Input
-                    placeholder="e.g. B2B Sales, Frontend Development"
+                    placeholder="ex: Vendas B2B, Desenvolvimento Frontend"
                     value={form.relevant_experience_domain}
                     onChange={e => setForm(prev => ({ ...prev, relevant_experience_domain: e.target.value }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Current CTC (in Lakhs)</Label>
+                  <Label>Remuneração Atual</Label>
                   <CtcInput
                     placeholder="e.g. 8.25"
                     value={form.current_ctc}
@@ -288,7 +288,7 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Expected CTC (in Lakhs)</Label>
+                  <Label>Pretensão Salarial</Label>
                   <CtcInput
                     placeholder="e.g. 11"
                     value={form.expected_ctc}
@@ -303,33 +303,33 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
             {/* Notice Period & Location */}
             <section>
               <h3 className={sectionHeadingClass}>
-                <MapPin className="h-4 w-4 shrink-0" /> Notice Period & Location
+                <MapPin className="h-4 w-4 shrink-0" /> Aviso Prévio e Localização
               </h3>
               <div className={fieldGridClass}>
                   <div className="space-y-2">
-                  <Label>Notice Period</Label>
+                  <Label>Aviso Prévio</Label>
                   <Select
                     value={form.notice_period}
                     onValueChange={(value) => setForm(prev => ({ ...prev, notice_period: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select notice period" />
+                      <SelectValue placeholder="Selecione o aviso prévio" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Immediate">Immediate</SelectItem>
-                      <SelectItem value="Serving">Serving</SelectItem>
-                      <SelectItem value="Notice">Notice</SelectItem>
-                      <SelectItem value="0 - 7 days">0 - 7 days</SelectItem>
-                      <SelectItem value="7 - 15 days">7 - 15 days</SelectItem>
-                      <SelectItem value="15 - 30 days">15 - 30 days</SelectItem>
-                      <SelectItem value="30 - 45 days">30 - 45 days</SelectItem>
-                      <SelectItem value="45 - 60 days">45 - 60 days</SelectItem>
-                      <SelectItem value="More than 60 days">More than 60 days</SelectItem>
+                      <SelectItem value="Immediate">Imediato</SelectItem>
+                      <SelectItem value="Serving">Cumprindo aviso</SelectItem>
+                      <SelectItem value="Notice">Em aviso prévio</SelectItem>
+                      <SelectItem value="0 - 7 days">0 - 7 dias</SelectItem>
+                      <SelectItem value="7 - 15 days">7 - 15 dias</SelectItem>
+                      <SelectItem value="15 - 30 days">15 - 30 dias</SelectItem>
+                      <SelectItem value="30 - 45 days">30 - 45 dias</SelectItem>
+                      <SelectItem value="45 - 60 days">45 - 60 dias</SelectItem>
+                      <SelectItem value="More than 60 days">Mais de 60 dias</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Last Working Day (LWD)</Label>
+                  <Label>Último Dia de Trabalho (LWD)</Label>
                   <Input
                     placeholder="e.g. 15 March 2026"
                     value={form.lwd}
@@ -337,7 +337,7 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Current Location</Label>
+                  <Label>Localização Atual</Label>
                   <Input
                     placeholder="e.g. Noida"
                     value={form.current_location}
@@ -345,7 +345,7 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Preferred Location</Label>
+                  <Label>Localização Preferida</Label>
                   <Input
                     placeholder="e.g. Noida, Delhi NCR"
                     value={form.preferred_location}
@@ -360,12 +360,12 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
             {/* Mobility & Work Mode */}
             <section>
               <h3 className={sectionHeadingClass}>
-                <Laptop2 className="h-4 w-4 shrink-0" /> Mobility & Work Mode
+                <Laptop2 className="h-4 w-4 shrink-0" /> Mobilidade e Modelo de Trabalho
               </h3>
               <div className="space-y-5">
                 {/* Open to Relocation */}
                 <div className="space-y-2">
-                  <Label>Open to Relocation?</Label>
+                  <Label>Disponibilidade para Mudança?</Label>
                   <div className="flex flex-wrap gap-2">
                     {(['yes', 'no', 'maybe'] as const).map(opt => (
                       <button
@@ -383,7 +383,7 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                             : 'border-border bg-muted text-muted-foreground hover:bg-muted-foreground/10'
                         )}
                       >
-                        {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                        {opt === 'yes' ? 'Sim' : opt === 'no' ? 'Não' : 'Talvez'}
                       </button>
                     ))}
                   </div>
@@ -391,13 +391,13 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
 
                 {/* Work Mode Preference */}
                 <div className="space-y-2">
-                  <Label>Work Mode Preference <span className="text-xs font-normal text-muted-foreground">(select all that apply)</span></Label>
+                  <Label>Preferência de Modelo de Trabalho <span className="text-xs font-normal text-muted-foreground">(selecione todos os aplicáveis)</span></Label>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { value: 'wfo',     label: 'WFO — Office' },
-                      { value: 'wfh',     label: 'WFH — Remote' },
-                      { value: 'hybrid',  label: 'Hybrid' },
-                      { value: 'flexible',label: 'Flexible' },
+                      { value: 'wfo',     label: 'Presencial' },
+                      { value: 'wfh',     label: 'Remoto' },
+                      { value: 'hybrid',  label: 'Híbrido' },
+                      { value: 'flexible',label: 'Flexível' },
                     ].map(opt => {
                       const selected = form.work_mode_preference.includes(opt.value);
                       return (
@@ -431,8 +431,8 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
             {/* Communication Rating - Highlighted */}
             <section className="rounded-lg border border-primary/20 bg-primary/5 p-4 sm:p-5">
               <h3 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-                <MessageSquare className="h-4 w-4 shrink-0" /> Communication Rating
-                <Badge variant="outline" className="border-primary/30 text-[10px] font-normal text-primary">Important</Badge>
+                <MessageSquare className="h-4 w-4 shrink-0" /> Avaliação de Comunicação
+                <Badge variant="outline" className="border-primary/30 text-[10px] font-normal text-primary">Importante</Badge>
               </h3>
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                 <div className="flex flex-wrap gap-1.5">
@@ -467,7 +467,7 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                     variant="secondary"
                   >
                     <Star className="mr-1 h-3.5 w-3.5" />
-                    {parseFloat(form.comms_rating) >= 8 ? 'Excellent' : parseFloat(form.comms_rating) >= 6 ? 'Good' : parseFloat(form.comms_rating) >= 4 ? 'Average' : 'Below Average'}
+                    {parseFloat(form.comms_rating) >= 8 ? 'Excelente' : parseFloat(form.comms_rating) >= 6 ? 'Bom' : parseFloat(form.comms_rating) >= 4 ? 'Médio' : 'Abaixo da Média'}
                   </Badge>
                 )}
               </div>
@@ -478,7 +478,7 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
             {/* Academics */}
             <section>
               <h3 className={sectionHeadingClass}>
-                <GraduationCap className="h-4 w-4 shrink-0" /> Academics
+                <GraduationCap className="h-4 w-4 shrink-0" /> Formação Acadêmica
               </h3>
               <div className="space-y-4">
                 {form.academics.map((acad, idx) => (
@@ -486,23 +486,23 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
                     <span className="text-sm font-medium">{levelLabels[acad.level]}</span>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       <div className="space-y-1">
-                        <Label className="text-xs">Institution</Label>
+                        <Label className="text-xs">Instituição</Label>
                         <Input
-                          placeholder="School / University"
+                          placeholder="Escola / Universidade"
                           value={acad.institution}
                           onChange={e => updateAcademic(idx, 'institution', e.target.value)}
                         />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-xs">Marks / CGPA</Label>
+                        <Label className="text-xs">Nota / Coeficiente</Label>
                         <Input
-                          placeholder="e.g. 85% or 8.5 CGPA"
+                          placeholder="ex: 85% ou 8.5"
                           value={acad.marks}
                           onChange={e => updateAcademic(idx, 'marks', e.target.value)}
                         />
                       </div>
                       <div className="space-y-1 sm:col-span-2 lg:col-span-1">
-                        <Label className="text-xs">Percentile</Label>
+                        <Label className="text-xs">Percentil</Label>
                         <Input
                           placeholder="e.g. 92nd"
                           value={acad.percentile}
@@ -520,10 +520,10 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
             {/* Nutshell */}
             <section>
               <h3 className={sectionHeadingClass}>
-                Nutshell / Summary
+                Resumo da Conversa
               </h3>
               <Textarea
-                placeholder="Key highlights from the pre-screening call..."
+                placeholder="Principais destaques da chamada de pré-triagem..."
                 rows={4}
                 className="min-h-26 resize-y"
                 value={form.nutshell}
@@ -534,9 +534,9 @@ export function PreScreenDialog({ open, onOpenChange, candidateId, candidateName
         </div>
 
         <DialogFooter className="gap-2 border-t bg-background px-4 py-3 sm:px-6 sm:py-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleSave} disabled={upsert.isPending}>
-            {upsert.isPending ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : 'Save Pre-Screen'}
+            {upsert.isPending ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Salvando...</> : 'Salvar Pré-Triagem'}
           </Button>
         </DialogFooter>
       </DialogContent>

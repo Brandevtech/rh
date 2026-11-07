@@ -42,9 +42,7 @@ content_path = "./supabase/templates/reauthentication.html"
 # Local: supabase functions serve send-auth-email --no-verify-jwt --env-file .env.local
 # Then restart: supabase stop && supabase start
 [auth.hook.send_email]
-enabled = true
-uri = "http://host.docker.internal:54321/functions/v1/send-auth-email"
-secrets = "env(SEND_AUTH_EMAIL_HOOK_SECRET)"
+enabled = false
 
 # TOTP MFA for staff accounts (enrollment in Settings → Security; challenge on login).
 [auth.mfa]

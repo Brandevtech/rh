@@ -67,19 +67,19 @@ interface BulkImportDialogProps {
 // ─── Field definitions ────────────────────────────────────────────────────────
 
 const FIELD_OPTIONS = [
-  { value: '__skip__', label: '— Skip column —' },
-  { value: 'name', label: 'Full Name' },
-  { value: 'email', label: 'Email' },
-  { value: 'phone', label: 'Phone' },
-  { value: 'role_applied', label: 'Role Applied' },
-  { value: 'candidate_current_role', label: 'Current Role' },
-  { value: 'candidate_current_company', label: 'Current Company' },
-  { value: 'experience_years', label: 'Experience (Years)' },
-  { value: 'skills', label: 'Skills' },
-  { value: 'notes', label: 'Notes / Summary' },
-  { value: 'linkedin_url', label: 'LinkedIn URL' },
-  { value: 'current_location', label: 'Current Location' },
-  { value: 'preferred_location', label: 'Preferred Location' },
+  { value: '__skip__', label: '— Ignorar coluna —' },
+  { value: 'name', label: 'Nome Completo' },
+  { value: 'email', label: 'E-mail' },
+  { value: 'phone', label: 'Telefone' },
+  { value: 'role_applied', label: 'Cargo Desejado' },
+  { value: 'candidate_current_role', label: 'Cargo Atual' },
+  { value: 'candidate_current_company', label: 'Empresa Atual' },
+  { value: 'experience_years', label: 'Experiência (Anos)' },
+  { value: 'skills', label: 'Habilidades' },
+  { value: 'notes', label: 'Observações / Resumo' },
+  { value: 'linkedin_url', label: 'URL do LinkedIn' },
+  { value: 'current_location', label: 'Localização Atual' },
+  { value: 'preferred_location', label: 'Localização Preferida' },
 ];
 
 const COLUMN_ALIASES: Record<string, string> = {
@@ -648,12 +648,12 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-3xl max-h-[85dvh] flex flex-col overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Bulk Import Candidates</DialogTitle>
+          <DialogTitle>Importação em Lote de Candidatos</DialogTitle>
           <DialogDescription>
-            {step === 'upload' && 'Upload a CSV or Excel file to import multiple candidates at once.'}
-            {step === 'map' && `Map the ${rawHeaders.length} columns in your file to candidate fields.`}
-            {step === 'preview' && `Preview ${candidates.length} rows — click any name, email, or phone to edit inline.`}
-            {step === 'done' && 'Import complete.'}
+            {step === 'upload' && 'Envie um arquivo CSV ou Excel para importar múltiplos candidatos de uma só vez.'}
+            {step === 'map' && `Mapeie as ${rawHeaders.length} colunas do seu arquivo para os campos do candidato.`}
+            {step === 'preview' && `Pré-visualização de ${candidates.length} linhas — clique no nome, e-mail ou telefone para editar inline.`}
+            {step === 'done' && 'Importação concluída.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -667,15 +667,15 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
-                <p className="text-sm text-muted-foreground mb-1">Click to upload or drag and drop</p>
+                <p className="text-sm text-muted-foreground mb-1">Clique para enviar ou arraste e solte</p>
                 <p className="text-xs text-muted-foreground">
-                  CSV or Excel file (.xlsx / .xls) — any column order, flexible headers. You'll map columns in the next step.
+                  Arquivo CSV ou Excel (.xlsx / .xls) — qualquer ordem de colunas. Você mapeará as colunas no próximo passo.
                 </p>
                 <input ref={fileInputRef} type="file" accept=".csv,.xlsx,.xls" onChange={handleFileSelect} className="hidden" />
               </div>
               <Button variant="outline" size="sm" onClick={downloadTemplate} className="w-full">
                 <Download className="h-4 w-4 mr-2" />
-                Download Template
+                Baixar Modelo
               </Button>
             </div>
           )}
@@ -689,7 +689,7 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                   <span className="ml-2 text-xs">({rawRows.length} rows)</span>
                 </p>
                 <Button variant="ghost" size="sm" onClick={() => { setStep('upload'); setFileName(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}>
-                  <X className="h-3.5 w-3.5 mr-1" />Change file
+                  <X className="h-3.5 w-3.5 mr-1" />Alterar arquivo
                 </Button>
               </div>
 
@@ -704,18 +704,18 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                     <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
-                      No role column detected — set a batch role so these candidates are searchable later.
+                      Nenhuma coluna de cargo detectada — defina um cargo em lote para facilitar a busca desses candidatos posteriormente.
                     </p>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     <Briefcase className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                    <p className="text-xs text-muted-foreground font-medium">Batch context (optional — fills rows without a role)</p>
+                    <p className="text-xs text-muted-foreground font-medium">Contexto em lote (opcional — preenche linhas sem cargo)</p>
                   </div>
                 )}
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground w-[72px] shrink-0">Job / Role</span>
+                  <span className="text-xs text-muted-foreground w-[72px] shrink-0">Vaga / Cargo</span>
                   <Select
                     value={importJobId ?? '__manual__'}
                     onValueChange={(val) => {
@@ -728,10 +728,10 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                     }}
                   >
                     <SelectTrigger className="h-7 text-xs flex-1">
-                      <SelectValue placeholder="Select a job…" />
+                      <SelectValue placeholder="Selecione uma vaga…" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="__manual__" className="text-xs text-muted-foreground italic">Enter role manually</SelectItem>
+                      <SelectItem value="__manual__" className="text-xs text-muted-foreground italic">Informar cargo manualmente</SelectItem>
                       {jobs.map(job => (
                         <SelectItem key={job.id} value={job.id} className="text-xs">{job.title}</SelectItem>
                       ))}
@@ -740,7 +740,7 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                   {!importJobId && (
                     <Input
                       className="h-7 text-xs flex-1"
-                      placeholder="e.g. Flutter Developer"
+                      placeholder="ex: Desenvolvedor Frontend"
                       value={importRole}
                       onChange={e => setImportRole(e.target.value)}
                     />
@@ -750,16 +750,16 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                 {vendors.length > 0 && (
                   <div className="flex items-center gap-2">
                     <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                    <span className="text-xs text-muted-foreground w-[72px] shrink-0">Vendor</span>
+                    <span className="text-xs text-muted-foreground w-[72px] shrink-0">Fornecedor</span>
                     <Select
                       value={vendorSourceKey ?? '__none__'}
                       onValueChange={val => setVendorSourceKey(val === '__none__' ? null : val)}
                     >
                       <SelectTrigger className="h-7 text-xs flex-1">
-                        <SelectValue placeholder="No vendor (internal)" />
+                        <SelectValue placeholder="Sem fornecedor (interno)" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="__none__" className="text-xs text-muted-foreground italic">No vendor (internal sourcing)</SelectItem>
+                        <SelectItem value="__none__" className="text-xs text-muted-foreground italic">Sem fornecedor (captação interna)</SelectItem>
                         {vendors.map(v => (
                           <SelectItem key={v.id} value={v.source_key} className="text-xs">{v.name}</SelectItem>
                         ))}
@@ -770,17 +770,17 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
 
                 <div className="flex items-center gap-2">
                   <Tags className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  <span className="text-xs text-muted-foreground w-[72px] shrink-0">Skills</span>
+                  <span className="text-xs text-muted-foreground w-[72px] shrink-0">Habilidades</span>
                   <Input
                     className="h-7 text-xs flex-1"
-                    placeholder="Apply to all: Flutter, Dart"
+                    placeholder="Aplicar a todos: React, Node.js"
                     value={batchSkills}
                     onChange={e => setBatchSkills(e.target.value)}
                   />
                 </div>
 
                 <p className="text-xs text-muted-foreground pl-[80px]">
-                  Candidates will land in <strong>Pending Approval</strong> and must be approved before entering the pipeline.
+                  Os candidatos entrarão em <strong>Aprovação Pendente</strong> e precisarão ser aprovados antes de ingressar no pipeline.
                 </p>
               </div>
 
@@ -788,9 +788,9 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[180px] sticky top-0 bg-background z-10">Column</TableHead>
-                      <TableHead className="w-[180px] sticky top-0 bg-background z-10">Sample Value</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Map to Field</TableHead>
+                      <TableHead className="w-[180px] sticky top-0 bg-background z-10">Coluna</TableHead>
+                      <TableHead className="w-[180px] sticky top-0 bg-background z-10">Valor de Exemplo</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">Mapear para Campo</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -798,14 +798,14 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                       <TableRow key={idx}>
                         <TableCell className="font-mono text-xs font-medium">{header}</TableCell>
                         <TableCell className="text-xs text-muted-foreground truncate max-w-[180px]">
-                          {rawRows[0]?.[idx] || <span className="italic opacity-50">empty</span>}
+                          {rawRows[0]?.[idx] || <span className="italic opacity-50">vazio</span>}
                         </TableCell>
                         <TableCell>
                           <Select value={mappings[idx] ?? '__skip__'} onValueChange={(val) => {
                             const next = [...mappings]; next[idx] = val; setMappings(next);
                           }}>
                             <SelectTrigger className="h-8 text-xs w-[200px]">
-                              <SelectValue placeholder="— Skip column —" />
+                              <SelectValue placeholder="— Ignorar coluna —" />
                             </SelectTrigger>
                             <SelectContent>
                               {FIELD_OPTIONS.map(opt => (
@@ -820,7 +820,7 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                 </Table>
               </div>
               <p className="text-xs text-muted-foreground">
-                Skills can be separated by semicolons (<code>;</code>), pipes (<code>|</code>), or commas — auto-detected.
+                As habilidades podem ser separadas por ponto e vírgula (<code>;</code>), barras verticais (<code>|</code>) ou vírgulas — detecção automática.
               </p>
             </>
           )}
@@ -830,13 +830,13 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
             <>
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="outline" className="bg-green-500/10 text-green-600">{validCount} will import</Badge>
-                  {warningCount > 0 && <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600">{warningCount} missing name</Badge>}
-                  {duplicateCount > 0 && <Badge variant="outline" className="bg-amber-500/10 text-amber-600">{duplicateCount} duplicate{duplicateCount !== 1 ? 's' : ''}</Badge>}
-                  {errorCount > 0 && <Badge variant="outline" className="bg-red-500/10 text-red-600">{errorCount} error{errorCount !== 1 ? 's' : ''}</Badge>}
+                  <Badge variant="outline" className="bg-green-500/10 text-green-600">{validCount} serão importados</Badge>
+                  {warningCount > 0 && <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600">{warningCount} sem nome</Badge>}
+                  {duplicateCount > 0 && <Badge variant="outline" className="bg-amber-500/10 text-amber-600">{duplicateCount} duplicado(s)</Badge>}
+                  {errorCount > 0 && <Badge variant="outline" className="bg-red-500/10 text-red-600">{errorCount} com erro(s)</Badge>}
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => setStep('map')}>
-                  <ArrowLeft className="h-3.5 w-3.5 mr-1" />Back to mapping
+                  <ArrowLeft className="h-3.5 w-3.5 mr-1" />Voltar ao mapeamento
                 </Button>
               </div>
 
@@ -845,14 +845,14 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-8 sticky top-0 bg-background z-10" />
-                      <TableHead className="w-12 sticky top-0 bg-background z-10 text-xs">Row</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Name</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Email</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Phone</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Company</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Role</TableHead>
+                      <TableHead className="w-12 sticky top-0 bg-background z-10 text-xs">Linha</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">Nome</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">E-mail</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">Telefone</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">Empresa</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">Cargo</TableHead>
                       <TableHead className="w-12 sticky top-0 bg-background z-10">Exp</TableHead>
-                      <TableHead className="sticky top-0 bg-background z-10">Skills</TableHead>
+                      <TableHead className="sticky top-0 bg-background z-10">Habilidades</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -873,7 +873,7 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground font-mono py-2">{c.rowNumber}</TableCell>
                           <TableCell className="py-2 font-medium text-sm">
-                            <EditableCell value={c.name} rowIdx={i} field="name" placeholder="click to add" {...editProps} />
+                            <EditableCell value={c.name} rowIdx={i} field="name" placeholder="clique para adicionar" {...editProps} />
                             {c.warnings.length > 0 && <p className="text-[10px] text-yellow-600 mt-0.5">{c.warnings.join(' · ')}</p>}
                             {!c.isValid && (
                               <p className={`text-[10px] mt-0.5 ${c.isDuplicate ? 'text-amber-600' : 'text-red-500'}`}>{c.errors.join(' · ')}</p>
@@ -908,9 +908,9 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
             <div className="flex flex-col items-center justify-center py-12 gap-4">
               <CheckCircle2 className="h-12 w-12 text-green-600" />
               <div className="text-center space-y-1">
-                <p className="text-lg font-semibold">{importResults.success} candidates imported</p>
+                <p className="text-lg font-semibold">{importResults.success} candidatos importados</p>
                 {importResults.failed > 0 && (
-                  <p className="text-sm text-destructive">{importResults.failed} rows failed (duplicate or invalid)</p>
+                  <p className="text-sm text-destructive">{importResults.failed} linhas com falha (duplicadas ou inválidas)</p>
                 )}
               </div>
             </div>
@@ -919,25 +919,25 @@ export function BulkImportDialog({ open, onOpenChange }: BulkImportDialogProps) 
         </div>
 
         <DialogFooter className="gap-2 shrink-0">
-          {step === 'upload' && <Button variant="outline" onClick={handleClose}>Cancel</Button>}
+          {step === 'upload' && <Button variant="outline" onClick={handleClose}>Cancelar</Button>}
           {step === 'map' && (
             <>
-              <Button variant="outline" onClick={handleClose}>Cancel</Button>
-              <Button onClick={handleApplyMappings}>Continue <ArrowRight className="h-4 w-4 ml-1" /></Button>
+              <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+              <Button onClick={handleApplyMappings}>Continuar <ArrowRight className="h-4 w-4 ml-1" /></Button>
             </>
           )}
           {step === 'preview' && (
             <>
-              <Button variant="outline" onClick={handleClose}>Cancel</Button>
+              <Button variant="outline" onClick={handleClose}>Cancelar</Button>
               <Button onClick={handleImport} disabled={isImporting || validCount === 0}>
                 {isImporting
-                  ? 'Importing…'
-                  : `Import ${validCount} Candidate${validCount !== 1 ? 's' : ''}${duplicateCount > 0 ? ` · skip ${duplicateCount}` : ''}`
+                  ? 'Importando…'
+                  : `Importar ${validCount} Candidato${validCount !== 1 ? 's' : ''}${duplicateCount > 0 ? ` · ignorar ${duplicateCount}` : ''}`
                 }
               </Button>
             </>
           )}
-          {step === 'done' && <Button onClick={handleClose}>Done</Button>}
+          {step === 'done' && <Button onClick={handleClose}>Concluído</Button>}
         </DialogFooter>
       </DialogContent>
     </Dialog>

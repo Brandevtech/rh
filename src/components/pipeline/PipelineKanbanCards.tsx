@@ -111,7 +111,7 @@ function fitScoreBadgeClass(score: number): string {
 function FitBadge({ score }: { score: number }) {
   return (
     <span className={cn(CHIP_BASE, fitScoreBadgeClass(score))}>
-      <span className="tabular-nums">{score}%</span> fit
+      <span className="tabular-nums">{score}%</span> compat.
     </span>
   );
 }
@@ -187,24 +187,24 @@ function CardOverflowMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
-        <button type="button" aria-label="Card actions" className="p-0.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-fast ease-out">
+        <button type="button" aria-label="Ações do cartão" className="p-0.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-fast ease-out">
           <MoreHorizontal className="w-3.5 h-3.5" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="text-sm" onClick={e => e.stopPropagation()}>
         {assessmentEnabled && onAssignAssessment && (
           <DropdownMenuItem onClick={onAssignAssessment} className="gap-2">
-            <ClipboardCheck className="w-3.5 h-3.5 text-muted-foreground" /> Assign Assessment
+            <ClipboardCheck className="w-3.5 h-3.5 text-muted-foreground" /> Atribuir Avaliação
           </DropdownMenuItem>
         )}
         {isRejected && onReopen && (
           <DropdownMenuItem onClick={onReopen} className="gap-2">
-            <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" /> Re-open Candidate
+            <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" /> Reabrir Candidato
           </DropdownMenuItem>
         )}
         {canAdminAction && (
           <DropdownMenuItem onClick={onRemove} className="gap-2 text-destructive focus:text-destructive">
-            <UserMinus className="w-3.5 h-3.5" /> Remove from Pipeline
+            <UserMinus className="w-3.5 h-3.5" /> Remover do Pipeline
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
@@ -442,16 +442,13 @@ export function DraggablePipelineCard({
                   {interview.verdict && (
                     <span className={cn(CHIP_BASE, verdictColors[interview.verdict])}>
                       {VerdictIcon && <VerdictIcon className={CHIP_ICON} />}
-                      {interview.verdict === 'proceeded' ? 'Proceeded'
-                        : interview.verdict === 'rejected' ? 'Rejected'
-                          : interview.verdict === 'hold' ? 'On Hold'
-                            : 'No Show'}
+                      {interview.verdict === 'proceeded' ? 'Aprovado' : interview.verdict === 'rejected' ? 'Recusado' : interview.verdict === 'hold' ? 'Em Espera' : 'Não Compareceu'}
                     </span>
                   )}
                   {!interview.verdict && isFeedbackOverdue && (
                     <span className={cn(CHIP_BASE, CHIP_TONE.warning)}>
                       <AlertTriangle className={CHIP_ICON} />
-                      Feedback overdue
+                      Feedback atrasado
                     </span>
                   )}
                   {primarySignal === 'new' && (
@@ -493,7 +490,7 @@ export function DraggablePipelineCard({
                 {canManage && (
                   <Button size="sm" variant="outline" className="h-7 text-xs flex-1 min-w-28" onClick={(e) => { e.stopPropagation(); onSchedule(); }}>
                     <CalendarDays className="w-3 h-3 mr-1" />
-                    {isScheduled ? 'Reschedule' : 'Schedule'}
+                    {isScheduled ? 'Reagendar' : 'Agendar'}
                   </Button>
                 )}
                 <Button
@@ -641,12 +638,12 @@ export function PendingApprovalColumn({
     <div className="w-[300px] shrink-0">
       <div className="flex items-center gap-2 mb-3 px-1">
         <span className="h-2 w-2 rounded-full shrink-0 bg-violet-500" aria-hidden />
-        <h3 className="text-label text-foreground">Pending Approval</h3>
+        <h3 className="text-label text-foreground">Aprovação Pendente</h3>
         <span className={COLUMN_COUNT_PILL}>{candidates.length}</span>
       </div>
       <div className="space-y-2 min-h-[200px] rounded-xl p-1 bg-surface-subtle">
         {candidates.length === 0 ? (
-          <p className="text-caption text-muted-foreground text-center py-8">No pending candidates</p>
+          <p className="text-caption text-muted-foreground text-center py-8">Nenhum candidato pendente</p>
         ) : (
           candidates.map((c) => {
             const isDeclined = c.candidate_status === 'rejected';

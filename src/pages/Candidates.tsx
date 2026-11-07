@@ -135,12 +135,12 @@ const candidateStatusColors: Record<string, string> = {
 };
 
 const candidateStatusLabels: Record<string, string> = {
-  new: 'New',
-  reviewing: 'Reviewing',
-  shortlisted: 'Hired',
-  rejected: 'Rejected',
-  hold: 'Hold',
-  backout: 'Backout',
+  new: 'Novo',
+  reviewing: 'Em Triagem',
+  shortlisted: 'Contratado',
+  rejected: 'Recusado',
+  hold: 'Em Espera',
+  backout: 'Desistência',
 };
 
 type CandidateFormState = {
@@ -203,15 +203,15 @@ function resetParseDerivedFields(prev: CandidateFormState): CandidateFormState {
 }
 
 const noticePeriodOptions = [
-  'Immediate',
-  'Serving',
-  'Notice',
-  '0 - 7 days',
-  '7 - 15 days',
-  '15 - 30 days',
-  '30 - 45 days',
-  '45 - 60 days',
-  'More than 60 days',
+  'Imediato',
+  'Cumprindo aviso',
+  'Em aviso prévio',
+  '0 - 7 dias',
+  '7 - 15 dias',
+  '15 - 30 dias',
+  '30 - 45 dias',
+  '45 - 60 dias',
+  'Mais de 60 dias',
 ];
 
 interface CandidatesProps {
@@ -227,7 +227,7 @@ function getDaysStale(updatedAt: string): number {
 
 export default function Candidates({ mode = 'pipeline', embedded = false }: CandidatesProps) {
   const isDatabase = mode === 'database';
-  usePageTitle(isDatabase ? 'Talent Database' : embedded ? 'Hiring' : 'Candidates');
+  usePageTitle(isDatabase ? 'Banco de Talentos' : embedded ? 'Contratação' : 'Candidatos');
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
@@ -475,11 +475,11 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
 
     const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!validTypes.includes(file.type)) {
-      toast({ title: 'Invalid file type', description: 'Please upload a PDF or Word document', variant: 'destructive' });
+      toast({ title: 'Tipo de arquivo inválido', description: 'Por favor, envie um documento PDF ou Word', variant: 'destructive' });
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      toast({ title: 'File too large', description: 'Maximum file size is 10MB', variant: 'destructive' });
+      toast({ title: 'Arquivo muito grande', description: 'O tamanho máximo do arquivo é de 10MB', variant: 'destructive' });
       return;
     }
 
@@ -496,10 +496,10 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
       if (parseGeneration !== parseGenerationRef.current) return;
 
       setForm(prev => ({ ...prev, resume_url: fileName }));
-      toast({ title: 'Resume uploaded successfully' });
+      toast({ title: 'Currículo enviado com sucesso' });
 
       setIsParsing(true);
-      toast({ title: `Parsing ${file.name}…`, description: 'Extracting candidate details with AI' });
+      toast({ title: `Analisando ${file.name}…`, description: 'Extraindo dados do candidato com IA' });
 
       try {
         const { data: parseData, error: parseError } = await supabase.functions.invoke('parse-resume', {
@@ -530,12 +530,12 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             credential_score: mapped.credential_score,
             resume_url: fileName,
           }));
-          toast({ title: 'Resume parsed!', description: 'Candidate details auto-filled. Review and save.' });
+          toast({ title: 'Currículo analisado!', description: 'Dados do candidato preenchidos automaticamente. Revise e salve.' });
         }
       } catch (parseErr: unknown) {
         if (parseGeneration !== parseGenerationRef.current) return;
         console.error('Resume parse error:', parseErr);
-        let description = 'You can still enter details manually.';
+        let description = 'Você ainda pode preencher os dados manualmente.';
         const err = parseErr as { context?: { json?: () => Promise<{ error?: string }> }; message?: string };
         if (err?.context?.json) {
           try {
@@ -547,7 +547,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         } else if (parseErr instanceof Error && parseErr.message) {
           description = parseErr.message;
         }
-        toast({ title: 'Could not auto-fill from resume', description, variant: 'default' });
+        toast({ title: 'Não foi possível preencher automaticamente', description, variant: 'default' });
       } finally {
         if (parseGeneration === parseGenerationRef.current) {
           setIsParsing(false);
@@ -556,7 +556,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
       }
     } catch (error: any) {
       if (parseGeneration === parseGenerationRef.current) {
-        toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
+        toast({ title: 'Falha no upload', description: error.message, variant: 'destructive' });
       }
     } finally {
       if (parseGeneration === parseGenerationRef.current) {
@@ -947,7 +947,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Delete this candidate and all their assessment data?')) {
+    if (confirm('Excluir este candidato e todos os seus dados de avaliação?')) {
       await deleteCandidate.mutateAsync(id);
     }
   };
@@ -971,13 +971,13 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         throw error;
       }
       if (data?.error) {
-        toast({ title: 'Analysis failed', description: data.error, variant: 'destructive' });
+        toast({ title: 'Falha na análise', description: data.error, variant: 'destructive' });
         return;
       }
-      toast({ title: 'Suitability analyzed', description: `Score: ${data.analysis.suitability_score}% match` });
+      toast({ title: 'Compatibilidade analisada', description: `Pontuação: ${data.analysis.suitability_score}% de compatibilidade` });
       await refetch();
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Analysis failed';
+      const message = err instanceof Error ? err.message : 'Falha na análise';
       toast({ title: 'Analysis failed', description: message, variant: 'destructive' });
     } finally {
       setAnalyzingId(null);
@@ -1025,15 +1025,15 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               ...(reason ? { rejection_reason: reason } : {}),
             },
           });
-          toast({ title: `Candidate ${candidateStatusLabels[newStatus] || newStatus}`, description: 'Status updated & email sent.' });
+          toast({ title: `Candidato ${candidateStatusLabels[newStatus] || newStatus}`, description: 'Status atualizado e e-mail enviado.' });
         } catch {
-          toast({ title: `Candidate ${candidateStatusLabels[newStatus] || newStatus}`, description: 'Status updated but email failed to send.' });
+          toast({ title: `Candidato ${candidateStatusLabels[newStatus] || newStatus}`, description: 'Status atualizado, mas o envio do e-mail falhou.' });
         }
       } else {
-        toast({ title: `Candidate ${candidateStatusLabels[newStatus] || newStatus}`, description: 'Status updated.' });
+        toast({ title: `Candidato ${candidateStatusLabels[newStatus] || newStatus}`, description: 'Status atualizado.' });
       }
     } catch (err: any) {
-      toast({ title: 'Failed to update status', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao atualizar status', description: err.message, variant: 'destructive' });
     }
   };
 
@@ -1045,7 +1045,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
     if (!statusDialog.candidate) return;
     const needsReason = statusDialog.sendEmail && (statusDialog.status === 'rejected' || statusDialog.status === 'backout');
     if (needsReason && !statusDialog.reason.trim()) {
-      toast({ title: 'Reason required', description: 'Please provide a reason before sending the rejection email.', variant: 'destructive' });
+      toast({ title: 'Motivo obrigatório', description: 'Por favor, informe um motivo antes de enviar o e-mail de recusa.', variant: 'destructive' });
       return;
     }
     await handleStatusChange(statusDialog.candidate, statusDialog.status, statusDialog.sendEmail, statusDialog.reason);
@@ -1152,10 +1152,10 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
 
       if (error) throw error;
       notifyStaffEmail('verdict_submitted', feedbackDialog.interview.id);
-      toast({ title: 'Feedback submitted', description: 'Interview feedback saved successfully.' });
+      toast({ title: 'Feedback enviado', description: 'Feedback da entrevista salvo com sucesso.' });
       setFeedbackDialog({ open: false, interview: null });
     } catch (err: any) {
-      toast({ title: 'Failed to submit feedback', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao enviar feedback', description: err.message, variant: 'destructive' });
     } finally {
       setFeedbackSubmitting(false);
     }
@@ -1172,21 +1172,21 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
   const databaseEmptyState = (() => {
     if (pipelineFilter === 'in_pipeline') {
       return {
-        title: 'No candidates in pipeline',
-        description: 'No candidates are currently in an active pipeline.',
+        title: 'Nenhum candidato no pipeline',
+        description: 'Nenhum candidato está atualmente em um pipeline ativo.',
       };
     }
     if (pipelineFilter === 'not_in_job') {
       return {
-        title: 'No unassigned candidates',
-        description: 'No unassigned candidates in the pool.',
+        title: 'Nenhum candidato sem vaga vinculada',
+        description: 'Não há candidatos não atribuídos no banco.',
       };
     }
     return {
-      title: jobFilter ? 'No candidates for this job yet' : 'No candidates yet',
+      title: jobFilter ? 'Nenhum candidato para esta vaga ainda' : 'Nenhum candidato ainda',
       description: jobFilter
-        ? 'Add a candidate or share the public careers page.'
-        : 'Add your first candidate to get started.',
+        ? 'Adicione um candidato ou compartilhe a página pública de carreiras.'
+        : 'Adicione seu primeiro candidato para começar.',
     };
   })();
 
@@ -1198,12 +1198,12 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
           onValueChange={(value) => setPipelineFilter(value as PipelineEnrollmentFilter)}
         >
           <SelectTrigger className={stacked ? 'w-full' : 'w-[200px]'}>
-            <SelectValue placeholder="Pipeline status" />
+            <SelectValue placeholder="Status no pipeline" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All candidates</SelectItem>
-            <SelectItem value="in_pipeline">In pipeline</SelectItem>
-            <SelectItem value="not_in_job">Not in any job</SelectItem>
+            <SelectItem value="all">Todos os candidatos</SelectItem>
+            <SelectItem value="in_pipeline">No pipeline</SelectItem>
+            <SelectItem value="not_in_job">Sem vaga vinculada</SelectItem>
           </SelectContent>
         </Select>
       )}
@@ -1214,10 +1214,10 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
           onValueChange={(value) => setTagFilter(value === 'all' ? '' : value)}
         >
           <SelectTrigger className={stacked ? 'w-full' : 'w-[180px]'}>
-            <SelectValue placeholder="Filter by tag" />
+            <SelectValue placeholder="Filtrar por tag" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All tags</SelectItem>
+            <SelectItem value="all">Todas as tags</SelectItem>
             {allTags.map((tag) => (
               <SelectItem key={tag} value={tag}>
                 {tag}
@@ -1241,13 +1241,13 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
           }}
         >
           <SelectTrigger className={stacked ? 'w-full' : 'w-[220px]'}>
-            <SelectValue placeholder="Filter by Job" />
+            <SelectValue placeholder="Filtrar por Vaga" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">{isDatabase ? 'All Jobs' : 'All Open Jobs'}</SelectItem>
+            <SelectItem value="all">{isDatabase ? 'Todas as Vagas' : 'Todas as Vagas Abertas'}</SelectItem>
             {jobFilterOptions.map((job: any) => (
               <SelectItem key={job.id} value={job.id}>
-                {job.title}{job.status === 'paused' ? ' (Paused)' : job.status === 'closed' ? ' (Closed)' : ''}
+                {job.title}{job.status === 'paused' ? ' (Pausada)' : job.status === 'closed' ? ' (Encerrada)' : ''}
               </SelectItem>
             ))}
           </SelectContent>
@@ -1257,13 +1257,13 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
       {jobFilter && !embedded && (
         <Button variant="ghost" size="sm" onClick={clearJobFilter} className="gap-1 self-start">
           <X className="h-3 w-3" />
-          Clear Filter
+          Limpar Filtro
         </Button>
       )}
 
       <div className={stacked ? 'space-y-2' : 'flex items-center gap-2'}>
         <Input
-          placeholder="Filter by skill..."
+          placeholder="Filtrar por habilidade..."
           className={stacked ? 'w-full' : 'w-48'}
           value={skillFilterInput}
           onChange={(e) => setSkillFilterInput(e.target.value)}
@@ -1282,7 +1282,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               </Badge>
             ))}
             <Button variant="ghost" size="sm" className="h-6 text-xs" onClick={() => setSkillFilter([])}>
-              Clear
+              Limpar
             </Button>
           </div>
         )}
@@ -1302,19 +1302,19 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         <DropdownMenuTrigger asChild>
           <Button variant={missingFilter.length > 0 ? 'default' : 'outline'} size="sm" className="gap-2 self-start">
             <Filter className="h-3.5 w-3.5" />
-            Missing Info
+            Dados Ausentes
             {missingFilter.length > 0 && <span className="ml-1 rounded-full bg-background/20 px-1.5 text-xs">{missingFilter.length}</span>}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-44">
-          <DropdownMenuLabel className="text-xs text-muted-foreground">Show candidates missing:</DropdownMenuLabel>
+          <DropdownMenuLabel className="text-xs text-muted-foreground">Exibir candidatos sem:</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {([
-            { key: 'email', label: 'Email' },
-            { key: 'phone', label: 'Phone' },
+            { key: 'email', label: 'E-mail' },
+            { key: 'phone', label: 'Telefone' },
             { key: 'linkedin', label: 'LinkedIn' },
-            { key: 'resume', label: 'Resume' },
-            { key: 'enrichment', label: 'Enrichment' },
+            { key: 'resume', label: 'Currículo' },
+            { key: 'enrichment', label: 'Enriquecimento' },
           ] as const).map(({ key, label }) => (
             <DropdownMenuCheckboxItem
               key={key}
@@ -1330,7 +1330,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-xs text-muted-foreground justify-center" onClick={() => setMissingFilter([])}>
-                Clear filters
+                Limpar filtros
               </DropdownMenuItem>
             </>
           )}
@@ -1347,14 +1347,14 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         <div className="flex items-start justify-between gap-3 mb-4 md:mb-8">
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-              {isDatabase ? 'Talent Database' : 'Candidates'}
+              {isDatabase ? 'Banco de Talentos' : 'Candidatos'}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5 md:mt-1 line-clamp-2 md:line-clamp-none">
               {selectedJobForFilter
-                ? `Showing candidates for: ${selectedJobForFilter.title}`
+                ? `Exibindo candidatos para: ${selectedJobForFilter.title}`
                 : isDatabase
-                  ? 'All CVs ever uploaded — your full talent pool'
-                  : 'Active candidates mapped to an open job'}
+                  ? 'Todos os currículos cadastrados — seu banco de talentos completo'
+                  : 'Candidatos ativos vinculados a uma vaga aberta'}
             </p>
           </div>
 
@@ -1364,36 +1364,36 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="gap-1.5 shrink-0 md:hidden">
                     <MoreVertical className="h-4 w-4" />
-                    Actions
+                    Ações
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-44">
                   <DropdownMenuItem onClick={() => setIsExportOpen(true)} className="gap-2">
                     <Download className="h-4 w-4" />
-                    Export
+                    Exportar
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsBulkImportOpen(true)} className="gap-2">
                     <Upload className="h-4 w-4" />
-                    Import CSV
+                    Importar CSV
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsBulkResumeOpen(true)} className="gap-2">
                     <FileText className="h-4 w-4" />
-                    Upload Resumes
+                    Upload de Currículos
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <div className="hidden md:flex flex-wrap gap-2 shrink-0">
                 <Button variant="outline" size="sm" onClick={() => setIsExportOpen(true)} className="gap-2">
                   <Download className="h-4 w-4" />
-                  Export
+                  Exportar
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => setIsBulkImportOpen(true)} className="gap-2">
                   <Upload className="h-4 w-4" />
-                  Import CSV
+                  Importar CSV
                 </Button>
                 <Button variant="outline" size="sm" onClick={() => setIsBulkResumeOpen(true)} className="gap-2">
                   <FileText className="h-4 w-4" />
-                  Upload Resumes
+                  Upload de Currículos
                 </Button>
               </div>
             </>
@@ -1412,7 +1412,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={isMobile ? 'Search candidates…' : 'Search… or use AND / OR / NOT (e.g. "React AND Python NOT Java")'}
+              placeholder={isMobile ? 'Buscar candidatos…' : 'Buscar… ou use AND / OR / NOT (ex: "React AND Python NOT Java")'}
               className="pl-10 pr-4 h-9 md:h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -1425,7 +1425,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             onClick={() => setAdvancedOpen(v => !v)}
           >
             <Filter className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Advanced</span>
+            <span className="hidden sm:inline">Avançado</span>
             {advSearchActive && <span className="rounded-full bg-background/20 px-1.5 text-xs">ON</span>}
           </Button>
           <Button
@@ -1435,7 +1435,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             onClick={() => setMobileFiltersOpen(true)}
           >
             <Filter className="h-3.5 w-3.5" />
-            Filters
+            Filtros
             {mobileFiltersCount > 0 && (
               <span className="rounded-full bg-background/20 px-1.5 text-xs">{mobileFiltersCount}</span>
             )}
@@ -1447,41 +1447,41 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
           <div className="rounded-lg border bg-muted/30 p-4 space-y-3">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium">Name</label>
-                <Input placeholder="e.g. Rahul" value={advSearch.name} onChange={e => setAdvSearch(p => ({ ...p, name: e.target.value }))} className="h-8 text-sm" />
+                <label className="text-xs text-muted-foreground font-medium">Nome</label>
+                <Input placeholder="ex: Ana Silva" value={advSearch.name} onChange={e => setAdvSearch(p => ({ ...p, name: e.target.value }))} className="h-8 text-sm" />
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium">Email</label>
-                <Input placeholder="e.g. @gmail.com" value={advSearch.email} onChange={e => setAdvSearch(p => ({ ...p, email: e.target.value }))} className="h-8 text-sm" />
+                <label className="text-xs text-muted-foreground font-medium">E-mail</label>
+                <Input placeholder="ex: @gmail.com" value={advSearch.email} onChange={e => setAdvSearch(p => ({ ...p, email: e.target.value }))} className="h-8 text-sm" />
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium">Current Company</label>
-                <Input placeholder="e.g. Infosys" value={advSearch.company} onChange={e => setAdvSearch(p => ({ ...p, company: e.target.value }))} className="h-8 text-sm" />
+                <label className="text-xs text-muted-foreground font-medium">Empresa Atual</label>
+                <Input placeholder="ex: Google" value={advSearch.company} onChange={e => setAdvSearch(p => ({ ...p, company: e.target.value }))} className="h-8 text-sm" />
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium">Role Applied</label>
-                <Input placeholder="e.g. Data Engineer" value={advSearch.role} onChange={e => setAdvSearch(p => ({ ...p, role: e.target.value }))} className="h-8 text-sm" />
+                <label className="text-xs text-muted-foreground font-medium">Cargo Desejado / Vaga</label>
+                <Input placeholder="ex: Engenheiro de Dados" value={advSearch.role} onChange={e => setAdvSearch(p => ({ ...p, role: e.target.value }))} className="h-8 text-sm" />
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium">Experience (years)</label>
+                <label className="text-xs text-muted-foreground font-medium">Experiência (anos)</label>
                 <div className="flex items-center gap-1">
-                  <Input placeholder="Min" type="number" min={0} value={advSearch.expMin} onChange={e => setAdvSearch(p => ({ ...p, expMin: e.target.value }))} className="h-8 text-sm w-20" />
+                  <Input placeholder="Mín" type="number" min={0} value={advSearch.expMin} onChange={e => setAdvSearch(p => ({ ...p, expMin: e.target.value }))} className="h-8 text-sm w-20" />
                   <span className="text-xs text-muted-foreground">–</span>
-                  <Input placeholder="Max" type="number" min={0} value={advSearch.expMax} onChange={e => setAdvSearch(p => ({ ...p, expMax: e.target.value }))} className="h-8 text-sm w-20" />
+                  <Input placeholder="Máx" type="number" min={0} value={advSearch.expMax} onChange={e => setAdvSearch(p => ({ ...p, expMax: e.target.value }))} className="h-8 text-sm w-20" />
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="text-xs text-muted-foreground font-medium">Source</label>
-                <Input placeholder="e.g. bulk_resume" value={advSearch.source} onChange={e => setAdvSearch(p => ({ ...p, source: e.target.value }))} className="h-8 text-sm" />
+                <label className="text-xs text-muted-foreground font-medium">Origem</label>
+                <Input placeholder="ex: linkedin" value={advSearch.source} onChange={e => setAdvSearch(p => ({ ...p, source: e.target.value }))} className="h-8 text-sm" />
               </div>
             </div>
             {advSearchActive && (
               <Button variant="ghost" size="sm" className="h-6 text-xs text-muted-foreground" onClick={() => setAdvSearch({ name: '', email: '', company: '', role: '', expMin: '', expMax: '', source: '' })}>
-                Clear advanced filters
+                Limpar filtros avançados
               </Button>
             )}
             <p className="text-xs text-muted-foreground">
-              Tip: main search box supports <strong>AND</strong>, <strong>OR</strong>, <strong>NOT</strong> — e.g. <code className="bg-muted px-1 rounded">React AND Python NOT Java</code>
+              Dica: a busca principal suporta <strong>AND</strong>, <strong>OR</strong>, <strong>NOT</strong> — ex: <code className="bg-muted px-1 rounded">React AND Python NOT Java</code>
             </p>
           </div>
         )}
@@ -1494,7 +1494,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
           <SheetContent side="bottom" className="max-h-[85dvh] overflow-y-auto rounded-t-xl pb-safe">
             <SheetHeader className="text-left pb-2">
-              <SheetTitle>Filters</SheetTitle>
+              <SheetTitle>Filtros</SheetTitle>
             </SheetHeader>
             {renderSecondaryFilters(true)}
           </SheetContent>
@@ -1516,12 +1516,12 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               {searchQuery || skillFilter.length > 0 || jobFilter ? (
                 <>
                   <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No matching candidates</h3>
+                  <h3 className="text-lg font-semibold mb-2">Nenhum candidato encontrado</h3>
                   <p className="text-muted-foreground mb-4">
-                    Try adjusting your search or filters.
+                    Tente ajustar sua busca ou filtros.
                   </p>
                   <Button variant="outline" onClick={() => { setSearchQuery(''); setSkillFilter([]); }}>
-                    Clear filters
+                    Limpar filtros
                   </Button>
                 </>
               ) : (
@@ -1531,31 +1531,31 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                     {isDatabase
                       ? databaseEmptyState.title
                       : jobFilter
-                        ? 'No candidates for this job yet'
-                        : 'No active candidates'}
+                        ? 'Nenhum candidato para esta vaga ainda'
+                        : 'Nenhum candidato ativo'}
                   </h3>
                   <p className="text-muted-foreground mb-4">
                     {isInterviewer
-                      ? 'No candidates have been assigned to you yet.'
+                      ? 'Nenhum candidato foi atribuído a você ainda.'
                       : isDatabase
                         ? databaseEmptyState.description
                         : !isDatabase && !jobFilter
-                          ? 'Candidates appear here when assigned to an open job. Find unassigned candidates in the Database.'
+                          ? 'Candidatos aparecem aqui quando vinculados a uma vaga aberta. Veja candidatos sem vaga no Banco de Talentos.'
                           : jobFilter
-                            ? 'Add a candidate or share the public careers page.'
-                            : 'Add your first candidate to get started.'}
+                            ? 'Adicione um candidato ou compartilhe a página pública de carreiras.'
+                            : 'Adicione seu primeiro candidato para começar.'}
                   </p>
                   <div className="flex gap-2 justify-center">
                     {canManageCandidates && (
                       <Button onClick={openCreate} className="gap-2">
                         <Plus className="h-4 w-4" />
-                        Add Candidate
+                        Adicionar Candidato
                       </Button>
                     )}
                     {!isDatabase && !jobFilter && canManageCandidates && (
                       <Button variant="outline" onClick={() => window.location.href = '/database'} className="gap-2">
                         <Users className="h-4 w-4" />
-                        Go to Database
+                        Ir para o Banco de Talentos
                       </Button>
                     )}
                   </div>
@@ -1569,15 +1569,15 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               <Table unwrapped>
                 <TableHeader className="[&_th]:sticky [&_th]:top-0 [&_th]:z-10 [&_th]:bg-surface-subtle [&_th]:shadow-[inset_0_-1px_0_hsl(var(--border))]">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="min-w-[220px]">Candidate</TableHead>
-                    <TableHead className="min-w-[180px]">Current Position</TableHead>
-                    <TableHead className="min-w-[120px]">{isDatabase ? 'Jobs' : 'Job'}</TableHead>
-                    <TableHead className="min-w-[80px]">Source</TableHead>
+                    <TableHead className="min-w-[220px]">Candidato</TableHead>
+                    <TableHead className="min-w-[180px]">Posição Atual</TableHead>
+                    <TableHead className="min-w-[120px]">{isDatabase ? 'Vagas' : 'Vaga'}</TableHead>
+                    <TableHead className="min-w-[80px]">Origem</TableHead>
                     <TableHead className="min-w-[100px]">Status</TableHead>
-                    {!isDatabase && <TableHead className="min-w-[140px]">Scores</TableHead>}
-                    <TableHead className="min-w-[160px]">{isDatabase ? 'Owner' : 'Assigned To'}</TableHead>
+                    {!isDatabase && <TableHead className="min-w-[140px]">Pontuações</TableHead>}
+                    <TableHead className="min-w-[160px]">{isDatabase ? 'Responsável' : 'Atribuído a'}</TableHead>
                     {showDatabaseTagsColumn && <TableHead className="min-w-[120px]">Tags</TableHead>}
-                    {!isDatabase && <TableHead className="min-w-[180px]">Assessments</TableHead>}
+                    {!isDatabase && <TableHead className="min-w-[180px]">Avaliações</TableHead>}
                     <TableHead className="w-12"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -1614,7 +1614,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                               {isMissingInfo && (
                                 <Badge variant="warning" className="px-1.5 py-0 h-5">
                                   <AlertTriangle className="h-3 w-3 mr-1" />
-                                  Incomplete
+                                  Incompleto
                                 </Badge>
                               )}
                             </div>
@@ -1623,7 +1623,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                 <Mail className="h-3 w-3" />
                                 {candidate.email
                                   ? candidate.email
-                                  : <span className="italic text-[hsl(var(--chip-warning-text))]">No email — click to edit</span>}
+                                  : <span className="italic text-[hsl(var(--chip-warning-text))]">Sem e-mail — clique para editar</span>}
                               </div>
                               {candidate.phone ? (
                                 <div className="flex items-center gap-1">
@@ -1633,7 +1633,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                               ) : (
                                 <div className="flex items-center gap-1 italic text-[hsl(var(--chip-warning-text))]">
                                   <Phone className="h-3 w-3" />
-                                  No phone — click to edit
+                                  Sem telefone — clique para editar
                                 </div>
                               )}
                               {(candidate as any).linkedin_url && (() => {
@@ -1654,7 +1654,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                             </p>
                           )}
                           {candidate.owner_name && !isDatabase && (
-                            <div className="flex items-center gap-1 mt-1.5 text-caption text-muted-foreground" title={`Owner: ${candidate.owner_name}`}>
+                            <div className="flex items-center gap-1 mt-1.5 text-caption text-muted-foreground" title={`Responsável: ${candidate.owner_name}`}>
                               <Crown className="h-2.5 w-2.5 text-amber-500 fill-amber-400 shrink-0" />
                               <span className="truncate max-w-[180px]">{candidate.owner_name}</span>
                             </div>
@@ -1675,7 +1675,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                 )}
                                 {(candidate as any).candidate_current_company && (
                                   <div className="text-xs text-muted-foreground ml-5">
-                                    at {(candidate as any).candidate_current_company}
+                                    na {(candidate as any).candidate_current_company}
                                   </div>
                                 )}
                               </div>
@@ -1690,7 +1690,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                       ? 'bg-[hsl(var(--chip-warning-bg))] text-[hsl(var(--chip-warning-text))]'
                                       : 'bg-[hsl(var(--chip-danger-bg))] text-[hsl(var(--chip-danger-text))]'
                                 }`}>
-                                  {(candidate as any).suitability_score}% Match
+                                  {(candidate as any).suitability_score}% Compatível
                                 </span>
                               </div>
                             ) : (showJobMatch && (candidate as any).job_id) ? (
@@ -1702,9 +1702,9 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                 disabled={analyzingId === candidate.id}
                               >
                                 {analyzingId === candidate.id ? (
-                                  <><Loader2 className="h-3 w-3 animate-spin" /> Analyzing...</>
+                                  <><Loader2 className="h-3 w-3 animate-spin" /> Analisando...</>
                                 ) : (
-                                  <><Sparkles className="h-3 w-3" /> Analyze Job Match</>
+                                  <><Sparkles className="h-3 w-3" /> Analisar Compatibilidade</>
                                 )}
                               </Button>
                             ) : null}
@@ -1716,7 +1716,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                             (() => {
                               const summaries = candidatePipelineSummaryMap.get(candidate.id) || [];
                               if (summaries.length === 0) {
-                                return <span className="text-xs text-muted-foreground italic">Not in pipeline</span>;
+                                return <span className="text-xs text-muted-foreground italic">Fora do pipeline</span>;
                               }
                               const [first, ...rest] = summaries;
                               return (
@@ -1725,7 +1725,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                     {first.jobTitle} · {first.stageName}
                                   </span>
                                   {rest.length > 0 && (
-                                    <span className="text-xs text-muted-foreground">+{rest.length} more</span>
+                                    <span className="text-xs text-muted-foreground">+{rest.length} mais</span>
                                   )}
                                 </div>
                               );
@@ -1742,7 +1742,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                 <div className="space-y-0.5">
                                   <span className="text-sm text-muted-foreground line-through">{candidateJob.title}</span>
                                   <Badge variant="warning" className="block w-fit">
-                                    {candidateJob.status === 'closed' ? 'Job closed' : `Job ${candidateJob.status}`}
+                                    {candidateJob.status === 'closed' ? 'Vaga encerrada' : candidateJob.status === 'paused' ? 'Vaga pausada' : `Vaga ${candidateJob.status}`}
                                   </Badge>
                                 </div>
                               );
@@ -1779,7 +1779,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                               const days = getDaysStale((candidate as any).updated_at);
                               if (days >= 7) return (
                                 <span className="flex items-center gap-0.5 text-caption font-medium tabular-nums text-[hsl(var(--chip-danger-text))]">
-                                  <Clock className="h-2.5 w-2.5" />{days}d stale
+                                  <Clock className="h-2.5 w-2.5" />{days}d sem atividade
                                 </span>
                               );
                               if (days >= 3) return (
@@ -1812,7 +1812,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                             {(candidate as any).enrichment_score != null ? (
                               <div>
                                 <div className="flex items-center justify-between mb-0.5">
-                                  <span className="text-caption text-muted-foreground">Enrich</span>
+                                  <span className="text-caption text-muted-foreground">Enriquecimento</span>
                                   <span className="text-caption font-medium">{(candidate as any).enrichment_score}%</span>
                                 </div>
                                 <div className="h-1.5 w-full rounded-full bg-track overflow-hidden">
@@ -1824,13 +1824,13 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                               </div>
                             ) : (candidate as any).parse_score > 0 ? (
                               <Badge variant="outline" className="px-1.5 py-0 h-5 text-muted-foreground border-dashed">
-                                Not Enriched
+                                Não Enriquecido
                               </Badge>
                             ) : null}
                             {(candidate as any).credential_score != null && (candidate as any).credential_score > 0 && (
                               <div>
                                 <div className="flex items-center justify-between mb-0.5">
-                                  <span className="text-caption text-muted-foreground">Credential</span>
+                                  <span className="text-caption text-muted-foreground">Credenciais</span>
                                   <span className="text-caption font-medium">{(candidate as any).credential_score}%</span>
                                 </div>
                                 <div className="h-1.5 w-full rounded-full bg-track overflow-hidden">
@@ -1856,7 +1856,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                 <span className="truncate max-w-[140px]">{candidate.owner_name}</span>
                               </div>
                             ) : (
-                              <span className="text-xs text-muted-foreground italic">Unassigned</span>
+                              <span className="text-xs text-muted-foreground italic">Não atribuído</span>
                             )
                           ) : (() => {
                             const recruiters = recruiterMap.get(candidate.id) || [];
@@ -1867,14 +1867,14 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                             return (
                               <div className="space-y-1 text-xs">
                                 {recruiters.map((r, idx) => (
-                                  <div key={idx} className="flex items-center gap-1 text-muted-foreground" title={`${r.is_primary ? 'Primary ' : ''}Recruiter: ${r.recruiter_name}`}>
+                                  <div key={idx} className="flex items-center gap-1 text-muted-foreground" title={`${r.is_primary ? 'Recrutador Principal' : 'Recrutador'}: ${r.recruiter_name}`}>
                                     <Briefcase className="h-3 w-3 shrink-0" />
                                     <span className="truncate max-w-[120px] font-medium text-foreground">{r.recruiter_name}</span>
                                     {r.is_primary && <Crown className="h-2.5 w-2.5 text-amber-500 fill-amber-400 shrink-0" />}
                                   </div>
                                 ))}
                                 {interviewers.map((iv, idx) => (
-                                  <div key={idx} className="flex items-center gap-1 text-muted-foreground" title={`Interviewer: ${iv.interviewer_name}`}>
+                                  <div key={idx} className="flex items-center gap-1 text-muted-foreground" title={`Entrevistador: ${iv.interviewer_name}`}>
                                     <Users className="h-3 w-3 shrink-0" />
                                     <span className="truncate max-w-[120px]">{iv.interviewer_name}</span>
                                   </div>
@@ -1902,7 +1902,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                         {!isDatabase && (
                         <TableCell>
                           {candidateAssignments.length === 0 ? (
-                            <span className="text-sm text-muted-foreground">None assigned</span>
+                            <span className="text-sm text-muted-foreground">Nenhuma atribuída</span>
                           ) : (
                             <div className="space-y-2">
                               {candidateAssignments.slice(0, 2).map(assignment => (
@@ -1934,7 +1934,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                               ))}
                               {candidateAssignments.length > 2 && (
                                 <span className="text-xs text-muted-foreground">
-                                  +{candidateAssignments.length - 2} more
+                                  +{candidateAssignments.length - 2} mais
                                 </span>
                               )}
                             </div>
@@ -1956,38 +1956,38 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                     {canManageCandidates && (candidateStatus === 'new' || candidateStatus === 'reviewing') && (
                                       <DropdownMenuItem onClick={() => openStatusDialog(candidate, 'shortlisted')}>
                                         <ThumbsUp className="h-4 w-4 mr-2" />
-                                        Mark as Hired
+                                        Marcar como Contratado
                                       </DropdownMenuItem>
                                     )}
                                     <DropdownMenuItem onClick={() => {
                                       const link = `${window.location.origin}/hiring?view=list&profile=${candidate.id}`;
                                       navigator.clipboard.writeText(link);
-                                      toast({ title: 'Profile link copied', description: 'Shareable link copied to clipboard' });
+                                      toast({ title: 'Link do perfil copiado', description: 'Link compartilhável copiado para a área de transferência' });
                                     }}>
                                       <LinkIcon className="h-4 w-4 mr-2" />
-                                      Copy Profile Link
+                                      Copiar Link do Perfil
                                     </DropdownMenuItem>
                                     {canManageCandidates && (
                                       <>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem onClick={() => openEdit(candidate)}>
                                           <Edit className="h-4 w-4 mr-2" />
-                                          Edit
+                                          Editar
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => openAddToJob(candidate)}>
                                           <Briefcase className="h-4 w-4 mr-2" />
-                                          Add to Job
+                                          Vincular à Vaga
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                           onClick={() => handleEnrich(candidate.id)}
                                           disabled={enrichingId === candidate.id}
                                         >
                                           <Sparkles className="h-4 w-4 mr-2" />
-                                          {enrichingId === candidate.id ? 'Enriching...' : (candidate as any).enrichment_score != null ? 'Re-enrich' : 'Enrich Profile'}
+                                          {enrichingId === candidate.id ? 'Enriquecendo...' : (candidate as any).enrichment_score != null ? 'Reenriquecer' : 'Enriquecer Perfil'}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => setTagsCandidate(candidate)}>
                                           <Tag className="h-4 w-4 mr-2" />
-                                          Manage Tags
+                                          Gerenciar Tags
                                         </DropdownMenuItem>
                                       </>
                                     )}
@@ -1999,7 +1999,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                           onClick={() => handleDelete(candidate.id)}
                                         >
                                           <Trash2 className="h-4 w-4 mr-2" />
-                                          Delete
+                                          Excluir
                                         </DropdownMenuItem>
                                       </>
                                     )}
@@ -2010,37 +2010,37 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                 {canManageCandidates && candidateStatus === 'new' && (
                                   <DropdownMenuItem onClick={() => handleStatusChange(candidate, 'reviewing')}>
                                     <Eye className="h-4 w-4 mr-2" />
-                                    Mark as Reviewing
+                                    Marcar como Em Triagem
                                   </DropdownMenuItem>
                                 )}
                                 {canManageCandidates && (candidateStatus === 'new' || candidateStatus === 'reviewing') && (
                                   <DropdownMenuItem onClick={() => openStatusDialog(candidate, 'shortlisted')}>
                                     <ThumbsUp className="h-4 w-4 mr-2" />
-                                    Mark as Hired
+                                    Marcar como Contratado
                                   </DropdownMenuItem>
                                 )}
                                 {canManageCandidates && candidateStatus !== 'rejected' && (
                                   <DropdownMenuItem onClick={() => openStatusDialog(candidate, 'rejected')}>
                                     <ThumbsDown className="h-4 w-4 mr-2" />
-                                    Reject
+                                    Recusar
                                   </DropdownMenuItem>
                                 )}
                                 {canManageCandidates && candidateStatus !== 'hold' && candidateStatus !== 'backout' && (
                                   <DropdownMenuItem onClick={() => openStatusDialog(candidate, 'hold')}>
                                     <Clock className="h-4 w-4 mr-2" />
-                                    Put on Hold
+                                    Colocar em Espera
                                   </DropdownMenuItem>
                                 )}
                                 {canManageCandidates && candidateStatus !== 'backout' && (
                                   <DropdownMenuItem onClick={() => openStatusDialog(candidate, 'backout')}>
                                     <UserX className="h-4 w-4 mr-2" />
-                                    Mark as Backout
+                                    Marcar como Desistência
                                   </DropdownMenuItem>
                                 )}
                                 {coverLetter && (
                                   <DropdownMenuItem onClick={() => setCoverLetterDialog({ open: true, content: coverLetter })}>
                                     <FileText className="h-4 w-4 mr-2" />
-                                    View Cover Letter
+                                    Ver Carta de Apresentação
                                   </DropdownMenuItem>
                                 )}
                                 <DropdownMenuItem onClick={() => {
@@ -2056,44 +2056,44 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                   <>
                                     <DropdownMenuItem onClick={() => openAssign(candidate)}>
                                       <FileText className="h-4 w-4 mr-2" />
-                                      Assign Assessment
+                                      Atribuir Avaliação
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => setPreScreenCandidate(candidate)}>
                                       <MessageSquare className="h-4 w-4 mr-2" />
-                                      Pre-Screen
+                                      Pré-Triagem
                                     </DropdownMenuItem>
                                   </>
                                 )}
                                 {(isAdminOrHR || isRecruiter) && (
                                   <DropdownMenuItem onClick={() => setInterviewerDialog({ open: true, candidateId: candidate.id, candidateName: candidate.name })}>
                                     <Users className="h-4 w-4 mr-2" />
-                                    Assign Interviewers
+                                    Atribuir Entrevistadores
                                   </DropdownMenuItem>
                                 )}
                                 {isInterviewer && (
                                   <DropdownMenuItem onClick={() => handleOpenFeedback(candidate.id)}>
                                     <ClipboardEdit className="h-4 w-4 mr-2" />
-                                    Add Feedback
+                                    Adicionar Feedback
                                   </DropdownMenuItem>
                                 )}
                                 {canManageCandidates && (candidate as any).job_id && (
                                   <DropdownMenuItem onClick={() => handleAnalyze(candidate.id)} disabled={analyzingId === candidate.id}>
                                     <Sparkles className="h-4 w-4 mr-2" />
-                                    {analyzingId === candidate.id ? 'Analyzing...' : 'Analyze Job Match'}
+                                    {analyzingId === candidate.id ? 'Analisando...' : 'Analisar Compatibilidade'}
                                   </DropdownMenuItem>
                                 )}
                                 {canManageCandidates && (
                                   <>
                                     <DropdownMenuItem onClick={() => openEdit(candidate)}>
                                       <Edit className="h-4 w-4 mr-2" />
-                                      Edit
+                                      Editar
                                     </DropdownMenuItem>
                                     <DropdownMenuItem 
                                       onClick={() => handleEnrich(candidate.id)} 
                                       disabled={enrichingId === candidate.id}
                                     >
                                       <Sparkles className="h-4 w-4 mr-2" />
-                                      {enrichingId === candidate.id ? 'Enriching...' : (candidate as any).enrichment_score != null ? 'Re-enrich Profile' : 'Enrich Profile'}
+                                      {enrichingId === candidate.id ? 'Enriquecendo...' : (candidate as any).enrichment_score != null ? 'Reenriquecer Perfil' : 'Enriquecer Perfil'}
                                     </DropdownMenuItem>
                                   </>
                                 )}
@@ -2105,7 +2105,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                                       onClick={() => handleDelete(candidate.id)}
                                     >
                                       <Trash2 className="h-4 w-4 mr-2" />
-                                      Delete
+                                      Excluir
                                     </DropdownMenuItem>
                                   </>
                                 )}
@@ -2128,7 +2128,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         {filteredCandidates.length > 0 && (
           <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <span>Rows per page:</span>
+              <span>Linhas por página:</span>
               <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setCurrentPage(1); }}>
                 <SelectTrigger className="h-8 w-[80px]">
                   <SelectValue />
@@ -2142,7 +2142,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             </div>
             <div className="flex items-center gap-4">
               <span>
-                {listTotal === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, listTotal)} of {listTotal}
+                {listTotal === 0 ? 0 : (currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, listTotal)} de {listTotal}
               </span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" className="h-8 px-2" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>«</Button>
@@ -2158,21 +2158,21 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         <Dialog open={isFormOpen} onOpenChange={handleFormOpenChange}>
           <DialogContent className="max-w-2xl max-h-[85dvh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{selectedCandidate ? 'Edit Candidate' : 'Add Candidate'}</DialogTitle>
+              <DialogTitle>{selectedCandidate ? 'Editar Candidato' : 'Adicionar Candidato'}</DialogTitle>
               <DialogDescription>
                 {selectedCandidate
-                  ? 'Update candidate information.'
+                  ? 'Atualize as informações do candidato.'
                   : addMode === 'bulk'
-                    ? 'Upload multiple resumes — each will be parsed and added automatically.'
-                    : 'Upload a resume to auto-fill details, then review and save.'}
+                    ? 'Envie múltiplos currículos — cada um será analisado e cadastrado automaticamente.'
+                    : 'Envie um currículo para preenchimento automático, depois revise e salve.'}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               {!selectedCandidate && (
                 <Tabs value={addMode} onValueChange={(v) => setAddMode(v as 'single' | 'bulk')}>
                   <TabsList className="w-full">
-                    <TabsTrigger value="single" className="flex-1">Single</TabsTrigger>
-                    <TabsTrigger value="bulk" className="flex-1">Bulk Resumes</TabsTrigger>
+                    <TabsTrigger value="single" className="flex-1">Individual</TabsTrigger>
+                    <TabsTrigger value="bulk" className="flex-1">Múltiplos Currículos</TabsTrigger>
                   </TabsList>
                 </Tabs>
               )}
@@ -2191,7 +2191,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               {/* Resume Upload Section */}
               {(selectedCandidate || addMode === 'single') && (
               <div className="space-y-2">
-                <Label>Upload Resume (PDF/Word)</Label>
+                <Label>Upload de Currículo (PDF/Word)</Label>
                 <div className="flex flex-wrap items-center gap-3">
                   <input
                     ref={fileInputRef}
@@ -2208,11 +2208,11 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                     className="gap-2"
                   >
                     {isUploading ? (
-                      <><Loader2 className="h-4 w-4 animate-spin" /> Uploading...</>
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Enviando...</>
                     ) : isParsing ? (
-                      <><Loader2 className="h-4 w-4 animate-spin" /> Parsing {parsingFileName || 'resume'}…</>
+                      <><Loader2 className="h-4 w-4 animate-spin" /> Analisando {parsingFileName || 'currículo'}…</>
                     ) : (
-                      <><Upload className="h-4 w-4" /> Upload CV to Auto-fill</>
+                      <><Upload className="h-4 w-4" /> Upload de CV para Preencher</>
                     )}
                   </Button>
                   {form.resume_url && (
@@ -2223,20 +2223,20 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                         onClick={() => openResumeUrl(form.resume_url)}
                         className="text-primary underline"
                       >
-                        {selectedCandidate ? 'View Resume' : 'Resume uploaded'}
+                        {selectedCandidate ? 'Ver Currículo' : 'Currículo enviado'}
                       </button>
                     </span>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  AI will extract candidate details from the resume automatically.
+                  A IA extrairá as informações do candidato a partir do currículo automaticamente.
                 </p>
               </div>
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name *</Label>
+                  <Label htmlFor="name">Nome Completo *</Label>
                   <Input
                     id="name"
                     placeholder="Rahul Sharma"
@@ -2245,7 +2245,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email">E-mail *</Label>
                   <Input
                     id="email"
                     type="email"
@@ -2257,7 +2257,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">Telefone</Label>
                   <Input
                     id="phone"
                     placeholder="+91 98765 43210"
@@ -2266,7 +2266,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="linkedin_url">LinkedIn URL</Label>
+                  <Label htmlFor="linkedin_url">URL do LinkedIn</Label>
                   <Input
                     id="linkedin_url"
                     placeholder="https://linkedin.com/in/rahulsharma"
@@ -2277,16 +2277,16 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Apply for Job</Label>
+                  <Label>Vincular à Vaga</Label>
                   <Select
                     value={form.job_id}
                     onValueChange={(value) => setForm(prev => ({ ...prev, job_id: value === 'none' ? '' : value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a job (optional)" />
+                      <SelectValue placeholder="Selecione uma vaga (opcional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No specific job</SelectItem>
+                      <SelectItem value="none">Nenhuma vaga específica</SelectItem>
                       {jobs.map(job => (
                         <SelectItem key={job.id} value={job.id}>
                           {job.title}{job.status !== 'open' ? ` (${job.status})` : ''}
@@ -2298,7 +2298,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="role">Role Applied</Label>
+                  <Label htmlFor="role">Cargo Desejado</Label>
                   <Input
                     id="role"
                     placeholder="Frontend Developer"
@@ -2307,13 +2307,13 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Source</Label>
+                  <Label>Origem</Label>
                   <Select
                     value={form.source}
                     onValueChange={(value) => setForm(prev => ({ ...prev, source: value, referred_by: value !== 'referral' ? '' : prev.referred_by }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select source" />
+                      <SelectValue placeholder="Selecione a origem" />
                     </SelectTrigger>
                     <SelectContent>
                       {CANDIDATE_SOURCE_SELECT_OPTIONS.map(({ value, label }) => (
@@ -2327,10 +2327,10 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               {/* Referred by — only shown when source = referral */}
               {form.source === 'referral' && (
                 <div className="space-y-2">
-                  <Label htmlFor="referred_by">Referred by <span className="text-muted-foreground font-normal text-xs">(employee name)</span></Label>
+                  <Label htmlFor="referred_by">Indicado por <span className="text-muted-foreground font-normal text-xs">(nome do colaborador)</span></Label>
                   <Input
                     id="referred_by"
-                    placeholder="e.g. Rahul Mehta — Engineering"
+                    placeholder="ex: João Silva — Engenharia"
                     value={form.referred_by}
                     onChange={(e) => setForm(prev => ({ ...prev, referred_by: e.target.value }))}
                   />
@@ -2340,7 +2340,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               {/* Current Position */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="current_role">Current Role</Label>
+                  <Label htmlFor="current_role">Cargo Atual</Label>
                   <Input
                     id="current_role"
                     placeholder="Software Engineer"
@@ -2349,7 +2349,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="current_company">Current Company</Label>
+                  <Label htmlFor="current_company">Empresa Atual</Label>
                   <Input
                     id="current_company"
                     placeholder="Google"
@@ -2361,7 +2361,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="experience_years">Experience (Years)</Label>
+                  <Label htmlFor="experience_years">Experiência (Anos)</Label>
                   <Input
                     id="experience_years"
                     type="number"
@@ -2371,7 +2371,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="skills">Skills (comma separated)</Label>
+                  <Label htmlFor="skills">Habilidades (separadas por vírgula)</Label>
                   <Input
                     id="skills"
                     placeholder="React, TypeScript, Node.js"
@@ -2386,7 +2386,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-1 text-base font-semibold">
                     <Building2 className="h-4 w-4" />
-                    Work Experience
+                    Experiência Profissional
                   </Label>
                   <Button
                     type="button"
@@ -2395,29 +2395,29 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                     onClick={() => setForm(prev => ({ ...prev, work_experience: [...(prev.work_experience || []), { company: '', title: '', start_date: '', end_date: '', description: '' }] }))}
                   >
                     <Plus className="h-3 w-3 mr-1" />
-                    Add
+                    Adicionar
                   </Button>
                 </div>
                 {(!form.work_experience || form.work_experience.length === 0) && (
-                  <p className="text-sm text-muted-foreground">No experience added. Upload a resume to auto-fill or add manually.</p>
+                  <p className="text-sm text-muted-foreground">Nenhuma experiência adicionada. Envie um currículo para preencher automaticamente ou adicione manualmente.</p>
                 )}
                 {(form.work_experience || []).map((exp: any, idx: number) => (
                   <div key={idx} className="border rounded-lg p-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-muted-foreground">Experience {idx + 1}</span>
+                      <span className="text-sm font-medium text-muted-foreground">Experiência {idx + 1}</span>
                       <Button type="button" variant="ghost" size="sm" onClick={() => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).filter((_: any, i: number) => i !== idx) }))}>
                         <Trash2 className="h-3 w-3 text-destructive" />
                       </Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Input placeholder="Company" value={exp.company || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, company: e.target.value } : item) }))} />
-                      <Input placeholder="Job Title" value={exp.title || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, title: e.target.value } : item) }))} />
+                      <Input placeholder="Empresa" value={exp.company || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, company: e.target.value } : item) }))} />
+                      <Input placeholder="Cargo" value={exp.title || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, title: e.target.value } : item) }))} />
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Input placeholder="Start (e.g. 2020-01)" value={exp.start_date || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, start_date: e.target.value } : item) }))} />
-                      <Input placeholder="End (e.g. Present)" value={exp.end_date || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, end_date: e.target.value } : item) }))} />
+                      <Input placeholder="Início (ex: 2020-01)" value={exp.start_date || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, start_date: e.target.value } : item) }))} />
+                      <Input placeholder="Fim (ex: Atual)" value={exp.end_date || ''} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, end_date: e.target.value } : item) }))} />
                     </div>
-                    <Textarea placeholder="Brief description of role" value={exp.description || ''} rows={2} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, description: e.target.value } : item) }))} />
+                    <Textarea placeholder="Breve descrição das responsabilidades" value={exp.description || ''} rows={2} onChange={e => setForm(prev => ({ ...prev, work_experience: (prev.work_experience || []).map((item: any, i: number) => i === idx ? { ...item, description: e.target.value } : item) }))} />
                   </div>
                 ))}
               </div>
@@ -2427,32 +2427,32 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-1 text-base font-semibold">
                     <GraduationCap className="h-4 w-4" />
-                    Education
+                    Formação Acadêmica
                   </Label>
                   <Button type="button" variant="outline" size="sm" onClick={() => setForm(prev => ({ ...prev, education: [...(prev.education || []), { institution: '', degree: '', field: '', start_date: '', end_date: '' }] }))}>
                     <Plus className="h-3 w-3 mr-1" />
-                    Add
+                    Adicionar
                   </Button>
                 </div>
                 {(!form.education || form.education.length === 0) && (
-                  <p className="text-sm text-muted-foreground">No education added. Upload a resume to auto-fill or add manually.</p>
+                  <p className="text-sm text-muted-foreground">Nenhuma formação adicionada. Envie um currículo para preencher automaticamente ou adicione manualmente.</p>
                 )}
                 {(form.education || []).map((edu: any, idx: number) => (
                   <div key={idx} className="border rounded-lg p-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-muted-foreground">Education {idx + 1}</span>
+                      <span className="text-sm font-medium text-muted-foreground">Formação {idx + 1}</span>
                       <Button type="button" variant="ghost" size="sm" onClick={() => setForm(prev => ({ ...prev, education: (prev.education || []).filter((_: any, i: number) => i !== idx) }))}>
                         <Trash2 className="h-3 w-3 text-destructive" />
                       </Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Input placeholder="Institution" value={edu.institution || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, institution: e.target.value } : item) }))} />
-                      <Input placeholder="Degree" value={edu.degree || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, degree: e.target.value } : item) }))} />
+                      <Input placeholder="Instituição" value={edu.institution || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, institution: e.target.value } : item) }))} />
+                      <Input placeholder="Grau / Diploma" value={edu.degree || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, degree: e.target.value } : item) }))} />
                     </div>
-                    <Input placeholder="Field of Study" value={edu.field || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, field: e.target.value } : item) }))} />
+                    <Input placeholder="Área de Estudo" value={edu.field || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, field: e.target.value } : item) }))} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <Input placeholder="Start Year" value={edu.start_date || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, start_date: e.target.value } : item) }))} />
-                      <Input placeholder="End Year" value={edu.end_date || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, end_date: e.target.value } : item) }))} />
+                      <Input placeholder="Ano de Início" value={edu.start_date || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, start_date: e.target.value } : item) }))} />
+                      <Input placeholder="Ano de Conclusão" value={edu.end_date || ''} onChange={e => setForm(prev => ({ ...prev, education: (prev.education || []).map((item: any, i: number) => i === idx ? { ...item, end_date: e.target.value } : item) }))} />
                     </div>
                   </div>
                 ))}
@@ -2463,21 +2463,21 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-1 text-base font-semibold">
                     <Award className="h-4 w-4" />
-                    Certifications
+                    Certificações
                   </Label>
                   <Button type="button" variant="outline" size="sm" onClick={() => setForm(prev => ({ ...prev, certifications: [...(prev.certifications || []), { name: '', issuer: '', year: '' }] }))}>
                     <Plus className="h-3 w-3 mr-1" />
-                    Add
+                    Adicionar
                   </Button>
                 </div>
                 {(!form.certifications || form.certifications.length === 0) && (
-                  <p className="text-sm text-muted-foreground">No certifications added. Upload a resume to auto-fill or add manually.</p>
+                  <p className="text-sm text-muted-foreground">Nenhuma certificação adicionada. Envie um currículo para preencher automaticamente ou adicione manualmente.</p>
                 )}
                 {(form.certifications || []).map((cert: any, idx: number) => (
                   <div key={idx} className="border rounded-lg p-3 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-muted-foreground">
-                        Certification {idx + 1}
+                        Certificação {idx + 1}
                         {cert.tier && <Badge variant="outline" className="ml-2 text-[10px]">Tier {cert.tier}</Badge>}
                         {cert.is_premium && <Badge className="ml-1 text-[10px] bg-amber-100 text-amber-800 border-amber-300">🏅 Premium</Badge>}
                       </span>
@@ -2486,10 +2486,10 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                       </Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                      <Input placeholder="Certification Name" className="sm:col-span-2" value={cert.name || ''} onChange={e => setForm(prev => ({ ...prev, certifications: (prev.certifications || []).map((item: any, i: number) => i === idx ? { ...item, name: e.target.value } : item) }))} />
-                      <Input placeholder="Year" value={cert.year || ''} onChange={e => setForm(prev => ({ ...prev, certifications: (prev.certifications || []).map((item: any, i: number) => i === idx ? { ...item, year: e.target.value } : item) }))} />
+                      <Input placeholder="Nome da Certificação" className="sm:col-span-2" value={cert.name || ''} onChange={e => setForm(prev => ({ ...prev, certifications: (prev.certifications || []).map((item: any, i: number) => i === idx ? { ...item, name: e.target.value } : item) }))} />
+                      <Input placeholder="Ano" value={cert.year || ''} onChange={e => setForm(prev => ({ ...prev, certifications: (prev.certifications || []).map((item: any, i: number) => i === idx ? { ...item, year: e.target.value } : item) }))} />
                     </div>
-                    <Input placeholder="Issuer (e.g. AWS, PMI)" value={cert.issuer || ''} onChange={e => setForm(prev => ({ ...prev, certifications: (prev.certifications || []).map((item: any, i: number) => i === idx ? { ...item, issuer: e.target.value } : item) }))} />
+                    <Input placeholder="Emissor (ex: AWS, PMI)" value={cert.issuer || ''} onChange={e => setForm(prev => ({ ...prev, certifications: (prev.certifications || []).map((item: any, i: number) => i === idx ? { ...item, issuer: e.target.value } : item) }))} />
                   </div>
                 ))}
               </div>
@@ -2499,39 +2499,39 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-1 text-base font-semibold">
                     <Medal className="h-4 w-4" />
-                    Awards & Achievements
+                    Prêmios e Conquistas
                   </Label>
                   <Button type="button" variant="outline" size="sm" onClick={() => setForm(prev => ({ ...prev, awards: [...(prev.awards || []), { title: '', issuer: '', year: '' }] }))}>
                     <Plus className="h-3 w-3 mr-1" />
-                    Add
+                    Adicionar
                   </Button>
                 </div>
                 {(!form.awards || form.awards.length === 0) && (
-                  <p className="text-sm text-muted-foreground">No awards added. Upload a resume to auto-fill or add manually.</p>
+                  <p className="text-sm text-muted-foreground">Nenhum prêmio adicionado. Envie um currículo para preencher automaticamente ou adicione manualmente.</p>
                 )}
                 {(form.awards || []).map((award: any, idx: number) => (
                   <div key={idx} className="border rounded-lg p-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-muted-foreground">Award {idx + 1}</span>
+                      <span className="text-sm font-medium text-muted-foreground">Prêmio {idx + 1}</span>
                       <Button type="button" variant="ghost" size="sm" onClick={() => setForm(prev => ({ ...prev, awards: (prev.awards || []).filter((_: any, i: number) => i !== idx) }))}>
                         <Trash2 className="h-3 w-3 text-destructive" />
                       </Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                      <Input placeholder="Award Title" className="sm:col-span-2" value={award.title || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, title: e.target.value } : item) }))} />
+                      <Input placeholder="Título do Prêmio" className="sm:col-span-2" value={award.title || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, title: e.target.value } : item) }))} />
                       <Input placeholder="Year" value={award.year || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, year: e.target.value } : item) }))} />
                     </div>
-                    <Input placeholder="Issuer / Organization" value={award.issuer || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, issuer: e.target.value } : item) }))} />
+                    <Input placeholder="Emissor / Organização" value={award.issuer || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, issuer: e.target.value } : item) }))} />
                   </div>
                 ))}
               </div>
 
               {/* Notes */}
               <div className="space-y-2 pt-4 border-t">
-                <Label htmlFor="notes">Notes</Label>
+                <Label htmlFor="notes">Observações</Label>
                 <Textarea
                   id="notes"
-                  placeholder="Additional notes about the candidate..."
+                  placeholder="Observações adicionais sobre o candidato..."
                   value={form.notes}
                   onChange={(e) => setForm(prev => ({ ...prev, notes: e.target.value }))}
                 />
@@ -2541,9 +2541,9 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               {form.credential_score != null && (
                 <div className="flex flex-wrap items-center gap-2 p-3 rounded-lg bg-muted/50 border">
                   <Award className="h-4 w-4 text-amber-600" />
-                  <span className="text-sm font-medium">Credential Score:</span>
+                  <span className="text-sm font-medium">Pontuação de Credenciais:</span>
                   <span className="text-sm font-bold text-amber-700">{form.credential_score}/100</span>
-                  <span className="text-xs text-muted-foreground ml-auto">Auto-calculated from certifications & education</span>
+                  <span className="text-xs text-muted-foreground ml-auto">Calculado automaticamente a partir de certificações e formação acadêmica</span>
                 </div>
               )}
               </>
@@ -2551,9 +2551,9 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             </div>
             {(selectedCandidate || addMode === 'single') && (
             <DialogFooter>
-              <Button variant="outline" onClick={() => handleFormOpenChange(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => handleFormOpenChange(false)}>Cancelar</Button>
               <Button onClick={handleSubmit} disabled={isPending || isUploading || isParsing || !form.name.trim() || !form.email.trim()}>
-                {isPending ? 'Saving...' : selectedCandidate ? 'Update' : 'Add Candidate'}
+                {isPending ? 'Salvando...' : selectedCandidate ? 'Atualizar' : 'Adicionar Candidato'}
               </Button>
             </DialogFooter>
             )}
@@ -2564,9 +2564,9 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
         <Dialog open={coverLetterDialog.open} onOpenChange={(open) => setCoverLetterDialog(prev => ({ ...prev, open }))}>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>Cover Letter</DialogTitle>
+              <DialogTitle>Carta de Apresentação</DialogTitle>
               <DialogDescription className="sr-only">
-                Full cover letter text submitted with the candidate application.
+                Texto completo da carta de apresentação enviada com a candidatura.
               </DialogDescription>
             </DialogHeader>
             <div className="whitespace-pre-wrap text-sm text-muted-foreground max-h-[400px] overflow-y-auto">
@@ -2583,14 +2583,14 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 {candidateStatusLabels[statusDialog.status] || statusDialog.status} — {statusDialog.candidate?.name}
               </DialogTitle>
               <DialogDescription>
-                Change status to <strong>{candidateStatusLabels[statusDialog.status]}</strong>. You can optionally send an email notification.
+                Alterar status para <strong>{candidateStatusLabels[statusDialog.status]}</strong>. Você pode opcionalmente enviar uma notificação por e-mail.
               </DialogDescription>
             </DialogHeader>
             {(statusDialog.status === 'rejected' || statusDialog.status === 'hold' || statusDialog.status === 'backout') && (
               <Textarea
                 placeholder={statusDialog.sendEmail && (statusDialog.status === 'rejected' || statusDialog.status === 'backout')
-                  ? 'Reason (required when sending email)...'
-                  : 'Reason (optional)...'}
+                  ? 'Motivo (obrigatório ao enviar e-mail)...'
+                  : 'Motivo (opcional)...'}
                 value={statusDialog.reason}
                 onChange={(e) => setStatusDialog(prev => ({ ...prev, reason: e.target.value }))}
                 rows={3}
@@ -2603,16 +2603,16 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 onCheckedChange={(checked) => setStatusDialog(prev => ({ ...prev, sendEmail: !!checked }))}
               />
               <label htmlFor="send-email-toggle" className="text-sm font-medium cursor-pointer">
-                Send email notification to candidate
+                Enviar notificação por e-mail para o candidato
               </label>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setStatusDialog({ open: false, candidate: null, status: '', reason: '', sendEmail: false })}>Cancel</Button>
+              <Button variant="outline" onClick={() => setStatusDialog({ open: false, candidate: null, status: '', reason: '', sendEmail: false })}>Cancelar</Button>
               <Button
                 variant={statusDialog.status === 'rejected' || statusDialog.status === 'backout' ? 'destructive' : 'default'}
                 onClick={confirmStatusChange}
               >
-                {statusDialog.sendEmail ? `${candidateStatusLabels[statusDialog.status]} & Send Email` : `${candidateStatusLabels[statusDialog.status]}`}
+                {statusDialog.sendEmail ? `${candidateStatusLabels[statusDialog.status]} e Enviar E-mail` : `${candidateStatusLabels[statusDialog.status]}`}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -2677,10 +2677,10 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <ShieldAlert className="h-5 w-5 text-destructive" />
-                Access Denied
+                Acesso Negado
               </DialogTitle>
               <DialogDescription>
-                You do not have permission to view this candidate's profile. Please contact your administrator to request access.
+                Você não tem permissão para visualizar o perfil deste candidato. Entre em contato com seu administrador para solicitar acesso.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -2689,7 +2689,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                 searchParams.delete('profile');
                 setSearchParams(searchParams, { replace: true });
               }}>
-                Close
+                Fechar
               </Button>
             </DialogFooter>
           </DialogContent>

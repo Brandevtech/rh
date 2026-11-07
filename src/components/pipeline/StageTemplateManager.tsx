@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Trash2, GripVertical, Copy } from 'lucide-react';
-import { useStageTemplates, type InterviewStageTemplate } from '@/hooks/useInterviewPipeline';
+import { useStageTemplates } from '@/hooks/useInterviewPipeline';
 import { Textarea } from '@/components/ui/textarea';
 
 interface StageTemplateManagerProps {
@@ -20,9 +20,9 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [stages, setStages] = useState<{ name: string; order: number }[]>([
-    { name: 'Screening', order: 1 },
-    { name: 'Technical Round 1', order: 2 },
-    { name: 'HR', order: 3 },
+    { name: 'Triagem Inicial', order: 1 },
+    { name: 'Entrevista Técnica', order: 2 },
+    { name: 'Entrevista RH / Final', order: 3 },
   ]);
 
   const addStage = () => {
@@ -44,7 +44,11 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
         setShowCreate(false);
         setName('');
         setDescription('');
-        setStages([{ name: 'Screening', order: 1 }, { name: 'Technical Round 1', order: 2 }, { name: 'HR', order: 3 }]);
+        setStages([
+          { name: 'Triagem Inicial', order: 1 },
+          { name: 'Entrevista Técnica', order: 2 },
+          { name: 'Entrevista RH / Final', order: 3 },
+        ]);
       },
     });
   };
@@ -52,18 +56,18 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Interview Stage Templates</h3>
+        <h3 className="text-lg font-semibold">Modelos de Etapas de Entrevista</h3>
         <Button size="sm" onClick={() => setShowCreate(true)} className="gap-1">
-          <Plus className="w-4 h-4" /> New Template
+          <Plus className="w-4 h-4" /> Novo Modelo
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="text-center py-8 text-muted-foreground">Loading templates...</div>
+        <div className="text-center py-8 text-muted-foreground">Carregando modelos...</div>
       ) : templates.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
-            No templates yet. Create one to quickly set up interview stages for jobs.
+            Nenhum modelo cadastrado. Crie um para configurar rapidamente as etapas das vagas.
           </CardContent>
         </Card>
       ) : (
@@ -86,7 +90,7 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
                   <div className="flex gap-1">
                     {showApply && onApplyTemplate && (
                       <Button size="sm" variant="outline" onClick={() => onApplyTemplate(t.stages)} className="gap-1">
-                        <Copy className="w-3 h-3" /> Apply
+                        <Copy className="w-3 h-3" /> Aplicar
                       </Button>
                     )}
                     <Button size="sm" variant="ghost" onClick={() => deleteTemplate.mutate(t.id)} className="text-destructive hover:text-destructive">
@@ -104,19 +108,19 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Create Stage Template</DialogTitle>
+            <DialogTitle>Criar Modelo de Etapas</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="space-y-1.5">
-              <Label>Template Name</Label>
-              <Input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Standard Tech Hiring" />
+              <Label>Nome do Modelo</Label>
+              <Input value={name} onChange={e => setName(e.target.value)} placeholder="Ex: Processo Técnico Padrão" />
             </div>
             <div className="space-y-1.5">
-              <Label>Description (optional)</Label>
-              <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe when to use this template" rows={2} />
+              <Label>Descrição (opcional)</Label>
+              <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Descreva quando utilizar este modelo" rows={2} />
             </div>
             <div className="space-y-2">
-              <Label>Stages</Label>
+              <Label>Etapas</Label>
               {stages.map((s, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -124,7 +128,7 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
                   <Input
                     value={s.name}
                     onChange={e => updateStageName(i, e.target.value)}
-                    placeholder="Stage name"
+                    placeholder="Nome da etapa"
                     className="flex-1"
                   />
                   {stages.length > 1 && (
@@ -135,14 +139,14 @@ export function StageTemplateManager({ onApplyTemplate, showApply }: StageTempla
                 </div>
               ))}
               <Button size="sm" variant="outline" onClick={addStage} className="w-full gap-1">
-                <Plus className="w-3.5 h-3.5" /> Add Stage
+                <Plus className="w-3.5 h-3.5" /> Adicionar Etapa
               </Button>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCreate(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setShowCreate(false)}>Cancelar</Button>
             <Button onClick={handleCreate} disabled={!name.trim() || stages.some(s => !s.name.trim()) || createTemplate.isPending}>
-              {createTemplate.isPending ? 'Creating...' : 'Create Template'}
+              {createTemplate.isPending ? 'Criando...' : 'Criar Modelo'}
             </Button>
           </DialogFooter>
         </DialogContent>

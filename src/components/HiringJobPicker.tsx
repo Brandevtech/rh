@@ -46,7 +46,7 @@ export function HiringJobPicker({ showAllJobs = false }: HiringJobPickerProps) {
   };
 
   if (availableJobs.length === 0) {
-    return <p className="text-sm text-muted-foreground">No open jobs found.</p>;
+    return <p className="text-sm text-muted-foreground">Nenhuma vaga aberta encontrada.</p>;
   }
 
   return (
@@ -63,7 +63,7 @@ export function HiringJobPicker({ showAllJobs = false }: HiringJobPickerProps) {
                 : 'border-transparent text-muted-foreground hover:text-foreground',
             )}
           >
-            All jobs
+            Todas as vagas
           </button>
         )}
         {availableJobs.map((job: { id: string; title: string; status: string }) => {
@@ -83,8 +83,8 @@ export function HiringJobPicker({ showAllJobs = false }: HiringJobPickerProps) {
               <button
                 type="button"
                 onClick={() => togglePin(job.id)}
-                title={pinned ? 'Unpin job' : 'Pin job to front'}
-                aria-label={pinned ? `Unpin ${job.title}` : `Pin ${job.title} to front`}
+                title={pinned ? 'Desafixar vaga' : 'Fixar vaga no início'}
+                aria-label={pinned ? `Desafixar ${job.title}` : `Fixar ${job.title} no início`}
                 className={cn(
                   'pl-3 pr-1 py-2.5 transition-opacity duration-fast ease-out',
                   pinned ? 'text-primary opacity-100' : 'text-muted-foreground opacity-0 group-hover:opacity-70',
@@ -100,23 +100,27 @@ export function HiringJobPicker({ showAllJobs = false }: HiringJobPickerProps) {
                   isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
                 )}
               >
+                <span>{job.title}</span>
                 {job.status === 'paused' && (
-                  <Pause className="h-3 w-3 shrink-0 text-[hsl(var(--chip-warning-text))]" aria-label="Paused" />
-                )}
-                {job.title}
-                {pendingCount > 0 && (
-                  <Badge
-                    variant="destructive"
-                    className="h-5 min-w-5 justify-center px-1.5 tabular-nums shrink-0"
-                    title={`${pendingCount} pending approval`}
-                  >
-                    {pendingCount}
+                  <Badge variant="neutral" className="gap-1 text-[10px] px-1 py-0">
+                    <Pause className="h-2.5 w-2.5" /> Pausada
                   </Badge>
                 )}
                 {count > 0 && (
-                  <span className="text-caption tabular-nums bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full leading-none shrink-0">
+                  <Badge
+                    variant={isActive ? 'default' : 'neutral'}
+                    className="text-xs px-1.5 py-0"
+                  >
                     {count}
-                  </span>
+                  </Badge>
+                )}
+                {pendingCount > 0 && (
+                  <Badge
+                    className="bg-violet-500 text-white hover:bg-violet-600 text-xs px-1.5 py-0"
+                    title={`${pendingCount} aprovação pendente`}
+                  >
+                    {pendingCount}
+                  </Badge>
                 )}
               </button>
             </div>

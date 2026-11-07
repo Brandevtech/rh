@@ -130,11 +130,11 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
 
     Array.from(fileList).forEach(file => {
       if (!VALID_TYPES.includes(file.type)) {
-        errors.push(`${file.name}: Not a PDF or Word file`);
+        errors.push(`${file.name}: Não é um arquivo PDF ou Word`);
         return;
       }
       if (file.size > MAX_FILE_SIZE) {
-        errors.push(`${file.name}: Exceeds 10MB limit`);
+        errors.push(`${file.name}: Excede o limite de 10MB`);
         return;
       }
       if (files.some(f => f.file.name === file.name && f.file.size === file.size)) {
@@ -150,7 +150,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
     if (errors.length > 0) {
       toast({
         variant: 'destructive',
-        title: `${errors.length} file(s) skipped`,
+        title: `${errors.length} arquivo(s) ignorado(s)`,
         description: errors.slice(0, 3).join('\n'),
       });
     }
@@ -185,7 +185,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
   const addEmailToCandidate = async (rf: ResumeFile) => {
     const email = rf.manualEmail?.trim();
     if (!email || !email.includes('@')) {
-      toast({ variant: 'destructive', title: 'Enter a valid email address' });
+      toast({ variant: 'destructive', title: 'Informe um endereço de e-mail válido' });
       return;
     }
     if (!rf.candidateId) return;
@@ -200,7 +200,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
       if (error) {
         throw new Error(
           error.message.includes('duplicate')
-            ? `${email} already exists`
+            ? `${email} já existe no sistema`
             : error.message
         );
       }
@@ -209,7 +209,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
       await queryClient.invalidateQueries({ queryKey: ['candidates'] });
     } catch (err: any) {
       updateFile(rf.id, { status: 'saved_incomplete', error: err.message });
-      toast({ variant: 'destructive', title: 'Update failed', description: err.message });
+      toast({ variant: 'destructive', title: 'Falha na atualização', description: err.message });
     } finally {
       setSavingEmailId(null);
     }
@@ -240,17 +240,17 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
         const storageName = `bulk-${authUser?.id}-${Date.now()}-${i}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage.from('resumes').upload(storageName, rf.file);
-        if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+        if (uploadError) throw new Error(`Falha no upload: ${uploadError.message}`);
 
         updateFile(rf.id, { status: 'parsing' });
         const { data: parseData, error: parseError } = await supabase.functions.invoke('parse-resume', {
           body: { resume_url: storageName },
         });
 
-        if (parseError) throw new Error(`Parse failed: ${parseError.message}`);
+        if (parseError) throw new Error(`Falha no processamento: ${parseError.message}`);
 
         if (!parseData?.success || !parseData?.data) {
-          throw new Error(parseData?.error || 'No data extracted from resume');
+          throw new Error(parseData?.error || 'Nenhum dado extraído do currículo');
         }
 
         const mapped = mapParsedResume(parseData.data);
@@ -289,7 +289,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
           if (insertError.message.includes('duplicate') || insertError.code === '23505') {
             updateFile(rf.id, {
               status: 'error',
-              error: `Skipped — ${candidateEmail ?? 'candidate'} already exists in the system`,
+              error: `Ignorado — ${candidateEmail ?? 'candidato'} já cadastrado no sistema`,
             });
             setProcessedCount(prev => prev + 1);
             failCount++;
@@ -346,12 +346,12 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
     await queryClient.invalidateQueries({ queryKey: ['pending-approval'] });
     await queryClient.invalidateQueries({ queryKey: ['pending-approval-counts'] });
 
-    const parts = [`${successCount} added`];
-    if (incompleteCount > 0) parts.push(`${incompleteCount} saved (missing info)`);
-    if (failCount > 0) parts.push(`${failCount} failed`);
+    const parts = [`${successCount} adicionado(s)`];
+    if (incompleteCount > 0) parts.push(`${incompleteCount} salvo(s) (dados incompletos)`);
+    if (failCount > 0) parts.push(`${failCount} com falha`);
     toast({
-      title: 'Bulk upload complete',
-      description: `${parts.join(', ')} out of ${files.length} resumes`,
+      title: 'Upload em lote concluído',
+      description: `${parts.join(', ')} de ${files.length} currículo(s)`,
     });
   };
 
@@ -389,13 +389,13 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
 
   const statusLabel = (status: FileStatus) => {
     switch (status) {
-      case 'pending': return 'Queued';
-      case 'uploading': return 'Uploading…';
-      case 'parsing': return 'AI Parsing…';
-      case 'saving': return 'Saving…';
-      case 'done': return 'Done';
-      case 'saved_incomplete': return 'Saved (incomplete)';
-      case 'error': return 'Failed';
+      case 'pending': return 'Na fila';
+      case 'uploading': return 'Enviando…';
+      case 'parsing': return 'Análise por IA…';
+      case 'saving': return 'Salvando…';
+      case 'done': return 'Concluído';
+      case 'saved_incomplete': return 'Salvo (incompleto)';
+      case 'error': return 'Falhou';
     }
   };
 
@@ -404,12 +404,12 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
   const footerButtons = (
     <>
       <Button variant="outline" onClick={handleClose} disabled={isProcessing}>
-        {doneCount > 0 && !isProcessing ? 'Done' : 'Cancel'}
+        {doneCount > 0 && !isProcessing ? 'Concluído' : 'Cancelar'}
       </Button>
       {pendingCount > 0 && !isProcessing && (
         <Button onClick={processFiles} disabled={!canProcess} className="gap-2">
           <Upload className="h-4 w-4" />
-          Process {pendingCount} Resume{pendingCount !== 1 ? 's' : ''}
+          Processar {pendingCount} Currículo{pendingCount !== 1 ? 's' : ''}
         </Button>
       )}
     </>
@@ -422,28 +422,28 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
           <div className="flex items-center gap-2">
             <Briefcase className="h-4 w-4 text-muted-foreground" />
             <label className="text-sm font-medium">
-              Assign to Job
+              Vincular à Vaga
               {isRecruiter && <span className="text-destructive ml-1">*</span>}
             </label>
           </div>
           {loadingJobs ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading jobs…
+              <Loader2 className="h-4 w-4 animate-spin" /> Carregando vagas…
             </div>
           ) : jobs.length === 0 ? (
             <p className="text-sm text-muted-foreground py-2">
               {isRecruiter
-                ? 'No jobs assigned to you. Contact an admin to assign you to a job first.'
-                : 'No jobs available. Create a job first.'}
+                ? 'Nenhuma vaga atribuída a você. Entre em contato com um administrador.'
+                : 'Nenhuma vaga disponível. Crie uma vaga primeiro.'}
             </p>
           ) : (
             <Select value={selectedJobId} onValueChange={setSelectedJobId} disabled={isProcessing}>
               <SelectTrigger>
-                <SelectValue placeholder={isRecruiter ? 'Select a job (required)' : 'Select a job (optional)'} />
+                <SelectValue placeholder={isRecruiter ? 'Selecione uma vaga (obrigatório)' : 'Selecione uma vaga (opcional)'} />
               </SelectTrigger>
               <SelectContent>
                 {isAdminOrHr && (
-                  <SelectItem value="__none__">— No job (unassigned) —</SelectItem>
+                  <SelectItem value="__none__">— Nenhuma vaga (não vinculado) —</SelectItem>
                 )}
                 {jobs.map(j => (
                   <SelectItem key={j.id} value={j.id}>{j.title}</SelectItem>
@@ -452,7 +452,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
             </Select>
           )}
           {isRecruiter && !selectedJobId && (
-            <p className="text-xs text-destructive">Please select a job to upload resumes for.</p>
+            <p className="text-xs text-destructive">Por favor, selecione uma vaga para vincular os currículos.</p>
           )}
         </div>
 
@@ -465,10 +465,10 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
           >
             <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-3" />
             <p className="text-sm text-muted-foreground mb-1">
-              Drop resumes here or click to browse
+              Arraste currículos aqui ou clique para selecionar
             </p>
             <p className="text-xs text-muted-foreground">
-              PDF or Word files, up to 10MB each
+              Arquivos PDF ou Word, de até 10MB cada
             </p>
             <input
               ref={fileInputRef}
@@ -485,7 +485,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">
-                Processing {processedCount} of {files.length}…
+                Processando {processedCount} de {files.length}…
               </span>
               <span className="font-medium">{Math.round(progress)}%</span>
             </div>
@@ -495,7 +495,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
 
         {files.length > 0 && (
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="outline">{files.length} file{files.length !== 1 ? 's' : ''}</Badge>
+            <Badge variant="outline">{files.length} arquivo{files.length !== 1 ? 's' : ''}</Badge>
             {selectedJobName && (
               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
                 {selectedJobName}
@@ -503,22 +503,22 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
             )}
             {doneCount > 0 && (
               <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-200">
-                {doneCount} done
+                {doneCount} concluído(s)
               </Badge>
             )}
             {incompleteCount > 0 && (
               <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-200">
-                {incompleteCount} incomplete
+                {incompleteCount} incompleto(s)
               </Badge>
             )}
             {errorCount > 0 && (
               <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-200">
-                {errorCount} failed
+                {errorCount} com falha
               </Badge>
             )}
             {pendingCount > 0 && !isProcessing && (
               <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-200">
-                {pendingCount} ready
+                {pendingCount} pronto(s)
               </Badge>
             )}
           </div>
@@ -542,7 +542,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
                         {rf.status === 'done'
                           ? `→ ${rf.candidateName} (${rf.candidateEmail})`
                           : rf.status === 'saved_incomplete'
-                          ? 'Saved — email missing. Add it below or edit on the Candidates page.'
+                          ? 'Salvo — e-mail ausente. Adicione abaixo ou edite na página de Candidatos.'
                           : rf.status === 'error'
                           ? rf.error
                           : `${(rf.file.size / 1024).toFixed(0)} KB`}
@@ -578,7 +578,7 @@ export function BulkResumeUploadPanel({ active, defaultJobId, onClose, embedded 
                     <div className="mt-2 flex gap-2 pl-7">
                       <Input
                         type="email"
-                        placeholder="Add email (optional)"
+                        placeholder="Adicionar e-mail (opcional)"
                         value={rf.manualEmail || ''}
                         onChange={e => updateFile(rf.id, { manualEmail: e.target.value })}
                         onKeyDown={e => { if (e.key === 'Enter') addEmailToCandidate(rf); }}
@@ -623,9 +623,9 @@ export function BulkResumeUploadDialog({ open, onOpenChange, defaultJobId }: Bul
     <Dialog open={open} onOpenChange={(next) => { if (!next) onOpenChange(false); }}>
       <DialogContent className="max-w-2xl flex flex-col max-h-[90dvh]">
         <DialogHeader className="shrink-0">
-          <DialogTitle>Bulk Resume Upload</DialogTitle>
+          <DialogTitle>Upload em Lote de Currículos</DialogTitle>
           <DialogDescription>
-            Upload multiple resumes (PDF/Word). Each will be parsed by AI and added as a candidate automatically.
+            Envie múltiplos currículos (PDF/Word). Cada um será analisado pela IA e cadastrado como candidato automaticamente.
           </DialogDescription>
         </DialogHeader>
         <BulkResumeUploadPanel

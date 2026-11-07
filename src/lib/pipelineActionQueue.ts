@@ -218,27 +218,27 @@ export function buildPipelineActionQueue(input: {
     items.push({
       id: 'decide',
       count: decide,
-      cta: 'Review',
-      label: decide === 1 ? 'Decide 1' : `Decide ${decide}`,
+      cta: 'Revisar',
+      label: decide === 1 ? 'Decidir 1' : `Decidir ${decide}`,
     });
   }
   if (pending > 0) {
     items.push({
       id: 'pending',
       count: pending,
-      cta: 'Approve',
-      label: pending === 1 ? 'Approve 1 pending' : `Approve ${pending} pending`,
+      cta: 'Aprovar',
+      label: pending === 1 ? 'Aprovar 1 pendente' : `Aprovar ${pending} pendentes`,
     });
   }
   if (noShowCount > 0) {
     items.push({
       id: 'noshow',
       count: noShowCount,
-      cta: 'Clear',
+      cta: 'Resolver',
       label:
         noShowCount === 1
-          ? 'Reschedule or clear 1 no-show'
-          : `Reschedule or clear ${noShowCount} no-shows`,
+          ? 'Reagendar ou resolver 1 falta'
+          : `Reagendar ou resolver ${noShowCount} faltas`,
     });
   }
 
@@ -248,19 +248,19 @@ export function buildPipelineActionQueue(input: {
       items.push({
         id: 'schedule_push',
         count: pushCount,
-        cta: 'Schedule',
+        cta: 'Agendar',
         label:
           pushCount === 1
-            ? `Align 1 interview before ${formatDeadlineShort(deadlineIso)}`
-            : `Align ${pushCount} interviews before ${formatDeadlineShort(deadlineIso)}`,
+            ? `Agendar 1 entrevista antes de ${formatDeadlineShort(deadlineIso)}`
+            : `Agendar ${pushCount} entrevistas antes de ${formatDeadlineShort(deadlineIso)}`,
       });
     } else {
       items.push({
         id: 'schedule',
         count: schedule,
-        cta: 'Schedule',
+        cta: 'Agendar',
         label:
-          schedule === 1 ? 'Schedule 1 this week' : `Schedule ${schedule} this week`,
+          schedule === 1 ? 'Agendar 1 nesta semana' : `Agendar ${schedule} nesta semana`,
       });
     }
   }
@@ -271,12 +271,12 @@ export function buildPipelineActionQueue(input: {
       ? `/hiring?view=list&job=${jobId}&action=add`
       : '/hiring?view=list&action=add';
     const label = nearDeadline && deadlineIso
-      ? `Add ${sourceNeed} candidates by ${formatDeadlineShort(deadlineIso)}`
-      : `Add ${sourceNeed} candidates this week`;
+      ? `Adicionar ${sourceNeed} candidatos até ${formatDeadlineShort(deadlineIso)}`
+      : `Adicionar ${sourceNeed} candidatos nesta semana`;
     items.push({
       id: 'source',
       count: sourceNeed,
-      cta: 'Add',
+      cta: 'Adicionar',
       label,
       href,
     });

@@ -42,7 +42,7 @@ export function Header(props: HeaderProps = {}) {
   const headerCtaClass = 'h-10 w-10 p-0 shrink-0 md:h-9 md:w-auto md:gap-1.5 md:px-3';
   const mobileIconBtnClass = 'h-10 w-10 shrink-0';
 
-  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
   const initials = displayName
     .split(' ')
     .map((n: string) => n[0])
@@ -69,10 +69,10 @@ export function Header(props: HeaderProps = {}) {
                 type="button"
                 onClick={openGlobalSearch}
                 className="hidden md:flex h-9 w-52 lg:w-64 items-center gap-2 rounded-md bg-surface-subtle px-3 text-sm text-muted-foreground shadow-border transition-[color,box-shadow] duration-fast ease-out hover:text-foreground hover:shadow-border-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label="Open global search"
+                aria-label="Abrir busca global"
               >
                 <Search className="h-4 w-4 shrink-0" />
-                <span className="flex-1 truncate text-left">Search candidates, jobs…</span>
+                <span className="flex-1 truncate text-left">Buscar candidatos, vagas…</span>
                 <kbd className="pointer-events-none hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded-xs bg-card px-1.5 font-sans text-[11px] font-medium shadow-border">
                   ⌘K
                 </kbd>
@@ -84,7 +84,7 @@ export function Header(props: HeaderProps = {}) {
                 <div className="relative w-full">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search..."
+                    placeholder="Buscar..."
                     value={searchQuery}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className="pl-10 bg-secondary border-0 focus-visible:ring-1 focus-visible:ring-primary rounded-lg"
@@ -99,7 +99,7 @@ export function Header(props: HeaderProps = {}) {
                 size="icon"
                 className={cn('md:hidden', mobileIconBtnClass)}
                 onClick={openGlobalSearch}
-                aria-label="Search"
+                aria-label="Buscar"
               >
                 <Search className="h-5 w-5" />
               </Button>
@@ -111,17 +111,17 @@ export function Header(props: HeaderProps = {}) {
                   <Button
                     className={headerCtaClass}
                     onClick={onAddCandidate}
-                    aria-label="Add Candidate"
+                    aria-label="Adicionar Candidato"
                   >
                     <UserPlus className="h-4 w-4" />
-                    <span className="hidden md:inline text-sm font-medium">Add Candidate</span>
+                    <span className="hidden md:inline text-sm font-medium">Adicionar Candidato</span>
                   </Button>
                 )}
                 {canAccessCalendar && (
                   <Button variant="ghost" className={headerCtaClass} asChild>
-                    <Link to="/calendar" aria-label="Calendar">
+                    <Link to="/calendar" aria-label="Calendário">
                       <Calendar className="h-4 w-4" />
-                      <span className="hidden md:inline text-sm font-medium">Calendar</span>
+                      <span className="hidden md:inline text-sm font-medium">Calendário</span>
                     </Link>
                   </Button>
                 )}
@@ -134,7 +134,7 @@ export function Header(props: HeaderProps = {}) {
             <button
               className={cn('focus:outline-hidden md:hidden flex items-center justify-center', mobileIconBtnClass)}
               onClick={() => setProfileOpen(true)}
-              aria-label="My profile"
+              aria-label="Meu perfil"
             >
               <Avatar className="w-8 h-8 cursor-pointer outline-solid outline-1 -outline-offset-1 outline-black/10">
                 {profile?.avatar_url && (

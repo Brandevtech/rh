@@ -123,11 +123,11 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { PullToRefresh } from '@/components/PullToRefresh';
 
 const statusConfig: Record<JobStatus, { label: string; className: string }> = {
-  draft:  { label: 'Draft',  className: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700' },
-  open:   { label: 'Open',   className: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400 dark:border-emerald-800' },
-  paused: { label: 'Paused', className: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:border-amber-800' },
-  closed: { label: 'Closed', className: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800' },
-  cancelled: { label: 'Cancelled', className: 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600' },
+  draft:  { label: 'Rascunho',  className: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700' },
+  open:   { label: 'Aberta',   className: 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400 dark:border-emerald-800' },
+  paused: { label: 'Pausada', className: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-400 dark:border-amber-800' },
+  closed: { label: 'Fechada', className: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800' },
+  cancelled: { label: 'Cancelada', className: 'bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600' },
 };
 
 type JobRow = Job & { candidate_count?: number };
@@ -147,7 +147,7 @@ function ClosedJobTooltipWrap({
       <TooltipTrigger asChild>
         <span className={cn('inline-flex', className)}>{children}</span>
       </TooltipTrigger>
-      <TooltipContent>This job is no longer active</TooltipContent>
+      <TooltipContent>Esta vaga não está mais ativa</TooltipContent>
     </Tooltip>
   );
 }
@@ -203,7 +203,7 @@ function SortableJobTableRow({
           <button
             type="button"
             className="flex h-8 w-6 items-center justify-center rounded text-muted-foreground cursor-grab active:cursor-grabbing hover:text-foreground"
-            aria-label="Reorder job"
+            aria-label="Reordenar vaga"
             {...attributes}
             {...listeners}
           >
@@ -231,37 +231,37 @@ function JobLifecycleMenuItems({
       {job.status === 'draft' && (
         <DropdownMenuItem onClick={() => onStatusChange(job, 'open')}>
           <Play className="h-4 w-4 mr-2" />
-          Publish
+          Publicar
         </DropdownMenuItem>
       )}
       {job.status === 'open' && (
         <DropdownMenuItem onClick={() => onStatusChange(job, 'paused')}>
           <Pause className="h-4 w-4 mr-2" />
-          Pause
+          Pausar
         </DropdownMenuItem>
       )}
       {job.status === 'paused' && (
         <DropdownMenuItem onClick={() => onStatusChange(job, 'open')}>
           <Play className="h-4 w-4 mr-2" />
-          Resume
+          Retomar
         </DropdownMenuItem>
       )}
       {isActiveJobStatus(job.status) && (
         <>
           <DropdownMenuItem onClick={() => onStatusChange(job, 'closed')}>
             <Archive className="h-4 w-4 mr-2" />
-            Close
+            Fechar
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onStatusChange(job, 'cancelled')}>
             <Ban className="h-4 w-4 mr-2" />
-            Cancel
+            Cancelar
           </DropdownMenuItem>
         </>
       )}
       {isCompletedJobStatus(job.status) && (
         <DropdownMenuItem onClick={() => onStatusChange(job, 'open')}>
           <ArchiveRestore className="h-4 w-4 mr-2" />
-          Re-open
+          Reabrir Vaga
         </DropdownMenuItem>
       )}
     </>
@@ -287,7 +287,7 @@ function ClosedDropdownItem({
             </DropdownMenuItem>
           </span>
         </TooltipTrigger>
-        <TooltipContent side="left">This job is no longer active</TooltipContent>
+        <TooltipContent side="left">Esta vaga não está mais ativa</TooltipContent>
       </Tooltip>
     );
   }
@@ -306,7 +306,7 @@ function HiredNamesCell({
   if (hired.length === 0) {
     return (
       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-        <span className="text-xs text-muted-foreground italic">No hire recorded</span>
+        <span className="text-xs text-muted-foreground italic">Nenhuma contratação registrada</span>
         {canManage && onAssignHired && (
           <Button
             type="button"
@@ -341,7 +341,7 @@ function HiredNamesCell({
 }
 
 export default function Jobs() {
-  usePageTitle('Jobs');
+  usePageTitle('Vagas');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -439,7 +439,7 @@ export default function Jobs() {
     })();
   }, [detailJob?.id]);
 
-  // Per-job pipeline stats: scheduled interviews + pending feedback
+  // Per-job pipeline stats: entrevistas agendadas + pending feedback
   const { data: ivStats = {} } = useQuery<Record<string, { scheduled: number; pendingFeedback: number }>>({
     queryKey: ['jobs-iv-stats'],
     queryFn: async () => {
@@ -782,7 +782,7 @@ export default function Jobs() {
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Status</SelectItem>
+          <SelectItem value="all">Todos os Status</SelectItem>
           {Object.entries(jobStatusLabels)
             .filter(([val]) => isJobStatusInListTab(val as JobStatus, jobListTab))
             .map(([val, label]) => (
@@ -794,10 +794,10 @@ export default function Jobs() {
       {uniqueDomains.length > 0 && (
         <Select value={filterDomain} onValueChange={setFilterDomain}>
           <SelectTrigger className={cn('h-9', stacked ? 'w-full' : 'w-[150px]')}>
-            <SelectValue placeholder="Domain" />
+            <SelectValue placeholder="Área" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Domains</SelectItem>
+            <SelectItem value="all">Todas as Áreas</SelectItem>
             {uniqueDomains.map(d => (
               <SelectItem key={d} value={d}>{d}</SelectItem>
             ))}
@@ -808,10 +808,10 @@ export default function Jobs() {
       {uniqueTeams.length > 0 && (
         <Select value={filterTeam} onValueChange={setFilterTeam}>
           <SelectTrigger className={cn('h-9', stacked ? 'w-full' : 'w-[150px]')}>
-            <SelectValue placeholder="Team" />
+            <SelectValue placeholder="Equipe" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Teams</SelectItem>
+            <SelectItem value="all">Todas as Equipes</SelectItem>
             {uniqueTeams.map(t => (
               <SelectItem key={t} value={t}>{t}</SelectItem>
             ))}
@@ -821,10 +821,10 @@ export default function Jobs() {
 
       <Select value={filterPositionType} onValueChange={setFilterPositionType}>
         <SelectTrigger className={cn('h-9', stacked ? 'w-full' : 'w-[140px]')}>
-          <SelectValue placeholder="Position" />
+          <SelectValue placeholder="Tipo de Cargo" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Types</SelectItem>
+          <SelectItem value="all">Todos os Tipos</SelectItem>
           {Object.entries(positionTypeLabels).map(([val, label]) => (
             <SelectItem key={val} value={val}>{label}</SelectItem>
           ))}
@@ -833,10 +833,10 @@ export default function Jobs() {
 
       <Select value={filterExperience} onValueChange={setFilterExperience}>
         <SelectTrigger className={cn('h-9', stacked ? 'w-full' : 'w-[160px]')}>
-          <SelectValue placeholder="Experience" />
+          <SelectValue placeholder="Experiência" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Experience</SelectItem>
+          <SelectItem value="all">Todas as Experiências</SelectItem>
           {Object.entries(experienceYearsLabels).map(([val, label]) => (
             <SelectItem key={val} value={val}>{label}</SelectItem>
           ))}
@@ -850,7 +850,7 @@ export default function Jobs() {
           onClick={clearFilters}
           className={cn('h-9 text-muted-foreground', stacked && 'col-span-2')}
         >
-          Clear filters ({activeFilterCount})
+          Limpar filtros ({activeFilterCount})
         </Button>
       )}
     </>
@@ -861,8 +861,8 @@ export default function Jobs() {
       <PullToRefresh onRefresh={handleRefresh} className="flex flex-col flex-1 min-h-0">
       <main className="container mx-auto px-4 py-4 md:py-8 pb-safe space-y-4 md:space-y-6 min-w-0 max-w-full">
         <PageHeader
-          title="Jobs"
-          subtitle="Create and manage job postings"
+          title="Vagas"
+          subtitle="Crie e gerencie as oportunidades de trabalho"
           actions={
             <div className="flex items-center gap-1.5 shrink-0">
             <Button
@@ -876,7 +876,7 @@ export default function Jobs() {
               </Link>
             </Button>
             {canManageJobs && (
-              <Button size="icon" className="h-9 w-9 md:hidden" onClick={openCreate} aria-label="New job">
+              <Button size="icon" className="h-9 w-9 md:hidden" onClick={openCreate} aria-label="Nova Vaga">
                 <Plus className="h-4 w-4" />
               </Button>
             )}
@@ -884,13 +884,13 @@ export default function Jobs() {
               <Button variant="outline" asChild className="gap-2">
                 <Link to="/careers">
                   <ExternalLink className="h-4 w-4" />
-                  View Public Page
+                  Página Pública de Vagas
                 </Link>
               </Button>
               {canManageJobs && (
                 <Button onClick={openCreate} className="gap-2">
                   <Plus className="h-4 w-4" />
-                  New Job
+                  Nova Vaga
                 </Button>
               )}
             </div>
@@ -902,7 +902,7 @@ export default function Jobs() {
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search jobs..."
+              placeholder="Buscar vagas..."
               className="pl-10 h-9 md:h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -933,7 +933,7 @@ export default function Jobs() {
             onClick={() => setMobileFiltersOpen(true)}
           >
             <Filter className="h-3.5 w-3.5" />
-            Filters
+            Filtros
             {activeFilterCount > 0 && (
               <span className="rounded-full bg-background/20 px-1.5 text-xs">{activeFilterCount}</span>
             )}
@@ -947,7 +947,7 @@ export default function Jobs() {
         <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
           <SheetContent side="bottom" className="rounded-t-xl pb-safe">
             <SheetHeader>
-              <SheetTitle>Filters</SheetTitle>
+              <SheetTitle>Filtros</SheetTitle>
             </SheetHeader>
             <div className="grid grid-cols-2 gap-3 py-4">
               {renderJobFilters(true)}
@@ -965,19 +965,19 @@ export default function Jobs() {
         >
           <TabsList className="grid w-full max-w-xl grid-cols-3">
             <TabsTrigger value="active" className="gap-2">
-              Active
+              Ativas
               <Badge variant="secondary" className="h-5 px-1.5 text-xs font-normal">
                 {activeJobs.length}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value="closed" className="gap-2">
-              Closed
+              Fechadas
               <Badge variant="secondary" className="h-5 px-1.5 text-xs font-normal">
                 {closedJobs.length}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value="cancelled" className="gap-2">
-              Cancelled
+              Canceladas
               <Badge variant="secondary" className="h-5 px-1.5 text-xs font-normal">
                 {cancelledJobs.length}
               </Badge>
@@ -1005,20 +1005,16 @@ export default function Jobs() {
             <CardContent>
               <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">
-                {jobListTab === 'closed'
-                  ? 'No closed jobs'
-                  : jobListTab === 'cancelled'
-                    ? 'No cancelled jobs'
-                    : 'No job postings yet'}
+                {jobListTab === 'closed' ? 'Nenhuma vaga fechada' : jobListTab === 'cancelled' ? 'Nenhuma vaga cancelada' : 'Nenhuma vaga cadastrada'}
               </h3>
               <p className="text-muted-foreground mb-4">
                 {jobListTab === 'closed'
-                  ? 'Jobs closed after a hire appear here.'
+                  ? 'Vagas encerradas após contratações aparecem aqui.'
                   : jobListTab === 'cancelled'
-                    ? 'Cancelled openings (dropped with no hire) appear here.'
+                    ? 'Vagas canceladas (sem contratação) aparecem aqui.'
                     : activeFilterCount > 0 || searchQuery
-                      ? 'No jobs match your filters.'
-                      : 'Create your first job posting to start receiving applications.'}
+                      ? 'Nenhuma vaga corresponde aos filtros selecionados.'
+                      : 'Crie sua primeira vaga para começar a receber candidaturas.'}
               </p>
               {jobListTab === 'active' && canManageJobs && activeFilterCount === 0 && !searchQuery && (
                 <Button onClick={openCreate} className="gap-2">
@@ -1036,19 +1032,19 @@ export default function Jobs() {
               <TableHeader>
                 <TableRow>
                   {canReorder && <TableHead className={cn('w-8 px-2', tableHeadSticky)}><span className="sr-only">Reorder</span></TableHead>}
-                  <TableHead className={cn('min-w-[160px]', tableHeadSticky)}>Job</TableHead>
+                  <TableHead className={cn('min-w-[160px]', tableHeadSticky)}>Vaga</TableHead>
                   <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Status</TableHead>
-                  <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Domain</TableHead>
-                  <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Team</TableHead>
-                  <TableHead className={cn('min-w-[120px]', tableHeadSticky)}>Position Type</TableHead>
-                  <TableHead className={cn('min-w-[110px]', tableHeadSticky)}>Experience</TableHead>
-                  <TableHead className={cn('text-center min-w-[80px]', tableHeadSticky)}>Openings</TableHead>
+                  <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Área</TableHead>
+                  <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Equipe</TableHead>
+                  <TableHead className={cn('min-w-[120px]', tableHeadSticky)}>Tipo de Cargo</TableHead>
+                  <TableHead className={cn('min-w-[110px]', tableHeadSticky)}>Experiência</TableHead>
+                  <TableHead className={cn('text-center min-w-[80px]', tableHeadSticky)}>Posições</TableHead>
                   <TableHead className={cn('min-w-[150px]', tableHeadSticky)}>
-                    {showHiredColumn ? 'Hired' : 'Candidates & Pipeline'}
+                    {showHiredColumn ? 'Contratados' : 'Candidatos & Pipeline'}
                   </TableHead>
                   <TableHead className={cn('min-w-[130px]', tableHeadSticky)}>Salary (Minâ€“Max)</TableHead>
-                  <TableHead className={cn('min-w-[120px]', tableHeadSticky)}>Recruiters</TableHead>
-                  <TableHead className={cn('min-w-[140px]', tableHeadSticky)}>Application Deadline</TableHead>
+                  <TableHead className={cn('min-w-[120px]', tableHeadSticky)}>Recrutadores</TableHead>
+                  <TableHead className={cn('min-w-[140px]', tableHeadSticky)}>Prazo de Inscrição</TableHead>
                   <TableHead className={cn('w-10', tableHeadSticky)}></TableHead>
                 </TableRow>
               </TableHeader>
@@ -1127,7 +1123,7 @@ export default function Jobs() {
                               <Users className="h-3 w-3 text-muted-foreground" />
                               {job.candidate_count ?? 0}
                             </span>
-                            <span className="flex items-center gap-1 text-muted-foreground" title="Scheduled interviews">
+                            <span className="flex items-center gap-1 text-muted-foreground" title="entrevistas agendadas">
                               <CalendarDays className="h-3 w-3" />
                               {ivStats[job.id]?.scheduled ?? 0}
                             </span>
@@ -1185,7 +1181,7 @@ export default function Jobs() {
                                 onClick={() => navigate(`/hiring?view=list&job=${job.id}`)}
                               >
                                 <Eye className="h-4 w-4 mr-2" />
-                                View Candidates
+                                Ver Candidatos
                               </ClosedDropdownItem>
                               {canManageJobs && (
                                 <DropdownMenuItem onClick={() => openEdit(job)}>
@@ -1198,7 +1194,7 @@ export default function Jobs() {
                                 onClick={() => copyPublicLink(job.id)}
                               >
                                 <Copy className="h-4 w-4 mr-2" />
-                                Copy Public Link
+                                Copiar Link Público
                               </ClosedDropdownItem>
                               {canManageJobs && (
                                 <ClosedDropdownItem
@@ -1206,7 +1202,7 @@ export default function Jobs() {
                                   onClick={() => setRecruiterDialog({ open: true, jobId: job.id, jobTitle: job.title })}
                                 >
                                   <Users className="h-4 w-4 mr-2" />
-                                  Assign Recruiters
+                                  Atribuir Recrutadores
                                 </ClosedDropdownItem>
                               )}
                               <DropdownMenuSeparator />
@@ -1299,7 +1295,7 @@ export default function Jobs() {
                           onClick={() => navigate(`/hiring?view=list&job=${job.id}`)}
                         >
                           <Eye className="h-4 w-4 mr-2" />
-                          View Candidates
+                          Ver Candidatos
                         </ClosedDropdownItem>
                         {canManageJobs && (
                           <DropdownMenuItem onClick={() => openEdit(job)}>
@@ -1312,7 +1308,7 @@ export default function Jobs() {
                           onClick={() => copyPublicLink(job.id)}
                         >
                           <Copy className="h-4 w-4 mr-2" />
-                          Copy Public Link
+                          Copiar Link Público
                         </ClosedDropdownItem>
                         {canManageJobs && (
                           <ClosedDropdownItem
@@ -1320,7 +1316,7 @@ export default function Jobs() {
                             onClick={() => setRecruiterDialog({ open: true, jobId: job.id, jobTitle: job.title })}
                           >
                             <Users className="h-4 w-4 mr-2" />
-                            Assign Recruiters
+                            Atribuir Recrutadores
                           </ClosedDropdownItem>
                         )}
                         <DropdownMenuSeparator />
@@ -1370,7 +1366,7 @@ export default function Jobs() {
                             ))}
                           </span>
                         ) : (
-                          <span className="text-xs italic">No hire recorded</span>
+                          <span className="text-xs italic">Nenhuma contratação registrada</span>
                         )
                       ) : (
                         <>
@@ -1382,15 +1378,15 @@ export default function Jobs() {
                             )}
                           </span>
                           {(ivStats[job.id]?.scheduled ?? 0) > 0 && (
-                            <span className="flex items-center gap-1 text-xs text-muted-foreground" title="Scheduled interviews">
+                            <span className="flex items-center gap-1 text-xs text-muted-foreground" title="entrevistas agendadas">
                               <CalendarDays className="h-3.5 w-3.5 shrink-0" />
-                              {ivStats[job.id].scheduled} scheduled
+                              {ivStats[job.id].scheduled} agendadas
                             </span>
                           )}
                           {(ivStats[job.id]?.pendingFeedback ?? 0) > 0 && (
                             <span className="flex items-center gap-1 text-xs font-medium text-orange-600" title="Interviews pending feedback">
                               <Clock className="h-3.5 w-3.5 shrink-0" />
-                              {ivStats[job.id].pendingFeedback} pending
+                              {ivStats[job.id].pendingFeedback} pendentes
                             </span>
                           )}
                         </>
@@ -1638,7 +1634,7 @@ export default function Jobs() {
                           )}
                         </div>
                         {detailHired.length === 0 ? (
-                          <p className="text-sm text-muted-foreground italic">No hire recorded</p>
+                          <p className="text-sm text-muted-foreground italic">Nenhuma contratação registrada</p>
                         ) : (
                           <div className="space-y-2">
                             {detailHired.map((c) => (
@@ -1689,7 +1685,7 @@ export default function Jobs() {
                         className="gap-2"
                       >
                         <Eye className="h-4 w-4" />
-                        View Candidates ({detailJob.candidate_count || 0})
+                        Ver Candidatos ({detailJob.candidate_count || 0})
                       </Button>
                     </ClosedJobTooltipWrap>
                     <ClosedJobTooltipWrap closed={isInactive}>
@@ -1700,7 +1696,7 @@ export default function Jobs() {
                         className="gap-2"
                       >
                         <Workflow className="h-4 w-4" />
-                        View Pipeline
+                        Ver Pipeline / Kanban
                       </Button>
                     </ClosedJobTooltipWrap>
                     {canManageJobs && (
@@ -1717,7 +1713,7 @@ export default function Jobs() {
                         className="gap-2"
                       >
                         <Copy className="h-4 w-4" />
-                        Copy Link
+                        Copiar Link
                       </Button>
                     </ClosedJobTooltipWrap>
                     {canManageJobs && (
@@ -1729,7 +1725,7 @@ export default function Jobs() {
                           className="gap-2"
                         >
                           <Users className="h-4 w-4" />
-                          Assign Recruiters
+                          Atribuir Recrutadores
                         </Button>
                       </ClosedJobTooltipWrap>
                     )}
@@ -1780,27 +1776,27 @@ export default function Jobs() {
         <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
           <DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{selectedJob ? 'Edit Job' : 'Create Job Posting'}</DialogTitle>
+              <DialogTitle>{selectedJob ? 'Editar Vaga' : 'Criar Vaga'}</DialogTitle>
               <DialogDescription>
-                {selectedJob ? 'Update job details.' : 'Fill in the job details. You can publish it later.'}
+                {selectedJob ? 'Atualize as informações da vaga.' : 'Preencha os dados da vaga. Você poderá publicá-la a qualquer momento.'}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Job Title *</Label>
+                <Label htmlFor="title">Título da Vaga *</Label>
                 <Input
                   id="title"
-                  placeholder="e.g., Senior Frontend Developer"
+                  placeholder="Ex: Desenvolvedor Frontend Sênior"
                   value={form.title}
                   onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="description">Job Description</Label>
+                <Label htmlFor="description">Descrição da Vaga</Label>
                 <Textarea
                   id="description"
-                  placeholder="Describe the role, responsibilities, and requirements..."
+                  placeholder="Descreva a função, responsabilidades e requisitos..."
                   className="min-h-[120px]"
                   value={form.description}
                   onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
@@ -1815,7 +1811,7 @@ export default function Jobs() {
                     onValueChange={(value) => setForm(prev => ({ ...prev, domain: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select domain" />
+                      <SelectValue placeholder="Selecione a área" />
                     </SelectTrigger>
                     <SelectContent>
                       {domainList.map(d => (
@@ -1831,7 +1827,7 @@ export default function Jobs() {
                     onValueChange={(value) => setForm(prev => ({ ...prev, department: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select team" />
+                      <SelectValue placeholder="Selecione a equipe" />
                     </SelectTrigger>
                     <SelectContent>
                       {teamList.map(t => (
@@ -1844,16 +1840,16 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
+                  <Label htmlFor="location">Localização / Modalidade</Label>
                   <Input
                     id="location"
-                    placeholder="e.g., Remote, Bangalore, Mumbai, Pune"
+                    placeholder="Ex: Remoto, São Paulo, Híbrido"
                     value={form.location}
                     onChange={(e) => setForm(prev => ({ ...prev, location: e.target.value }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Job Type</Label>
+                  <Label>Tipo de Contrato</Label>
                   <Select
                     value={form.job_type}
                     onValueChange={(value: JobType) => setForm(prev => ({ ...prev, job_type: value }))}
@@ -1872,13 +1868,13 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Experience Level</Label>
+                  <Label>Nível de Senioridade</Label>
                   <Select
                     value={form.experience_level}
                     onValueChange={(value: ExperienceLevel) => setForm(prev => ({ ...prev, experience_level: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select level" />
+                      <SelectValue placeholder="Selecione o nível" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(experienceLevelLabels).map(([value, label]) => (
@@ -1888,13 +1884,13 @@ export default function Jobs() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Experience (in Years)</Label>
+                  <Label>Tempo de Experiência</Label>
                   <Select
                     value={form.experience_years_range}
                     onValueChange={(value: ExperienceYearsRange) => setForm(prev => ({ ...prev, experience_years_range: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select range" />
+                      <SelectValue placeholder="Selecione a faixa" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(experienceYearsLabels).map(([value, label]) => (
@@ -1907,7 +1903,7 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Position Type</Label>
+                  <Label>Área de Atuação</Label>
                   <Select
                     value={form.position_type}
                     onValueChange={(value: PositionType) => setForm(prev => ({ ...prev, position_type: value }))}
@@ -1923,7 +1919,7 @@ export default function Jobs() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="total_openings">Total Openings</Label>
+                  <Label htmlFor="total_openings">Total de Posições / Vagas</Label>
                   <Input
                     id="total_openings"
                     type="number"
@@ -1959,7 +1955,7 @@ export default function Jobs() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="required_skills">Required Skills (comma separated)</Label>
+                <Label htmlFor="required_skills">Habilidades Necessárias (separadas por vírgula)</Label>
                 <Input
                   id="required_skills"
                   placeholder="React, TypeScript, Node.js"
@@ -1969,17 +1965,17 @@ export default function Jobs() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="benefits">Benefits (comma separated)</Label>
+                <Label htmlFor="benefits">Benefícios (separados por vírgula)</Label>
                 <Input
                   id="benefits"
-                  placeholder="Health Insurance, Remote Work, Stock Options"
+                  placeholder="Plano de saúde, Vale refeição, Trabalho remoto"
                   value={form.benefits}
                   onChange={(e) => setForm(prev => ({ ...prev, benefits: e.target.value }))}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="deadline">Application Deadline (optional)</Label>
+                <Label htmlFor="deadline">Prazo de Inscrição (opcional)</Label>
                 <Input
                   id="deadline"
                   type="date"
@@ -1993,9 +1989,9 @@ export default function Jobs() {
 
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="require-application-form">Digital application form</Label>
+                  <Label htmlFor="require-application-form">Formulário digital de inscrição</Label>
                   <p className="text-xs text-muted-foreground">
-                    Require applicants to complete the pre-screen form before interviews.
+                    Exigir que os candidatos preencham o formulário de triagem antes das entrevistas.
                   </p>
                 </div>
                 <Switch
@@ -2012,10 +2008,10 @@ export default function Jobs() {
                   <div className="space-y-0.5">
                     <Label htmlFor="assessment-enabled" className="flex items-center gap-2">
                       <ClipboardCheck className="h-4 w-4" />
-                      Job assessment
+                      Teste técnico / Avaliação da vaga
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      Link an assessment to this job for pipeline tracking and pass gating.
+                      Vincule um teste técnico a esta vaga para acompanhamento no pipeline.
                     </p>
                   </div>
                   <Switch
@@ -2028,7 +2024,7 @@ export default function Jobs() {
                 {form.assessment_enabled && (
                   <div className="space-y-4 pt-2">
                     <div className="space-y-2">
-                      <Label>Default assessment</Label>
+                      <Label>Teste padrão</Label>
                       <Select
                         value={form.default_assessment_id || 'none'}
                         onValueChange={(value) =>
@@ -2039,10 +2035,10 @@ export default function Jobs() {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select assessment" />
+                          <SelectValue placeholder="Selecione a avaliação" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">None selected</SelectItem>
+                          <SelectItem value="none">Nenhuma selecionada</SelectItem>
                           {activeAssessments.map((a) => (
                             <SelectItem key={a.id} value={a.id}>
                               {a.title}
@@ -2054,7 +2050,7 @@ export default function Jobs() {
 
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="deadline-days">Default deadline (days)</Label>
+                        <Label htmlFor="deadline-days">Prazo padrão (dias)</Label>
                         <Input
                           id="deadline-days"
                           type="number"
@@ -2073,13 +2069,13 @@ export default function Jobs() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="pass-override">Pass threshold override (%)</Label>
+                        <Label htmlFor="pass-override">Nota mínima de aprovação (%)</Label>
                         <Input
                           id="pass-override"
                           type="number"
                           min={0}
                           max={100}
-                          placeholder="Use assessment default"
+                          placeholder="Usar padrão do teste"
                           value={form.assessment_config.pass_threshold_override ?? ''}
                           onChange={(e) =>
                             setForm(prev => ({
@@ -2096,8 +2092,8 @@ export default function Jobs() {
 
                     <div className="flex items-center justify-between rounded-md border p-3">
                       <div className="space-y-0.5">
-                        <Label htmlFor="notify-on-complete">Notify recruiter on completion</Label>
-                        <p className="text-xs text-muted-foreground">In-app + email when candidate submits.</p>
+                        <Label htmlFor="notify-on-complete">Notificar recrutador ao concluir</Label>
+                        <p className="text-xs text-muted-foreground">Notificação no sistema e por e-mail quando o candidato enviar.</p>
                       </div>
                       <Switch
                         id="notify-on-complete"
@@ -2116,8 +2112,8 @@ export default function Jobs() {
 
                     <div className="flex items-center justify-between rounded-md border p-3">
                       <div className="space-y-0.5">
-                        <Label htmlFor="require-pass">Require pass to advance</Label>
-                        <p className="text-xs text-muted-foreground">Block pipeline advance until assessment passed (admin/HR can override).</p>
+                        <Label htmlFor="require-pass">Exigir aprovação para avançar no pipeline</Label>
+                        <p className="text-xs text-muted-foreground">Impede o avanço do candidato até que o teste seja aprovado (Admin/RH podem liberar manualmente).</p>
                       </div>
                       <Switch
                         id="require-pass"
@@ -2140,13 +2136,13 @@ export default function Jobs() {
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsFormOpen(false)}>Cancel</Button>
               <Button onClick={handleSubmit} disabled={isPending || !form.title.trim()}>
-                {isPending ? 'Saving...' : selectedJob ? 'Update Job' : 'Create Job'}
+                {isPending ? 'Salvando...' : selectedJob ? 'Salvar Alterações' : 'Criar Vaga'}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
-        {/* Assign Recruiters Dialog */}
+        {/* Atribuir Recrutadores Dialog */}
         <AssignRecruitersDialog
           open={recruiterDialog.open}
           onOpenChange={(open) => !open && setRecruiterDialog({ open: false, jobId: '', jobTitle: '' })}
@@ -2166,15 +2162,15 @@ export default function Jobs() {
             <DialogHeader>
               <DialogTitle>Cancel Job â€” {cancelJobDialog?.title}</DialogTitle>
               <DialogDescription>
-                Not pursuing this opening. No hire. This is not the same as Close (filled/completed).
+                A vaga não será mais trabalhada. Não houve contratação. Diferente de 'Fechada', que indica que a vaga foi preenchida.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3 py-2">
               <div className="space-y-2">
-                <Label htmlFor="cancel-reason">Reason (optional)</Label>
+                <Label htmlFor="cancel-reason">Motivo (opcional)</Label>
                 <Select value={cancelReason} onValueChange={setCancelReason}>
                   <SelectTrigger id="cancel-reason">
-                    <SelectValue placeholder="Select a reason" />
+                    <SelectValue placeholder="Selecione um motivo" />
                   </SelectTrigger>
                   <SelectContent>
                     {JOB_CANCEL_REASONS.map((reason) => (
@@ -2189,7 +2185,7 @@ export default function Jobs() {
                   <Input
                     id="cancel-other"
                     maxLength={120}
-                    placeholder="Short note"
+                    placeholder="Breve observação"
                     value={cancelOtherNote}
                     onChange={(e) => setCancelOtherNote(e.target.value)}
                   />
@@ -2197,7 +2193,7 @@ export default function Jobs() {
               )}
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setCancelJobDialog(null)}>Back</Button>
+              <Button variant="outline" onClick={() => setCancelJobDialog(null)}>Voltar</Button>
               <Button
                 variant="destructive"
                 onClick={handleConfirmCancel}
@@ -2220,7 +2216,7 @@ export default function Jobs() {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-2 py-2">
-              <Label htmlFor="positions-filled">Candidates who joined</Label>
+              <Label htmlFor="positions-filled">Candidatos contratados</Label>
               <Input
                 id="positions-filled"
                 type="number"

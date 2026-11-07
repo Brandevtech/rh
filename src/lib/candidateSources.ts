@@ -10,11 +10,11 @@ export const CANDIDATE_SOURCE_LABELS: Record<string, string> = {
   job_application: 'Portal',
   naukri: 'Naukri',
   linkedin: 'LinkedIn',
-  referral: 'Referral',
+  referral: 'Indicação',
   indeed: 'Indeed',
-  talent_email: 'Talent Email',
-  bulk_resume: 'Resume Upload',
-  csv_import: 'CSV Import',
+  talent_email: 'E-mail de Talentos',
+  bulk_resume: 'Upload de Currículo',
+  csv_import: 'Importação CSV',
 };
 
 /** Keys shown on the add-candidate form (human-entered, not system imports). */
@@ -23,9 +23,9 @@ export const CANDIDATE_SOURCE_SELECT_OPTIONS: ReadonlyArray<{ value: string; lab
   { value: 'portal', label: 'Portal' },
   { value: 'naukri', label: 'Naukri' },
   { value: 'linkedin', label: 'LinkedIn' },
-  { value: 'referral', label: 'Referral' },
+  { value: 'referral', label: 'Indicação' },
   { value: 'indeed', label: 'Indeed' },
-  { value: 'talent_email', label: 'Talent Email' },
+  { value: 'talent_email', label: 'E-mail de Talentos' },
 ];
 
 export const CANDIDATE_SOURCE_COLORS: Record<string, { color: string; bg: string }> = {

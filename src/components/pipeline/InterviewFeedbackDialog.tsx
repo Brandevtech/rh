@@ -54,10 +54,10 @@ function formatBytes(bytes: number): string {
 }
 
 const verdictConfig: { value: InterviewVerdict; label: string; icon: React.ComponentType<{ className?: string }>; className: string }[] = [
-  { value: 'proceeded', label: 'Proceed', icon: ThumbsUp, className: 'border-green-500 bg-green-500/10 text-green-700 hover:bg-green-500/20' },
-  { value: 'rejected', label: 'Reject', icon: ThumbsDown, className: 'border-red-500 bg-red-500/10 text-red-700 hover:bg-red-500/20' },
-  { value: 'hold', label: 'Hold', icon: Pause, className: 'border-yellow-500 bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20' },
-  { value: 'no_show', label: 'No-show', icon: UserX, className: 'border-muted bg-muted/50 text-muted-foreground hover:bg-muted' },
+  { value: 'proceeded', label: 'Aprovar / Avançar', icon: ThumbsUp, className: 'border-green-500 bg-green-500/10 text-green-700 hover:bg-green-500/20' },
+  { value: 'rejected', label: 'Reprovar', icon: ThumbsDown, className: 'border-red-500 bg-red-500/10 text-red-700 hover:bg-red-500/20' },
+  { value: 'hold', label: 'Em Espera', icon: Pause, className: 'border-yellow-500 bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20' },
+  { value: 'no_show', label: 'Falta / Não Compareceu', icon: UserX, className: 'border-muted bg-muted/50 text-muted-foreground hover:bg-muted' },
 ];
 
 // Legacy fallback â€” replaced by scorecard template criteria when available
@@ -421,7 +421,7 @@ export function InterviewFeedbackDialog({
           <div className="flex items-center justify-between">
             <Label className="text-sm font-medium flex items-center gap-1.5">
               <NotebookPen className="w-3.5 h-3.5 text-muted-foreground" />
-              Interview Notes
+              Anotações da Entrevista
               <span className={cn(
                 'text-xs font-normal',
                 notesSaveStatus === 'error' ? 'text-destructive' : 'text-muted-foreground',
@@ -460,7 +460,7 @@ export function InterviewFeedbackDialog({
 
         {/* Verdict */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Verdict</Label>
+          <Label className="text-sm font-medium">Decisão / Parecer</Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {verdictConfig.map(v => {
               const Icon = v.icon;
@@ -483,19 +483,19 @@ export function InterviewFeedbackDialog({
         {/* Rejection Reason â€” shown only when verdict is 'rejected' */}
         {verdict === 'rejected' && (
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Rejection Reason</Label>
+            <Label className="text-sm font-medium">Motivo da Reprovação</Label>
             <Select value={rejectionReason} onValueChange={setRejectionReason}>
               <SelectTrigger>
-                <SelectValue placeholder="Select reason (optional)" />
+                <SelectValue placeholder="Selecione o motivo (opcional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="skill_gap">Skill Gap</SelectItem>
-                <SelectItem value="culture_fit">Culture Fit</SelectItem>
-                <SelectItem value="salary_mismatch">Salary Mismatch</SelectItem>
-                <SelectItem value="communication">Communication</SelectItem>
-                <SelectItem value="overqualified">Overqualified</SelectItem>
-                <SelectItem value="no_show_final">No-Show (Final)</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="skill_gap">Lacuna Técnica / Competências</SelectItem>
+                <SelectItem value="culture_fit">Incompatibilidade Cultural</SelectItem>
+                <SelectItem value="salary_mismatch">Pretensão Salarial Incompatível</SelectItem>
+                <SelectItem value="communication">Comunicação</SelectItem>
+                <SelectItem value="overqualified">Qualificação Acima do Perfil</SelectItem>
+                <SelectItem value="no_show_final">Falta Definitiva (No-Show)</SelectItem>
+                <SelectItem value="other">Outro Motivo</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -512,7 +512,7 @@ export function InterviewFeedbackDialog({
                 </span>
               )}
             </Label>
-            {isNoShow && <p className="text-xs text-muted-foreground mt-1">Ratings not applicable for no-show</p>}
+            {isNoShow && <p className="text-xs text-muted-foreground mt-1">Pontuações não se aplicam para não comparecimento</p>}
           </div>
           {criteria.map(({ key, label, scale_hint }) => (
             <div key={key} className="flex items-start gap-3">
@@ -560,11 +560,11 @@ export function InterviewFeedbackDialog({
 
         {/* Feedback */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Detailed Feedback</Label>
+          <Label className="text-sm font-medium">Feedback Detalhado</Label>
           <Textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Share your observations, strengths, areas of improvement..."
+            placeholder="Compartilhe suas observações detalhadas, pontos fortes e áreas de melhoria..."
             rows={4}
           />
         </div>
@@ -573,8 +573,8 @@ export function InterviewFeedbackDialog({
         <div className="space-y-2">
           <Label className="text-sm font-medium flex items-center gap-1.5">
             <Paperclip className="w-3.5 h-3.5" />
-            Work Samples
-            <span className="text-muted-foreground font-normal text-xs">(optional)</span>
+            Amostras de Trabalho / Arquivos
+            <span className="text-muted-foreground font-normal text-xs">(opcional)</span>
           </Label>
 
           {artifacts.length > 0 && (
@@ -696,11 +696,11 @@ export function InterviewFeedbackDialog({
                 className="w-full text-muted-foreground text-sm"
                 onClick={() => setDidntHappenOpen(true)}
               >
-                Interview didn't happen?
+                A entrevista não aconteceu?
               </Button>
             ) : (
               <div className="rounded-lg bg-muted/50 border p-3 space-y-2">
-                <p className="text-sm font-medium text-foreground">What happened?</p>
+                <p className="text-sm font-medium text-foreground">O que aconteceu?</p>
                 <Button
                   variant="outline"
                   className="w-full justify-start"
@@ -708,7 +708,7 @@ export function InterviewFeedbackDialog({
                   disabled={isSubmitting}
                 >
                   <UserX className="w-4 h-4 mr-2 text-red-500" />
-                  Candidate didn't show up
+                  Candidato não compareceu (Falta)
                 </Button>
                 <Button
                   variant="outline"
@@ -726,7 +726,7 @@ export function InterviewFeedbackDialog({
                   disabled={isSubmitting}
                 >
                   <X className="w-4 h-4 mr-2" />
-                  Interview was cancelled
+                  A entrevista foi cancelada
                 </Button>
                 <Button
                   variant="ghost"
@@ -744,14 +744,14 @@ export function InterviewFeedbackDialog({
 
       <Footer>
         {!forced && (
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
         )}
         <Button
           onClick={handleSubmit}
           disabled={!verdict || isSubmitting}
           className="btn-gradient text-primary-foreground"
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
+          {isSubmitting ? 'Salvando...' : 'Salvar Feedback'}
         </Button>
       </Footer>
     </>

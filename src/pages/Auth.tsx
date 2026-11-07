@@ -15,24 +15,24 @@ import { useSystemConfig, parseSsoSettings, type SsoSettings } from '@/hooks/use
 import { APPLICANT_DASHBOARD_PATH, APPLICANT_LOGIN_VERIFY_PATH, isApplicantPortalUserMetadata } from '@/lib/publicRoutes';
 import talentAppLogo from '@/assets/The-Talent-App-Logo.png';
 
-const emailSchema = z.string().email('Please enter a valid email address');
-const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
-const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
+const emailSchema = z.string().email('Por favor, insira um e-mail válido');
+const passwordSchema = z.string().min(6, 'A senha deve ter pelo menos 6 caracteres');
+const nameSchema = z.string().min(2, 'O nome deve ter pelo menos 2 caracteres');
 
 export default function Auth() {
-  usePageTitle('Sign In');
+  usePageTitle('Entrar');
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
   const [signupPendingEmail, setSignupPendingEmail] = useState<string | null>(null);
   const [showMfaChallenge, setShowMfaChallenge] = useState(false);
   const [ssoLoading, setSsoLoading] = useState(false);
   
-  // Login form
+  // Formulário de login
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrors, setLoginErrors] = useState<{ email?: string; password?: string }>({});
   
-  // Signup form
+  // Formulário de cadastro
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupName, setSignupName] = useState('');
@@ -62,13 +62,13 @@ export default function Auth() {
 
   const handleForgotPassword = async () => {
     if (!loginEmail.trim()) {
-      toast({ title: 'Enter your email first', description: 'Type your email address in the field above, then click "Forgot your password?"', variant: 'destructive' });
+      toast({ title: 'Informe seu e-mail primeiro', description: 'Digite seu e-mail no campo acima e depois clique em "Esqueceu sua senha?"', variant: 'destructive' });
       return;
     }
     try {
       emailSchema.parse(loginEmail);
     } catch {
-      toast({ title: 'Please enter a valid email address', variant: 'destructive' });
+      toast({ title: 'Por favor, insira um e-mail válido', variant: 'destructive' });
       return;
     }
     setIsLoading(true);
@@ -77,9 +77,9 @@ export default function Auth() {
     });
     setIsLoading(false);
     if (error) {
-      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erro', description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: 'Reset link sent', description: 'Check your email for a password reset link.' });
+      toast({ title: 'Link enviado', description: 'Verifique seu e-mail para acessar o link de redefinição de senha.' });
     }
   };
 
@@ -107,7 +107,7 @@ export default function Auth() {
     if (error) {
       toast({
         variant: 'destructive',
-        title: 'SSO sign-in failed',
+        title: 'Falha no login via SSO',
         description: error.message,
       });
     }
@@ -177,25 +177,25 @@ export default function Auth() {
     const { error, mfaRequired } = await signIn(loginEmail, loginPassword);
     
     if (error) {
-      let message = 'An error occurred during login';
+      let message = 'Ocorreu um erro durante o login';
       
       if (error.message.includes('Invalid login credentials')) {
-        message = 'Invalid email or password. Please try again.';
+        message = 'E-mail ou senha incorretos. Tente novamente.';
       } else if (error.message.includes('Email not confirmed')) {
-        message = 'Please confirm your email before logging in.';
+        message = 'Por favor, confirme seu e-mail antes de entrar.';
       }
       
       toast({
         variant: 'destructive',
-        title: 'Login Failed',
+        title: 'Falha no Login',
         description: message,
       });
     } else if (mfaRequired) {
       setShowMfaChallenge(true);
     } else {
       toast({
-        title: 'Welcome back!',
-        description: 'You have successfully logged in.',
+        title: 'Bem-vindo de volta!',
+        description: 'Você entrou com sucesso.',
       });
     }
     
@@ -212,26 +212,25 @@ export default function Auth() {
     const { error, session } = await signUp(signupEmail, signupPassword, signupName);
 
     if (error) {
-      let message = 'An error occurred during signup';
+      let message = 'Ocorreu um erro durante o cadastro';
 
       if (error.message.includes('User already registered')) {
-        message = 'This email is already registered. Please log in instead.';
+        message = 'Este e-mail já está cadastrado. Faça login na sua conta.';
       } else if (error.message.includes('Password')) {
         message = error.message;
       }
 
       toast({
         variant: 'destructive',
-        title: 'Signup Failed',
+        title: 'Falha no Cadastro',
         description: message,
       });
     } else if (!session) {
-      // Email confirmation required — Supabase didn't auto-confirm
       setSignupPendingEmail(signupEmail);
     } else {
       toast({
-        title: 'Account created!',
-        description: 'Welcome to The Talent App.',
+        title: 'Conta criada!',
+        description: 'Bem-vindo ao The Talent App.',
       });
     }
     
@@ -248,7 +247,7 @@ export default function Auth() {
             alt="The Talent App"
             className="h-14 w-auto mb-3"
           />
-          <p className="text-sm text-muted-foreground">Talent Acquisition Platform</p>
+          <p className="text-sm text-muted-foreground">Plataforma de Recrutamento & Seleção</p>
         </div>
 
         {signupPendingEmail ? (
@@ -258,37 +257,37 @@ export default function Auth() {
                 <MailCheck className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold">Check your email</h2>
+                <h2 className="text-lg font-semibold">Verifique seu e-mail</h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  We sent a confirmation link to<br />
+                  Enviamos um link de confirmação para<br />
                   <span className="font-medium text-foreground">{signupPendingEmail}</span>
                 </p>
               </div>
               <p className="text-xs text-muted-foreground max-w-xs">
-                Click the link in the email to confirm your account. Once confirmed, an admin will assign your role before you can access the platform.
+                Clique no link enviado ao seu e-mail para confirmar a sua conta. Após a confirmação, o administrador definirá seu perfil de acesso.
               </p>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => { setSignupPendingEmail(null); setActiveTab('login'); }}
               >
-                Back to login
+                Voltar ao login
               </Button>
             </CardContent>
           </Card>
         ) : (
         <Card className="surface-card border-0 shadow-elev-2">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="font-display text-xl">Welcome</CardTitle>
+            <CardTitle className="font-display text-xl">Boas-vindas</CardTitle>
             <CardDescription>
-              Sign in to manage sourcing, pipeline, and hiring in one place
+              Acesse para gerenciar vagas, pipeline e contratações em um só lugar
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="login">Entrar</TabsTrigger>
+                <TabsTrigger value="signup">Cadastrar</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
@@ -296,7 +295,7 @@ export default function Auth() {
                   <MfaChallengePanel
                     onSuccess={() => {
                       setShowMfaChallenge(false);
-                      toast({ title: 'Welcome back!', description: 'Two-factor verification complete.' });
+                      toast({ title: 'Bem-vindo de volta!', description: 'Autenticação em duas etapas concluída.' });
                       navigate(staffRedirectTarget, { replace: true });
                     }}
                     onCancel={async () => {
@@ -307,11 +306,11 @@ export default function Auth() {
                 ) : (
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="login-email">Email</Label>
+                    <Label htmlFor="login-email">E-mail</Label>
                     <Input
                       id="login-email"
                       type="email"
-                      placeholder="you@company.com"
+                      placeholder="seu.email@empresa.com"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       className={loginErrors.email ? 'border-destructive' : ''}
@@ -322,7 +321,7 @@ export default function Auth() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="login-password">Password</Label>
+                    <Label htmlFor="login-password">Senha</Label>
                     <Input
                       id="login-password"
                       type="password"
@@ -344,10 +343,10 @@ export default function Auth() {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
+                        Entrando...
                       </>
                     ) : (
-                      'Sign In'
+                      'Entrar'
                     )}
                   </Button>
                   <div className="text-center">
@@ -357,7 +356,7 @@ export default function Auth() {
                       className="text-sm text-muted-foreground hover:text-primary hover:underline"
                       disabled={isLoading}
                     >
-                      Forgot your password?
+                      Esqueceu sua senha?
                     </button>
                   </div>
                 </form>
@@ -369,7 +368,7 @@ export default function Auth() {
                         <span className="w-full border-t" />
                       </div>
                       <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-card px-2 text-muted-foreground">Or</span>
+                        <span className="bg-card px-2 text-muted-foreground">Ou</span>
                       </div>
                     </div>
                     <Button
@@ -384,7 +383,7 @@ export default function Auth() {
                       ) : (
                         <KeyRound className="mr-2 h-4 w-4" />
                       )}
-                      Sign in with SSO
+                      Entrar com SSO
                     </Button>
                   </div>
                 )}
@@ -393,11 +392,11 @@ export default function Auth() {
               <TabsContent value="signup">
                 <form onSubmit={handleSignup} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
+                    <Label htmlFor="signup-name">Nome Completo</Label>
                     <Input
                       id="signup-name"
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Seu Nome"
                       value={signupName}
                       onChange={(e) => setSignupName(e.target.value)}
                       className={signupErrors.name ? 'border-destructive' : ''}
@@ -408,11 +407,11 @@ export default function Auth() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">E-mail</Label>
                     <Input
                       id="signup-email"
                       type="email"
-                      placeholder="you@company.com"
+                      placeholder="seu.email@empresa.com"
                       value={signupEmail}
                       onChange={(e) => setSignupEmail(e.target.value)}
                       className={signupErrors.email ? 'border-destructive' : ''}
@@ -423,7 +422,7 @@ export default function Auth() {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">Senha</Label>
                     <Input
                       id="signup-password"
                       type="password"
@@ -445,10 +444,10 @@ export default function Auth() {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating account...
+                        Criando conta...
                       </>
                     ) : (
-                      'Create Account'
+                      'Criar Conta'
                     )}
                   </Button>
                 </form>
@@ -460,9 +459,9 @@ export default function Auth() {
         )}
 
         <div className="text-center text-sm text-muted-foreground mt-6 space-y-1">
-          <p>By continuing, you agree to The Talent App&apos;s terms of service.</p>
+          <p>Ao continuar, você concorda com os termos de serviço do The Talent App.</p>
           <p>
-            Built by{' '}
+            Desenvolvido por{' '}
             <a
               href="https://www.sparxitsolutions.com"
               target="_blank"

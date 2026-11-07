@@ -102,9 +102,9 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
       });
     
     if (error) {
-      toast.error('Failed to assign interviewer');
+      toast.error('Falha ao atribuir entrevistador');
     } else {
-      toast.success('Interviewer assigned');
+      toast.success('Entrevistador atribuído com sucesso');
       setSelectedInterviewer('');
       setNotes('');
       await fetchData();
@@ -115,9 +115,9 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
   const handleRemove = async (assignmentId: string) => {
     const { error } = await supabase.from('candidate_interviewers').delete().eq('id', assignmentId);
     if (error) {
-      toast.error('Failed to remove interviewer');
+      toast.error('Falha ao remover entrevistador');
     } else {
-      toast.success('Interviewer removed');
+      toast.success('Entrevistador removido com sucesso');
       await fetchData();
     }
   };
@@ -126,9 +126,9 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl min-w-0 sm:min-w-[420px] bg-background border shadow-lg overflow-hidden flex flex-col max-h-[90dvh]">
         <DialogHeader>
-          <DialogTitle>Assign Interviewers</DialogTitle>
+          <DialogTitle>Atribuir Entrevistadores</DialogTitle>
           <DialogDescription>
-            Manage interviewers assigned to <strong>{candidateName}</strong>. Assigned interviewers can view candidate details and evaluations.
+            Gerencie os entrevistadores atribuídos a <strong>{candidateName}</strong>. Entrevistadores atribuídos podem visualizar detalhes e avaliações do candidato.
           </DialogDescription>
         </DialogHeader>
 
@@ -143,7 +143,7 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
                 <div className="flex gap-2">
                   <Select value={selectedInterviewer} onValueChange={setSelectedInterviewer}>
                     <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Select an interviewer" />
+                      <SelectValue placeholder="Selecione um entrevistador" />
                     </SelectTrigger>
                     <SelectContent>
                       {availableInterviewers.map(r => (
@@ -155,12 +155,12 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
                   </Select>
                   <Button onClick={handleAssign} disabled={!selectedInterviewer || adding} size="sm">
                     <UserPlus className="h-4 w-4 mr-1" />
-                    {adding ? 'Adding...' : 'Assign'}
+                    {adding ? 'Atribuindo...' : 'Atribuir'}
                   </Button>
                 </div>
                 {selectedInterviewer && (
                   <Textarea
-                    placeholder="Notes for the interviewer (optional)"
+                    placeholder="Observações para o entrevistador (opcional)"
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
                     rows={2}
@@ -171,7 +171,7 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
 
             {availableInterviewers.length === 0 && assignments.length === 0 && (
               <p className="text-sm text-muted-foreground text-center py-4">
-                No interviewers available. Enable "Can Interview" for users in Settings first.
+                Nenhum entrevistador disponível. Ative a permissão "Pode Conduzir Entrevistas" para usuários em Configurações primeiro.
               </p>
             )}
 
@@ -180,9 +180,9 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[120px]">Interviewer</TableHead>
-                      <TableHead className="min-w-[180px]">Email</TableHead>
-                      <TableHead className="min-w-[120px]">Notes</TableHead>
+                      <TableHead className="min-w-[120px]">Entrevistador</TableHead>
+                      <TableHead className="min-w-[180px]">E-mail</TableHead>
+                      <TableHead className="min-w-[120px]">Observações</TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -205,7 +205,7 @@ export function AssignInterviewersDialog({ open, onOpenChange, candidateId, cand
             )}
 
             {assignments.length === 0 && availableInterviewers.length > 0 && (
-              <p className="text-sm text-muted-foreground text-center py-2">No interviewers assigned yet.</p>
+              <p className="text-sm text-muted-foreground text-center py-2">Nenhum entrevistador atribuído ainda.</p>
             )}
           </div>
         )}

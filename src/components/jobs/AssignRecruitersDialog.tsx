@@ -148,9 +148,9 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl min-w-0 sm:min-w-[420px] bg-background border shadow-lg overflow-hidden flex flex-col max-h-[90dvh]">
         <DialogHeader>
-          <DialogTitle>Assign Recruiters</DialogTitle>
+          <DialogTitle>Atribuir Recrutadores</DialogTitle>
           <DialogDescription>
-            Manage recruiters assigned to <strong>{jobTitle}</strong>. The first assigned becomes primary. Click the crown to change primary.
+            Gerencie os recrutadores responsáveis por <strong>{jobTitle}</strong>. O primeiro atribuído é o principal. Clique na coroa para alternar o recrutador principal.
           </DialogDescription>
         </DialogHeader>
 
@@ -164,7 +164,7 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
               <div className="flex gap-2">
                 <Select value={selectedRecruiter} onValueChange={setSelectedRecruiter}>
                   <SelectTrigger className="flex-1">
-                    <SelectValue placeholder="Select a recruiter to add" />
+                    <SelectValue placeholder="Selecione um recrutador para adicionar" />
                   </SelectTrigger>
                   <SelectContent>
                     {availableRecruiters.map(r => (
@@ -176,14 +176,14 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
                 </Select>
                 <Button onClick={handleAssign} disabled={!selectedRecruiter || adding} size="sm">
                   <UserPlus className="h-4 w-4 mr-1" />
-                  {adding ? 'Adding...' : 'Assign'}
+                  {adding ? 'Adicionando...' : 'Atribuir'}
                 </Button>
               </div>
             )}
 
             {availableRecruiters.length === 0 && assignments.length === 0 && (
               <p className="text-sm text-muted-foreground text-center py-4">
-                No recruiters available. Assign the "Recruiter" role to users in Settings first.
+                Nenhum recrutador disponível. Atribua a função de Recrutador aos usuários nas Configurações primeiro.
               </p>
             )}
 
@@ -192,9 +192,9 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[120px]">Recruiter</TableHead>
-                      <TableHead className="min-w-[180px]">Email</TableHead>
-                      <TableHead className="w-24">Role</TableHead>
+                      <TableHead className="min-w-[120px]">Recrutador</TableHead>
+                      <TableHead className="min-w-[180px]">E-mail</TableHead>
+                      <TableHead className="w-24">Papel</TableHead>
                       <TableHead className="w-16"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -207,17 +207,17 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
                           {a.is_primary ? (
                             <Badge className="gap-1 text-xs bg-amber-500/15 text-amber-700 border-amber-300 hover:bg-amber-500/20">
                               <Crown className="h-3 w-3 fill-amber-500 text-amber-500" />
-                              Primary
+                              Principal
                             </Badge>
                           ) : (
                             <button
                               className="text-xs text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1 disabled:opacity-50"
                               onClick={() => handleSetPrimary(a)}
                               disabled={!!togglingId}
-                              title="Set as primary recruiter"
+                              title="Definir como recrutador principal"
                             >
                               <Crown className="h-3 w-3" />
-                              Set primary
+                              Definir principal
                             </button>
                           )}
                         </TableCell>
@@ -239,7 +239,7 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
             )}
 
             {assignments.length === 0 && availableRecruiters.length > 0 && (
-              <p className="text-sm text-muted-foreground text-center py-2">No recruiters assigned yet.</p>
+              <p className="text-sm text-muted-foreground text-center py-2">Nenhum recrutador atribuído ainda.</p>
             )}
           </div>
         )}

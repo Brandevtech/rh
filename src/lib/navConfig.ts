@@ -38,18 +38,18 @@ export interface NavLinkItem {
 export const hiringPaths = ['/hiring', '/candidates', '/pipeline'];
 
 export const mainNavItems: NavItemConfig[] = [
-  { label: 'Dashboard', href: '/', roles: ['admin', 'hr', 'recruiter'] },
-  { label: 'My Interviews', href: '/my-interviews', roles: [], accessOnly: true },
-  { label: 'Hiring', href: '/hiring', roles: ['admin', 'hr', 'recruiter', 'interviewer'] },
-  { label: 'Calendar', href: '/calendar', roles: ['admin', 'hr', 'recruiter', 'interviewer'] },
-  { label: 'Evaluations', href: '/evaluations', roles: ['admin', 'hr', 'recruiter', 'interviewer'] },
-  { label: 'Reports', href: '/reports', roles: ['admin', 'hr', 'recruiter'] },
+  { label: 'Painel Geral', href: '/', roles: ['admin', 'hr', 'recruiter'] },
+  { label: 'Minhas Entrevistas', href: '/my-interviews', roles: [], accessOnly: true },
+  { label: 'Recrutamento', href: '/hiring', roles: ['admin', 'hr', 'recruiter', 'interviewer'] },
+  { label: 'Calendário', href: '/calendar', roles: ['admin', 'hr', 'recruiter', 'interviewer'] },
+  { label: 'Avaliações', href: '/evaluations', roles: ['admin', 'hr', 'recruiter', 'interviewer'] },
+  { label: 'Relatórios', href: '/reports', roles: ['admin', 'hr', 'recruiter'] },
 ];
 
 export const evaluationsSubItems: NavLinkItem[] = [
-  { label: 'Evaluations', href: '/evaluations', roles: ['admin', 'hr', 'recruiter', 'interviewer'], icon: ClipboardList },
-  { label: 'Analytics', href: '/analytics', roles: ['admin', 'hr'], icon: BarChart3 },
-  { label: 'Assessments', href: '/assessments', roles: ['admin', 'hr'], icon: FileSpreadsheet },
+  { label: 'Avaliações', href: '/evaluations', roles: ['admin', 'hr', 'recruiter', 'interviewer'], icon: ClipboardList },
+  { label: 'Métricas & Análises', href: '/analytics', roles: ['admin', 'hr'], icon: BarChart3 },
+  { label: 'Testes & Provas', href: '/assessments', roles: ['admin', 'hr'], icon: FileSpreadsheet },
 ];
 
 export const evaluationPaths = ['/evaluations', '/analytics', '/assessments'];
@@ -59,10 +59,10 @@ export type ReportsTab = 'job' | 'recruiter' | 'vendor' | 'velocity';
 const REPORTS_TAB_VALUES: ReportsTab[] = ['job', 'recruiter', 'vendor', 'velocity'];
 
 export const reportsSubItems: NavLinkItem[] = [
-  { label: 'By Job', href: '/reports?tab=job', roles: ['admin', 'hr', 'recruiter'], icon: FileSpreadsheet },
-  { label: 'By Recruiter', href: '/reports?tab=recruiter', roles: ['admin', 'hr', 'recruiter'], icon: Trophy },
-  { label: 'By Vendor', href: '/reports?tab=vendor', roles: ['admin', 'hr', 'recruiter'], icon: Building2 },
-  { label: 'Time & Velocity', href: '/reports?tab=velocity', roles: ['admin', 'hr'], icon: Gauge },
+  { label: 'Por Vaga', href: '/reports?tab=job', roles: ['admin', 'hr', 'recruiter'], icon: FileSpreadsheet },
+  { label: 'Por Recrutador', href: '/reports?tab=recruiter', roles: ['admin', 'hr', 'recruiter'], icon: Trophy },
+  { label: 'Por Fornecedor', href: '/reports?tab=vendor', roles: ['admin', 'hr', 'recruiter'], icon: Building2 },
+  { label: 'Tempo & Velocidade', href: '/reports?tab=velocity', roles: ['admin', 'hr'], icon: Gauge },
 ];
 
 export function parseReportsTab(search: string): ReportsTab {
@@ -112,24 +112,24 @@ export function filterMainNavItems(role: NavRole | null, canAccessMyInterviews: 
 export function getBottomNavTabs(role: NavRole | null, canAccessMyInterviews: boolean): NavLinkItem[] {
   if (role === 'interviewer') {
     return [
-      { label: 'Interviews', href: '/my-interviews', icon: CalendarCheck },
-      { label: 'Hiring', href: '/hiring', icon: Users },
-      { label: 'Calendar', href: '/calendar', icon: Calendar },
-      { label: 'Evaluations', href: '/evaluations', icon: ClipboardList },
+      { label: 'Entrevistas', href: '/my-interviews', icon: CalendarCheck },
+      { label: 'Recrutamento', href: '/hiring', icon: Users },
+      { label: 'Calendário', href: '/calendar', icon: Calendar },
+      { label: 'Avaliações', href: '/evaluations', icon: ClipboardList },
     ];
   }
 
   const tabs: NavLinkItem[] = [
-    { label: 'Home', href: '/', icon: Home },
+    { label: 'Início', href: '/', icon: Home },
   ];
 
   if (canAccessMyInterviews) {
-    tabs.push({ label: 'Interviews', href: '/my-interviews', icon: CalendarCheck });
+    tabs.push({ label: 'Entrevistas', href: '/my-interviews', icon: CalendarCheck });
   } else {
-    tabs.push({ label: 'Calendar', href: '/calendar', icon: Calendar });
+    tabs.push({ label: 'Calendário', href: '/calendar', icon: Calendar });
   }
 
-  tabs.push({ label: 'Hiring', href: '/hiring', icon: Users });
+  tabs.push({ label: 'Recrutamento', href: '/hiring', icon: Users });
 
   return tabs;
 }
@@ -207,19 +207,19 @@ export function getMoreMenuItems(role: NavRole | null, canAccessMyInterviews: bo
 
   if (canManageCandidates) {
     items.push(
-      { label: 'Jobs', href: '/jobs', icon: Briefcase },
-      { label: 'Talent Database', href: '/database', icon: Database },
+      { label: 'Vagas', href: '/jobs', icon: Briefcase },
+      { label: 'Banco de Talentos', href: '/database', icon: Database },
     );
   }
 
   if (canAccessSettings(role)) {
-    items.push({ label: 'Settings', href: '/settings', icon: Settings });
+    items.push({ label: 'Configurações', href: '/settings', icon: Settings });
   }
 
-  items.push({ label: 'Help & Guides', href: '/help', icon: BookOpen });
-  items.push({ label: 'Features Overview', href: '/features', icon: Sparkles });
+  items.push({ label: 'Ajuda & Tutoriais', href: '/help', icon: BookOpen });
+  items.push({ label: 'Visão Geral dos Recursos', href: '/features', icon: Sparkles });
 
-  items.push({ label: 'Sign out', href: '#', icon: LogOut, action: 'sign-out' });
+  items.push({ label: 'Sair', href: '#', icon: LogOut, action: 'sign-out' });
 
   return items;
 }

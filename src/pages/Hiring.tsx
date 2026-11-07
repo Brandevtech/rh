@@ -22,11 +22,11 @@ export function HiringLegacyRedirect({ view }: { view: 'board' | 'list' }) {
 }
 
 export default function Hiring() {
-  usePageTitle('Hiring');
+  usePageTitle('Recrutamento');
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { role } = useAuth();
-  // Interviewers/panel members get Pipeline for jobs they're assigned to (RLS-scoped).
+  // Entrevistadores têm acesso ao Pipeline para as vagas às quais estão vinculados (RLS-scoped).
   const canAccessBoard = !!role && ['admin', 'hr', 'recruiter', 'interviewer'].includes(role);
 
   const viewParam = searchParams.get('view');
@@ -78,24 +78,24 @@ export default function Hiring() {
         )}
       >
         <PageHeader
-          title="Hiring"
-          subtitle={view === 'board' ? 'Kanban pipeline by interview stage' : 'All candidates by job'}
+          title="Recrutamento"
+          subtitle={view === 'board' ? 'Pipeline Kanban por etapa de entrevista' : 'Todos os candidatos por vaga'}
           actions={canAccessBoard ? (
             <ToggleGroup
               type="single"
               value={view}
               onValueChange={(value) => value && setView(value as 'board' | 'list')}
-              aria-label="Hiring view"
+              aria-label="Visualização do recrutamento"
               className="gap-0 rounded-lg bg-muted p-1"
             >
               {([
-                { value: 'board', label: 'Board', icon: LayoutGrid },
-                { value: 'list', label: 'List', icon: List },
+                { value: 'board', label: 'Quadro', icon: LayoutGrid },
+                { value: 'list', label: 'Lista', icon: List },
               ] as const).map(({ value, label, icon: Icon }) => (
                 <ToggleGroupItem
                   key={value}
                   value={value}
-                  aria-label={`${label} view`}
+                  aria-label={`Visualização em ${label}`}
                   className="h-7 gap-1.5 rounded-sm px-3 text-label text-muted-foreground transition-colors duration-fast ease-out hover:bg-transparent hover:text-foreground data-[state=on]:bg-card data-[state=on]:text-foreground data-[state=on]:shadow-border"
                 >
                   <Icon className="size-4" strokeWidth={1.5} aria-hidden />

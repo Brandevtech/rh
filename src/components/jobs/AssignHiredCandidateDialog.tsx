@@ -76,7 +76,7 @@ export function AssignHiredCandidateDialog({
 
       if (cancelled) return;
       if (error) {
-        toast({ title: 'Failed to load candidates', description: error.message, variant: 'destructive' });
+        toast({ title: 'Falha ao carregar candidatos', description: error.message, variant: 'destructive' });
         setCandidates([]);
       } else {
         setCandidates(data ?? []);
@@ -156,11 +156,11 @@ export function AssignHiredCandidateDialog({
     }
   };
 
-  const title = state?.mode === 'change' ? 'Change hired candidate' : 'Assign hired candidates';
+  const title = state?.mode === 'change' ? 'Alterar contratação' : 'Definir candidatos contratados';
   const description =
     state?.mode === 'change' && state.replaceCandidate
-      ? `Replace ${state.replaceCandidate.name} with another candidate from this job's pipeline.`
-      : `Select one or more candidates who were on the pipeline for ${state?.jobTitle ?? 'this job'}.`;
+      ? `Substituir ${state.replaceCandidate.name} por outro candidato do pipeline desta vaga.`
+      : `Selecione um ou mais candidatos do pipeline da vaga ${state?.jobTitle ?? 'esta vaga'}.`;
 
   return (
     <Dialog open={open} onOpenChange={(next) => !saving && onOpenChange(next)}>
@@ -180,7 +180,7 @@ export function AssignHiredCandidateDialog({
           </div>
         ) : selectable.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No eligible candidates on this job. All pipeline candidates are already marked as hired.
+            Nenhum candidato elegível nesta vaga. Todos os candidatos do pipeline já estão marcados como contratados.
           </p>
         ) : (
           <div className="rounded-lg border max-h-[300px] overflow-y-auto">
@@ -235,9 +235,9 @@ export function AssignHiredCandidateDialog({
                 Savingâ€¦
               </>
             ) : state?.mode === 'change' ? (
-              'Change hire'
+              'Salvar alteração'
             ) : (
-              selectedIds.size > 1 ? 'Assign hired' : 'Assign hired'
+              'Confirmar contratação'
             )}
           </Button>
         </DialogFooter>

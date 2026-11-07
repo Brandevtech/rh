@@ -71,17 +71,17 @@ const PIPELINE_TERMINAL_STATUSES = new Set(['shortlisted', 'rejected', 'backout'
 type FitScoreFilter = 'all' | '70' | '80' | '90';
 
 const PIPELINE_STATUS_FILTERS: { value: InterviewVerdict; label: string }[] = [
-  { value: 'proceeded', label: 'Proceeded' },
-  { value: 'hold', label: 'On Hold' },
-  { value: 'no_show', label: 'No Show' },
-  { value: 'rejected', label: 'Declined' },
+  { value: 'proceeded', label: 'Aprovado' },
+  { value: 'hold', label: 'Em Espera' },
+  { value: 'no_show', label: 'Não Compareceu' },
+  { value: 'rejected', label: 'Recusado' },
 ];
 
 const FIT_SCORE_FILTER_OPTIONS: { value: FitScoreFilter; label: string }[] = [
-  { value: 'all', label: 'Any fit score' },
-  { value: '70', label: '70%+ fit' },
-  { value: '80', label: '80%+ fit' },
-  { value: '90', label: '90%+ fit' },
+  { value: 'all', label: 'Qualquer compatibilidade' },
+  { value: '70', label: '70%+ compatibilidade' },
+  { value: '80', label: '80%+ compatibilidade' },
+  { value: '90', label: '90%+ compatibilidade' },
 ];
 
 function parseVerdictFilters(raw: string | null): Set<InterviewVerdict> {
@@ -157,7 +157,7 @@ interface PipelineProps {
 }
 
 export default function Pipeline({ embedded = false }: PipelineProps) {
-  usePageTitle(embedded ? 'Hiring' : 'Interview Pipeline');
+  usePageTitle(embedded ? 'Recrutamento' : 'Pipeline de Contratação');
   const { user, isAdmin, isAdminOrHR, role } = useAuth();
   const { sortJobs } = usePinnedJobs(user?.id);
   const { jobs } = useJobs({ summary: true });
@@ -697,7 +697,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
     }, {
       onSuccess: () => {
         setFeedbackInterview(null);
-        toast({ title: 'Feedback submitted' });
+        toast({ title: 'Feedback enviado com sucesso' });
         notifyStaffEmail('verdict_submitted', feedbackInterview.id);
       },
     });
@@ -731,7 +731,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
     const jobStages = [...selectedJobStages].sort((a, b) => a.order_index - b.order_index);
     const currentIdx = jobStages.findIndex(s => s.id === interview.job_interview_stage_id);
     if (currentIdx === -1 || currentIdx >= jobStages.length - 1) {
-      toast({ title: 'Final stage', description: 'Candidate has completed all interview stages.' });
+      toast({ title: 'Etapa final', description: 'O candidato concluiu todas as etapas de entrevista.' });
       return;
     }
     const nextStage = jobStages[currentIdx + 1];
@@ -765,7 +765,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           data,
         );
         setScheduleInterview(null);
-        toast({ title: 'New interview session scheduled' });
+        toast({ title: 'Nova entrevista agendada' });
         await queryClient.invalidateQueries({ queryKey: ['candidate-interviews', activeJobId] });
         await queryClient.invalidateQueries({ queryKey: ['scheduled-interviews'] });
         await queryClient.invalidateQueries({ queryKey: ['my-interviews-upcoming'] });
@@ -777,7 +777,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       } else {
         await applyInterviewSchedule(scheduleInterview.id, data);
         setScheduleInterview(null);
-        toast({ title: scheduleInterview.scheduled_at ? 'Interview rescheduled' : 'Interview scheduled' });
+        toast({ title: scheduleInterview.scheduled_at ? 'Entrevista reagendada' : 'Entrevista agendada' });
         await queryClient.invalidateQueries({ queryKey: ['candidate-interviews', activeJobId] });
         await queryClient.invalidateQueries({ queryKey: ['scheduled-interviews'] });
         await queryClient.invalidateQueries({ queryKey: ['my-interviews-upcoming'] });
@@ -798,7 +798,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
     try {
       await cancelScheduledInterview(cancelTarget.id, reason, note);
       setCancelTarget(null);
-      toast({ title: 'Interview cancelled', description: 'The slot is open again at the same stage.' });
+      toast({ title: 'Entrevista cancelada', description: 'O horário ficou livre novamente na mesma etapa.' });
       await queryClient.invalidateQueries({ queryKey: ['candidate-interviews', activeJobId] });
       await queryClient.invalidateQueries({ queryKey: ['scheduled-interviews'] });
       await queryClient.invalidateQueries({ queryKey: ['my-interviews-upcoming'] });
@@ -831,7 +831,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       await queryClient.invalidateQueries({ queryKey: ['pipeline-job-counts'] });
       await queryClient.invalidateQueries({ queryKey: ['pending-approval-counts'] });
       await queryClient.invalidateQueries({ queryKey: ['pending-approval', activeJobId] });
-      toast({ title: 'Candidate approved', description: 'Moved to first interview stage.' });
+      toast({ title: 'Candidato aprovado', description: 'Movido para a primeira etapa do processo.' });
     } finally {
       setIsApprovingPending(false);
     }
@@ -859,7 +859,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
     setDeclineConfirm(null);
     setDeclineReason('');
     setDeclineReasonError(false);
-    toast({ title: 'Candidate declined', description: 'Candidate stays in the talent database.' });
+    toast({ title: 'Candidato recusado', description: 'O candidato permanece no banco de talentos.' });
   };
 
   const handleMarkHired = async (interview: HolisticInterview) => {
@@ -877,7 +877,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       await queryClient.invalidateQueries({ queryKey: ['pending-approval-counts'] });
       await queryClient.invalidateQueries({ queryKey: ['candidates'] });
       await queryClient.invalidateQueries({ queryKey: ['dashboard-metrics'] });
-      toast({ title: 'Candidate marked as hired', description: 'Removed from active pipeline.' });
+      toast({ title: 'Candidato contratado!', description: 'Marcado como contratado e finalizado no pipeline.' });
     } catch (err: unknown) {
       toast({
         title: 'Error',
@@ -942,7 +942,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           targetStage,
           user.id,
         );
-        toast({ title: 'Candidate moved', description: `Moved to ${targetStage.stage_name}` });
+        toast({ title: 'Candidato movido', description: `Movido para ${targetStage.stage_name}` });
         await queryClient.invalidateQueries({ queryKey: ['candidate-interviews', activeJobId] });
     await queryClient.invalidateQueries({ queryKey: ['pipeline-job-counts'] });
       } catch (err: any) {
@@ -970,7 +970,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
             targetStage,
             user.id,
           );
-          toast({ title: 'Candidate moved', description: `Moved to ${targetStage.stage_name}` });
+          toast({ title: 'Candidato movido', description: `Movido para ${targetStage.stage_name}` });
           await queryClient.invalidateQueries({ queryKey: ['candidate-interviews', activeJobId] });
     await queryClient.invalidateQueries({ queryKey: ['pipeline-job-counts'] });
         } catch (err: any) {
@@ -1019,7 +1019,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           )}
           <div className="flex items-center gap-3 flex-wrap w-full">
             <Input
-              placeholder="Search candidates..."
+              placeholder="Buscar candidatos..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -1062,7 +1062,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Fit score</Label>
+                    <Label className="text-sm font-medium">Compatibilidade</Label>
                     <Select
                       value={fitScoreFilter}
                       onValueChange={(value: FitScoreFilter) => {
@@ -1093,7 +1093,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                         });
                       }}
                     />
-                    <span>Pending feedback</span>
+                    <span>Feedback pendente</span>
                   </label>
                   {activeFilterCount > 0 && (
                     <Button
@@ -1200,8 +1200,8 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           <Card>
             <CardContent className="py-16 text-center space-y-3">
               <Settings2 className="w-12 h-12 mx-auto text-muted-foreground/40" />
-              <p className="text-muted-foreground">No interview stages configured for this job.</p>
-              <p className="text-xs text-muted-foreground">Apply a template to set up the pipeline stages.</p>
+              <p className="text-muted-foreground">Nenhuma etapa de entrevista configurada para esta vaga.</p>
+              <p className="text-xs text-muted-foreground">Aplique um modelo para estruturar as etapas do processo seletivo.</p>
               {canManage && (
                 <Button variant="outline" onClick={() => setShowTemplates(true)} className="gap-1">
                   <Layers className="w-4 h-4" /> Manage Templates
@@ -1268,7 +1268,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                       }}
                     >
                       {stageInterviews.length === 0 ? (
-                        <p className="text-xs text-muted-foreground text-center py-8">No candidates</p>
+                        <p className="text-xs text-muted-foreground text-center py-8">Nenhum candidato</p>
                       ) : (
                         stageInterviews.map(iv => (
                           <DraggablePipelineCard
@@ -1334,7 +1334,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                                 <button onClick={() => { setShowAddStage(false); setNewStageName(''); }} className="text-muted-foreground p-1"><XIcon className="w-4 h-4" /></button>
                               </div>
                               {isDuplicate && (
-                                <p className="text-xs text-destructive px-0.5">A stage with this name already exists.</p>
+                                <p className="text-xs text-destructive px-0.5">Já existe uma etapa com este nome.</p>
                               )}
                             </>
                           );
@@ -1345,7 +1345,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                         onClick={() => setShowAddStage(true)}
                         className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground px-2 py-1.5 rounded-md border border-dashed border-muted-foreground/30 hover:border-muted-foreground/60 transition-colors w-full"
                       >
-                        <Plus className="w-3.5 h-3.5" /> Add Stage
+                        <Plus className="w-3.5 h-3.5" /> Adicionar Etapa
                       </button>
                     )}
                   </div>
@@ -1369,14 +1369,14 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={showTemplates} onOpenChange={(open) => { setShowTemplates(open); if (!open) setApplyTemplateJobId(''); }}>
         <DialogContent className="max-w-lg max-h-[80dvh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Stage Templates</DialogTitle>
+            <DialogTitle>Modelos de Etapas</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Apply to Job</label>
+              <label className="text-sm font-medium">Aplicar à Vaga</label>
               <Select value={applyTemplateJobId} onValueChange={setApplyTemplateJobId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a job to apply stages..." />
+                  <SelectValue placeholder="Selecione uma vaga para aplicar as etapas..." />
                 </SelectTrigger>
                 <SelectContent>
                   {availableJobs.map((j: any) => (
@@ -1385,7 +1385,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                 </SelectContent>
               </Select>
               {!applyTemplateJobId && (
-                <p className="text-xs text-muted-foreground">Select a job first, then click "Apply" on a template to set up its stages.</p>
+                <p className="text-xs text-muted-foreground">Selecione uma vaga primeiro e depois clique em "Aplicar" em um modelo para configurar suas etapas.</p>
               )}
             </div>
             <StageTemplateManager
@@ -1484,10 +1484,9 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={!!advanceOverrideConfirm} onOpenChange={(open) => !open && setAdvanceOverrideConfirm(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Advance without passing assessment?</DialogTitle>
+            <DialogTitle>Avançar sem aprovação no teste?</DialogTitle>
             <DialogDescription>
-              <strong>{advanceOverrideConfirm?.candidate?.name}</strong> has not passed the required job assessment.
-              As admin/HR you can override and advance anyway.
+              <strong>{advanceOverrideConfirm?.candidate?.name}</strong> não foi aprovado no teste técnico obrigatório da vaga. Como administrador/RH, você pode avançar manualmente mesmo assim.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1496,7 +1495,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
               onClick={() => advanceOverrideConfirm && handleAdvance(advanceOverrideConfirm, true)}
               disabled={advanceCandidate.isPending}
             >
-              {advanceCandidate.isPending ? 'Advancingâ€¦' : 'Override & Advance'}
+              {advanceCandidate.isPending ? 'Advancingâ€¦' : 'Avançar Mesmo Assim'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1534,10 +1533,9 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={!!removeConfirm} onOpenChange={(open) => !open && setRemoveConfirm(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Remove from Pipeline?</DialogTitle>
+            <DialogTitle>Remover do Pipeline?</DialogTitle>
             <DialogDescription>
-              <strong>{removeConfirm?.candidate?.name}</strong> will be removed from the <strong>{removeConfirm?.job?.title}</strong> pipeline.
-              Their interview history will be preserved.
+              <strong>{removeConfirm?.candidate?.name}</strong> será removido do pipeline da vaga <strong>{removeConfirm?.job?.title}</strong>. O histórico de entrevistas do candidato será mantido.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1565,10 +1563,9 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={!!deleteStageConfirm} onOpenChange={(open) => !open && setDeleteStageConfirm(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Delete Stage?</DialogTitle>
+            <DialogTitle>Excluir Etapa?</DialogTitle>
             <DialogDescription>
-              Are you sure you want to permanently delete the <strong>{deleteStageConfirm?.name}</strong> stage?
-              This cannot be undone.
+              Tem certeza de que deseja excluir permanentemente a etapa <strong>{deleteStageConfirm?.name}</strong>? Esta ação não pode ser desfeita.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1593,15 +1590,14 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={!!declineConfirm} onOpenChange={(open) => { if (!open) { setDeclineConfirm(null); setDeclineReason(''); setDeclineReasonError(false); } }}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Decline Candidate?</DialogTitle>
+            <DialogTitle>Recusar Candidato?</DialogTitle>
             <DialogDescription>
-              <strong>{declineConfirm?.name}</strong> will be marked as declined for this role.
-              They will remain in the talent database and can be reconsidered for future openings.
+              <strong>{declineConfirm?.name}</strong> será marcado como recusado para esta vaga. Ele continuará registrado no banco de talentos e poderá ser considerado para futuras oportunidades.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-1.5 py-1">
             <label className="text-sm font-medium" htmlFor="pending-decline-reason">
-              Reason for declining <span className="text-destructive">*</span>
+              Motivo da recusa <span className="text-destructive">*</span>
             </label>
             <textarea
               id="pending-decline-reason"
@@ -1620,7 +1616,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
               }}
             />
             {declineReasonError ? (
-              <p className="text-xs text-destructive">A reason is required so recruiters can improve screening.</p>
+              <p className="text-xs text-destructive">O motivo é obrigatório para manter o histórico de triagem.</p>
             ) : (
               <p className="text-xs text-muted-foreground">Required â€” helps recruiters source more relevant profiles.</p>
             )}
@@ -1642,10 +1638,9 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={!!reopenConfirm} onOpenChange={(open) => !open && setReopenConfirm(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Re-open Candidate?</DialogTitle>
+            <DialogTitle>Reabrir Candidato?</DialogTitle>
             <DialogDescription>
-              Start a new round for <strong>{reopenConfirm?.candidate?.name}</strong> on <strong>{reopenConfirm?.job?.title}</strong>.
-              Round 1 feedback will be preserved in history.
+              Iniciar uma nova rodada para <strong>{reopenConfirm?.candidate?.name}</strong> na vaga <strong>{reopenConfirm?.job?.title}</strong>. Os feedbacks da rodada anterior serão mantidos no histórico.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1662,7 +1657,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                 );
               }}
             >
-              {reopenCandidate.isPending ? 'Re-openingâ€¦' : 'Start New Round'}
+              {reopenCandidate.isPending ? 'Re-openingâ€¦' : 'Iniciar Nova Rodada'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1751,22 +1746,22 @@ function DroppableColumn({
         </div>
         {!isEditing && canManage && (
           <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-fast ease-out ml-1">
-            <button onClick={onMoveLeft} disabled={isFirst} title="Move stage left"
+            <button onClick={onMoveLeft} disabled={isFirst} title="Mover etapa para esquerda"
               className="p-1 rounded text-muted-foreground hover:text-foreground disabled:opacity-20 disabled:cursor-not-allowed">
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
-            <button onClick={onMoveRight} disabled={isLast} title="Move stage right"
+            <button onClick={onMoveRight} disabled={isLast} title="Mover etapa para direita"
               className="p-1 rounded text-muted-foreground hover:text-foreground disabled:opacity-20 disabled:cursor-not-allowed">
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
-            <button onClick={onStartEdit} title="Rename stage"
+            <button onClick={onStartEdit} title="Renomear etapa"
               className="p-1 rounded text-muted-foreground hover:text-foreground">
               <Pencil className="w-3 h-3" />
             </button>
             <button
               onClick={onDelete}
               disabled={!isEmpty}
-              title={isEmpty ? 'Delete stage' : 'Remove candidates first'}
+              title={isEmpty ? 'Excluir etapa' : 'Remova os candidatos primeiro'}
               className="p-1 rounded text-muted-foreground hover:text-destructive disabled:opacity-20 disabled:cursor-not-allowed"
             >
               <Trash2 className="w-3 h-3" />

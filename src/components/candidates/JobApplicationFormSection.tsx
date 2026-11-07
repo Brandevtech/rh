@@ -22,7 +22,7 @@ function formatFormSentWhen(sentAt: string): string {
   if (differenceInHours(new Date(), date) < 24) {
     return formatDistanceToNow(date, { addSuffix: true });
   }
-  return `${format(date, 'MMM d, yyyy')} at ${format(date, 'h:mm a')}`;
+  return `${format(date, 'dd/MM/yyyy')} às ${format(date, 'HH:mm')}`;
 }
 
 function FormSentStatus({ sentAt }: { sentAt: string }) {
@@ -33,7 +33,7 @@ function FormSentStatus({ sentAt }: { sentAt: string }) {
         variant="outline"
         className="border-emerald-300 text-emerald-700 bg-emerald-50 dark:border-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/30"
       >
-        Sent
+        Enviado
       </Badge>
       <span className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
         {formatFormSentWhen(sentAt)}
@@ -47,13 +47,13 @@ export function ApplicationFormStatusBadge({ status }: { status: 'pending' | 'su
   if (status === 'submitted') {
     return (
       <Badge variant="outline" className="text-[10px] border-emerald-300 text-emerald-700 bg-emerald-50 dark:border-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/30">
-        Form complete
+        Formulário concluído
       </Badge>
     );
   }
   return (
     <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700 bg-amber-50 dark:border-amber-700 dark:text-amber-400 dark:bg-amber-950/30">
-      Form pending
+      Formulário pendente
     </Badge>
   );
 }
@@ -81,7 +81,7 @@ export function JobApplicationFormSection({
 
   if (!data?.required) return null;
 
-  const jobTitle = (data.application.job as { title?: string } | null)?.title || 'the position';
+  const jobTitle = (data.application.job as { title?: string } | null)?.title || 'a vaga';
   const initialAnswers = Object.fromEntries(
     (data.responses || []).map((r) => [r.question_key, r.answer_text]),
   );
@@ -90,7 +90,7 @@ export function JobApplicationFormSection({
   const formStatus = isSubmitted ? 'submitted' : data.form ? 'pending' : 'none';
   const canSendForm = canEdit && !isSubmitted && candidateName && candidateEmail;
   const formSentAt = data.application.form_sent_at;
-  const sendButtonLabel = formSentAt ? 'Resend Form to Candidate' : 'Send Form to Candidate';
+  const sendButtonLabel = formSentAt ? 'Reenviar Formulário ao Candidato' : 'Enviar Formulário ao Candidato';
 
   const handleSendForm = () => {
     if (!candidateName || !candidateEmail) return;
@@ -106,11 +106,11 @@ export function JobApplicationFormSection({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
         {embedded ? (
-          <h4 className="text-sm font-medium">Applicant Digital Form</h4>
+          <h4 className="text-sm font-medium">Formulário Digital do Candidato</h4>
         ) : (
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
             <ClipboardList className="h-4 w-4" />
-            Digital Application Form
+            Formulário Digital de Candidatura
           </h3>
         )}
         <ApplicationFormStatusBadge status={formStatus} />
@@ -119,7 +119,7 @@ export function JobApplicationFormSection({
       {!data.form ? (
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground italic">
-            Applicant has not started the digital application form yet. Send them a link or fill on their behalf.
+            O candidato ainda não iniciou o formulário digital. Envie um link ou preencha em seu nome.
           </p>
           {formSentAt && <FormSentStatus sentAt={formSentAt} />}
           <div className="flex flex-wrap gap-2">
@@ -146,7 +146,7 @@ export function JobApplicationFormSection({
                 }}
               >
                 <Pencil className="h-3.5 w-3.5" />
-                Fill on Behalf
+                Preencher pelo Candidato
               </Button>
             )}
           </div>
@@ -155,8 +155,8 @@ export function JobApplicationFormSection({
         <div className="space-y-3">
           {data.form.submitted_at && (
             <p className="text-xs text-muted-foreground">
-              Submitted {format(new Date(data.form.submitted_at), 'MMM d, yyyy')}
-              {data.form.filled_by_recruiter ? ' · Filled by recruiter' : ''}
+              Enviado em {format(new Date(data.form.submitted_at), 'dd/MM/yyyy')}
+              {data.form.filled_by_recruiter ? ' · Preenchido pelo recrutador' : ''}
             </p>
           )}
           <JobApplicationFormReadOnlyView
@@ -168,7 +168,7 @@ export function JobApplicationFormSection({
       ) : (
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground italic">
-            Form started but not yet submitted.
+            Formulário iniciado, mas ainda não enviado.
           </p>
           {formSentAt && <FormSentStatus sentAt={formSentAt} />}
           <div className="flex flex-wrap gap-2">
@@ -195,7 +195,7 @@ export function JobApplicationFormSection({
                 }}
               >
                 <Pencil className="h-3.5 w-3.5" />
-                Complete on Behalf
+                Concluir pelo Candidato
               </Button>
             )}
           </div>

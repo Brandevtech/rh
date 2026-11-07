@@ -35,7 +35,7 @@ export function PipelineActionQueue({
     <div
       className={cn('flex min-w-0 items-center gap-3', className)}
       role="region"
-      aria-label="Job action queue"
+      aria-label="Fila de ações da vaga"
     >
       <span className="shrink-0 text-caption font-medium uppercase tracking-[0.04em] text-muted-foreground">
         Do
@@ -84,7 +84,7 @@ export function PipelineActionQueue({
           onClick={onClear}
         >
           <CheckCircle2 className="size-4" strokeWidth={1.5} aria-hidden />
-          Clear focus
+          Limpar foco
         </Button>
       )}
     </div>

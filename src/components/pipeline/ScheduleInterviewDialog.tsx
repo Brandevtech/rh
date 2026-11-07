@@ -63,7 +63,7 @@ function isValidMeetingLink(value: string): boolean {
 
 function meetingLinkValidationMessage(value: string): string | null {
   const trimmed = value.trim();
-  if (!trimmed) return 'Meeting link is required for video interviews';
+  if (!trimmed) return 'O link da reunião é obrigatório para entrevistas em vídeo';
   if (!isValidMeetingLink(trimmed)) {
     return 'Enter a valid meeting URL (https://â€¦)';
   }
@@ -71,9 +71,9 @@ function meetingLinkValidationMessage(value: string): string | null {
 }
 
 const modeConfig: { value: InterviewMode; label: string; icon: React.ElementType }[] = [
-  { value: 'video', label: 'Video Call', icon: Video },
-  { value: 'in_person', label: 'In Person', icon: MapPin },
-  { value: 'phone', label: 'Phone', icon: Phone },
+  { value: 'video', label: 'Vídeo Chamada', icon: Video },
+  { value: 'in_person', label: 'Presencial', icon: MapPin },
+  { value: 'phone', label: 'Telefone', icon: Phone },
 ];
 
 export function ScheduleInterviewDialog({
@@ -242,7 +242,7 @@ export function ScheduleInterviewDialog({
       }
       onSubmit(data);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Could not check for scheduling conflicts';
+      const message = err instanceof Error ? err.message : 'Could not check for Conflito de agendamentos';
       toast({ title: 'Conflict check failed', description: message, variant: 'destructive' });
     } finally {
       setCheckingConflicts(false);
@@ -284,7 +284,7 @@ export function ScheduleInterviewDialog({
       <Header>
         <Title className="flex items-center gap-2">
           <CalendarDays className="w-5 h-5 text-primary" />
-          {isRescheduling ? 'Reschedule Interview' : 'Schedule Interview'}
+          {isRescheduling ? 'Reagendar Entrevista' : 'Agendar Entrevista'}
         </Title>
         <Desc>
           {candidateName} â€” <span className="font-medium text-foreground">{stageName}</span>
@@ -293,13 +293,13 @@ export function ScheduleInterviewDialog({
 
       {prescreenFormIncomplete && (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-          This candidate has not completed the digital job application form yet.
+          Este candidato ainda não preencheu o formulário digital de inscrição.
         </div>
       )}
 
         <div className="space-y-5 py-1">
           <div className="space-y-2">
-            <Label>Date <span className="text-muted-foreground font-normal text-xs">(optional)</span></Label>
+            <Label>Data <span className="text-muted-foreground font-normal text-xs">(opcional)</span></Label>
             <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -307,7 +307,7 @@ export function ScheduleInterviewDialog({
                   className={cn('w-full justify-start text-left font-normal', !selectedDate && 'text-muted-foreground')}
                 >
                   <CalendarDays className="mr-2 h-4 w-4" />
-                  {selectedDate ? format(selectedDate, 'PPP') : 'Pick a date'}
+                  {selectedDate ? format(selectedDate, 'PPP') : 'Escolha uma data'}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -323,7 +323,7 @@ export function ScheduleInterviewDialog({
           </div>
 
           {selectedDate && <div className="space-y-2">
-            <Label>Time</Label>
+            <Label>Horário</Label>
             <div className="flex gap-2">
               <Select value={selectedHour} onValueChange={setSelectedHour}>
                 <SelectTrigger className="flex-1">
@@ -350,17 +350,17 @@ export function ScheduleInterviewDialog({
 
           <div className="space-y-2">
             <Label>
-              Panelists <span className="text-destructive">*</span>
+              Entrevistadores <span className="text-destructive">*</span>
               <span className="text-muted-foreground font-normal text-xs ml-1">
                 (1â€“{MAX_PANELISTS})
               </span>
             </Label>
             {loadingInterviewers ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
-                <Loader2 className="h-4 w-4 animate-spin" /> Loading interviewers...
+                <Loader2 className="h-4 w-4 animate-spin" /> Carregando entrevistadores...
               </div>
             ) : interviewers.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-2">No interviewers found. Enable &quot;Can Interview&quot; for users in Settings.</p>
+              <p className="text-sm text-muted-foreground py-2">Nenhum entrevistador encontrado. Habilite a permissão de entrevistador nas Configurações.</p>
             ) : (
               <div className="rounded-lg border divide-y max-h-48 overflow-y-auto">
                 {interviewers.map(iv => {
@@ -396,7 +396,7 @@ export function ScheduleInterviewDialog({
           </div>
 
           <div className="space-y-2">
-            <Label>Interview Mode</Label>
+            <Label>Formato da Entrevista</Label>
             <div className="flex gap-2">
               {modeConfig.map(({ value, label, icon: Icon }) => (
                 <button
@@ -421,7 +421,7 @@ export function ScheduleInterviewDialog({
             <div className="space-y-2">
               <Label className="flex items-center gap-1.5" htmlFor="schedule-meeting-link">
                 <Link className="h-3.5 w-3.5 text-muted-foreground" />
-                Meeting Link <span className="text-destructive">*</span>
+                Link da Reunião <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="schedule-meeting-link"
@@ -438,7 +438,7 @@ export function ScheduleInterviewDialog({
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Required for video interviews
+                  Obrigatório para entrevistas por vídeo
                 </p>
               )}
             </div>
@@ -446,7 +446,7 @@ export function ScheduleInterviewDialog({
         </div>
 
         <Footer>
-          {!inline && <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>}
+          {!inline && <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>}
           <Button
             onClick={() => void handleSubmit()}
             disabled={!canSubmit || isSubmitting || checkingConflicts}
@@ -455,7 +455,7 @@ export function ScheduleInterviewDialog({
             {isSubmitting || checkingConflicts ? (
               <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {checkingConflicts ? 'Checkingâ€¦' : 'Saving...'}</>
             ) : (
-              <><CalendarDays className="h-4 w-4 mr-2" />{isRescheduling ? 'Reschedule' : 'Schedule'}</>
+              <><CalendarDays className="h-4 w-4 mr-2" />{isRescheduling ? 'Reagendar' : 'Agendar'}</>
             )}
           </Button>
         </Footer>
@@ -476,24 +476,24 @@ export function ScheduleInterviewDialog({
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-amber-600" />
-            Scheduling conflict
+            Conflito de agendamento
           </AlertDialogTitle>
           <AlertDialogDescription asChild>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
-                One or more panelists already have an interview that overlaps this slot.
+                Um ou mais entrevistadores já possuem entrevista agendada neste mesmo horário.
               </p>
               <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100 whitespace-pre-line">
                 {summarizeScheduleConflicts(pendingConflicts ?? [])}
               </div>
-              <p>Schedule anyway only if this overlap is intentional.</p>
+              <p>Agende mesmo assim apenas se este conflito de horário for intencional.</p>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Go back</AlertDialogCancel>
+          <AlertDialogCancel>Voltar</AlertDialogCancel>
           <AlertDialogAction onClick={confirmScheduleDespiteConflicts}>
-            Schedule anyway
+            Agendar mesmo assim
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

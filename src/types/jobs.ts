@@ -8,11 +8,11 @@ export const COMPLETED_JOB_STATUSES: JobStatus[] = ['closed', 'cancelled'];
 export type JobListTab = 'active' | 'closed' | 'cancelled';
 
 export const JOB_CANCEL_REASONS = [
-  { value: 'filled_internally', label: 'Filled internally' },
-  { value: 'role_dropped', label: 'Role dropped' },
-  { value: 'budget', label: 'Budget' },
-  { value: 'duplicate', label: 'Duplicate' },
-  { value: 'other', label: 'Other' },
+  { value: 'filled_internally', label: 'Preenchida internamente' },
+  { value: 'role_dropped', label: 'Vaga cancelada / Descontinuada' },
+  { value: 'budget', label: 'Orçamento suspenso' },
+  { value: 'duplicate', label: 'Vaga duplicada' },
+  { value: 'other', label: 'Outro motivo' },
 ] as const;
 
 export type JobCancelReason = (typeof JOB_CANCEL_REASONS)[number]['value'];
@@ -108,44 +108,44 @@ export interface JobApplication {
 }
 
 export const jobTypeLabels: Record<JobType, string> = {
-  full_time: 'Full Time',
-  part_time: 'Part Time',
-  contract: 'Contract',
-  internship: 'Internship',
+  full_time: 'Tempo Integral',
+  part_time: 'Meio Período',
+  contract: 'Contrato / PJ',
+  internship: 'Estágio',
   freelance: 'Freelance',
 };
 
 export const experienceLevelLabels: Record<ExperienceLevel, string> = {
-  entry: 'Entry Level',
-  mid: 'Mid Level',
-  senior: 'Senior',
-  lead: 'Lead',
-  executive: 'Executive',
+  entry: 'Júnior / Inicial',
+  mid: 'Pleno',
+  senior: 'Sênior',
+  lead: 'Liderança / Especialista',
+  executive: 'Executivo / Diretoria',
 };
 
 export const experienceYearsLabels: Record<ExperienceYearsRange, string> = {
   fresh: '0 (Fresh)',
-  '0_6_months': '0-6 Months',
-  '6_months_plus': '6 Months+',
-  '1_year_plus': '1 Year+',
-  '2_years_plus': '2 Years+',
-  '3_years_plus': '3 Years+',
-  '5_years_plus': '5 Years+',
-  '8_years_plus': '8 Years+',
-  '10_years_plus': '10 Years+',
-  '12_years_plus': '12 Years+',
-  '15_years_plus': '15 Years+',
+  '0_6_months': '0 a 6 meses',
+  '6_months_plus': '6 meses+',
+  '1_year_plus': '1 ano+',
+  '2_years_plus': '2 anos+',
+  '3_years_plus': '3 anos+',
+  '5_years_plus': '5 anos+',
+  '8_years_plus': '8 anos+',
+  '10_years_plus': '10 anos+',
+  '12_years_plus': '12 anos+',
+  '15_years_plus': '15 anos+',
 };
 
 export const positionTypeLabels: Record<PositionType, string> = {
-  tech: 'Tech',
-  non_tech: 'Non-Tech',
+  tech: 'Tecnologia',
+  non_tech: 'Não-Tecnologia',
 };
 
 export const jobStatusLabels: Record<JobStatus, string> = {
-  draft: 'Draft',
-  open: 'Open',
-  paused: 'Paused',
-  closed: 'Closed',
-  cancelled: 'Cancelled',
+  draft: 'Rascunho',
+  open: 'Aberta',
+  paused: 'Pausada',
+  closed: 'Fechada',
+  cancelled: 'Cancelada',
 };

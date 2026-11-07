@@ -20,7 +20,7 @@ function formatJdSentWhen(sentAt: string): string {
   if (differenceInHours(new Date(), date) < 24) {
     return formatDistanceToNow(date, { addSuffix: true });
   }
-  return `${format(date, 'MMM d, yyyy')} at ${format(date, 'h:mm a')}`;
+  return `${format(date, 'dd/MM/yyyy')} às ${format(date, 'HH:mm')}`;
 }
 
 export function JobDetailsEmailSection({
@@ -47,10 +47,10 @@ export function JobDetailsEmailSection({
 
   if (!application) return null;
 
-  const jobTitle = (application.job as { title?: string } | null)?.title || 'the position';
+  const jobTitle = (application.job as { title?: string } | null)?.title || 'a vaga';
   const canSend = canEdit && candidateName && candidateEmail;
   const jdSentAt = application.jd_sent_at;
-  const sendButtonLabel = jdSentAt ? 'Resend Job Details' : 'Send Job Details';
+  const sendButtonLabel = jdSentAt ? 'Reenviar Detalhes da Vaga' : 'Enviar Detalhes da Vaga';
 
   const handleSend = () => {
     if (!candidateName || !candidateEmail) return;
@@ -65,15 +65,15 @@ export function JobDetailsEmailSection({
   return (
     <div className="space-y-2">
       {embedded ? (
-        <h4 className="text-sm font-medium">Job Details Email</h4>
+        <h4 className="text-sm font-medium">E-mail com Detalhes da Vaga</h4>
       ) : (
         <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
           <Briefcase className="h-4 w-4" />
-          Job Details Email
+          E-mail com Detalhes da Vaga
         </h3>
       )}
       <p className="text-sm text-muted-foreground">
-        Email the candidate job title, location, type, experience, and full description with a link to the careers page.
+        Envie ao candidato por e-mail o cargo, localização, tipo de contrato, experiência exigida e descrição completa da vaga.
       </p>
       {jdSentAt && (
         <div className="flex flex-wrap items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-2 dark:border-emerald-800 dark:bg-emerald-950/40">
@@ -82,7 +82,7 @@ export function JobDetailsEmailSection({
             variant="outline"
             className="border-emerald-300 text-emerald-700 bg-emerald-50 dark:border-emerald-700 dark:text-emerald-400 dark:bg-emerald-950/30"
           >
-            Sent
+            Enviado
           </Badge>
           <span className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
             {formatJdSentWhen(jdSentAt)}

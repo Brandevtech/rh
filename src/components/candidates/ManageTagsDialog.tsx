@@ -53,19 +53,19 @@ export function ManageTagsDialog({ open, onOpenChange, candidate }: ManageTagsDi
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Tag className="h-5 w-5" />
-            Manage Tags
+            Gerenciar Tags
           </DialogTitle>
           <DialogDescription>
-            Add talent pool tags for <strong>{candidate.name}</strong>.
+            Gerencie as tags do banco de talentos para <strong>{candidate.name}</strong>.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 py-2">
           {isLoading ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading tags...
+              <Loader2 className="h-4 w-4 animate-spin" /> Carregando tags...
             </div>
           ) : tags.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No tags yet.</p>
+            <p className="text-sm text-muted-foreground">Nenhuma tag cadastrada.</p>
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {tags.map((tag) => (
@@ -76,7 +76,7 @@ export function ManageTagsDialog({ open, onOpenChange, candidate }: ManageTagsDi
                     className="rounded-full p-0.5 hover:bg-muted"
                     onClick={() => removeTag.mutate({ candidateId: candidate.id, tag })}
                     disabled={removeTag.isPending}
-                    aria-label={`Remove tag ${tag}`}
+                    aria-label={`Remover tag ${tag}`}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -86,18 +86,18 @@ export function ManageTagsDialog({ open, onOpenChange, candidate }: ManageTagsDi
           )}
           <div className="flex gap-2">
             <Input
-              placeholder="e.g. react, senior, referral pool"
+              placeholder="ex: react, senior, banco indicados"
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); void handleAdd(); } }}
             />
             <Button onClick={() => void handleAdd()} disabled={!newTag.trim() || addTag.isPending}>
-              Add
+              Adicionar
             </Button>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Done</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Concluído</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -55,7 +55,7 @@ function PeriodToggle({
   className?: string;
 }) {
   return (
-    <div role="group" aria-label="Period" className={cn('flex items-center rounded-lg bg-muted p-1 shrink-0', className)}>
+    <div role="group" aria-label="Período" className={cn('flex items-center rounded-lg bg-muted p-1 shrink-0', className)}>
       {(['week', 'month'] as const).map(p => (
         <button
           key={p}
@@ -69,7 +69,7 @@ function PeriodToggle({
               : 'text-muted-foreground hover:text-foreground'
           )}
         >
-          {p === 'week' ? 'This week' : 'This month'}
+          {p === 'week' ? 'Esta semana' : 'Este mês'}
         </button>
       ))}
     </div>
@@ -77,7 +77,7 @@ function PeriodToggle({
 }
 
 const Index = () => {
-  usePageTitle('Dashboard');
+  usePageTitle('Painel Geral');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [period, setPeriod] = useState<'week' | 'month'>('week');
@@ -85,7 +85,7 @@ const Index = () => {
   const { isInterviewer, isAdminOrHR, isRecruiter } = useAuth();
   const canAddCandidate = isAdminOrHR || isRecruiter;
   const enter = useFirstVisitEntrance();
-  const periodLabel = period === 'week' ? 'week' : 'month';
+  const periodLabel = period === 'week' ? 'nesta semana' : 'neste mês';
 
   useStaffHeaderConfig({
     onAddCandidate: canAddCandidate ? () => navigate('/database?action=add') : undefined,
@@ -107,11 +107,11 @@ const Index = () => {
         <main className="container mx-auto px-4 sm:px-6 py-4 md:py-6 lg:py-8 space-y-4 md:space-y-6 lg:space-y-8 pb-safe">
         <div {...enter(0)}>
           <PageHeader
-            title="Dashboard"
+            title="Painel Geral"
             subtitle={
               isInterviewer
-                ? 'Your upcoming interviews and interview stages'
-                : 'Your recruitment pipeline at a glance'
+                ? 'Suas próximas entrevistas e etapas do processo'
+                : 'Visão geral do seu fluxo de recrutamento'
             }
             actions={!isInterviewer ? (
               <PeriodToggle period={period} onChange={setPeriod} className="hidden lg:flex mt-1" />
@@ -126,10 +126,10 @@ const Index = () => {
           )}
         </div>
 
-        {/* KPI Cards — interviewers skip these; they use Upcoming Interviews + Interview Stages */}
+        {/* Cartões KPI */}
         {!isInterviewer && (
           <section
-            aria-label="Key metrics"
+            aria-label="Métricas principais"
             className={cn('grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4', enter(100).className)}
             style={enter(100).style}
           >
@@ -138,9 +138,9 @@ const Index = () => {
             ) : (
               <>
                 <StatCard
-                  label="Talent pool"
+                  label="Banco de talentos"
                   value={(metrics?.totalCandidates ?? 0).toLocaleString()}
-                  hint={metrics?.newThisPeriod ? `+${metrics.newThisPeriod.toLocaleString()} this ${periodLabel}` : `None new this ${periodLabel}`}
+                  hint={metrics?.newThisPeriod ? `+${metrics.newThisPeriod.toLocaleString()} ${periodLabel}` : `Nenhum novo ${periodLabel}`}
                   trend={metrics?.newThisPeriodTrend !== undefined && (metrics?.newThisPeriod ?? 0) > 0 ? {
                     value: Math.abs(metrics.newThisPeriodTrend),
                     isPositive: metrics.newThisPeriodTrend >= 0,
@@ -149,32 +149,32 @@ const Index = () => {
                 />
 
                 <StatCard
-                  label="Active candidates"
+                  label="Candidatos ativos"
                   value={(metrics?.activeCandidates ?? 0).toLocaleString()}
                   total={metrics?.totalCandidates ?? 0}
-                  hint={`of ${(metrics?.totalCandidates ?? 0).toLocaleString()} in the pool`}
+                  hint={`de ${(metrics?.totalCandidates ?? 0).toLocaleString()} no banco`}
                   series={2}
                   href="/hiring"
                 />
 
                 <StatCard
-                  label="Open jobs"
+                  label="Vagas abertas"
                   value={(metrics?.openJobs ?? 0).toLocaleString()}
-                  hint={`${(metrics?.openPositions ?? 0).toLocaleString()} open positions`}
+                  hint={`${(metrics?.openPositions ?? 0).toLocaleString()} posições disponíveis`}
                   href="/jobs"
                 />
 
                 <StatCard
-                  label={`Hires this ${periodLabel}`}
+                  label={`Contratações ${periodLabel}`}
                   value={(metrics?.hiresThisPeriod ?? 0).toLocaleString()}
-                  hint="Candidates selected"
+                  hint="Candidatos aprovados"
                 />
               </>
             )}
           </section>
         )}
 
-        {/* Interviewer layout */}
+        {/* Layout do Entrevistador */}
         {isInterviewer ? (
           <section
             className={cn('grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4', enter(200).className)}

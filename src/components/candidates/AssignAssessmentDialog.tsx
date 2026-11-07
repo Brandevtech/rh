@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/popover';
 import { CalendarIcon, Copy, CheckCircle, Link, Mail, Loader2 } from 'lucide-react';
 import { format, addDays } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { useAssessments } from '@/hooks/useAssessments';
 import { useCandidateAssessments } from '@/hooks/useCandidates';
@@ -118,18 +119,18 @@ export function AssignAssessmentDialog({
           if (data?.success) {
             setEmailSent(true);
             toast({
-              title: 'Email sent!',
-              description: `Invitation sent to ${candidate.email}`,
+              title: 'E-mail enviado!',
+              description: `Convite enviado para ${candidate.email}`,
             });
           } else {
-            throw new Error(data?.error || 'Failed to send email');
+            throw new Error(data?.error || 'Falha ao enviar e-mail');
           }
         } catch (err) {
           console.error('Email send error:', err);
           toast({
             variant: 'destructive',
-            title: 'Email failed',
-            description: 'Could not send invitation email. You can share the link manually.',
+            title: 'Falha no envio do e-mail',
+            description: 'Não foi possível enviar o e-mail de convite. Você pode compartilhar o link manualmente.',
           });
         } finally {
           setIsSendingEmail(false);
@@ -160,9 +161,9 @@ export function AssignAssessmentDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Assign Assessment</DialogTitle>
+          <DialogTitle>Atribuir Avaliação</DialogTitle>
           <DialogDescription>
-            Assign an assessment to {candidate.name}. A unique magic link will be generated.
+            Atribua uma avaliação para {candidate.name}. Um link mágico exclusivo será gerado.
           </DialogDescription>
         </DialogHeader>
 
@@ -174,20 +175,20 @@ export function AssignAssessmentDialog({
               </div>
             </div>
             <div className="text-center">
-              <h3 className="font-semibold text-lg">Assessment Assigned!</h3>
+              <h3 className="font-semibold text-lg">Avaliação Atribuída!</h3>
               {emailSent ? (
                 <p className="text-sm text-green-600 dark:text-green-400 mt-1 flex items-center justify-center gap-1">
                   <Mail className="h-4 w-4" />
-                  Invitation email sent to {candidate.email}
+                  E-mail de convite enviado para {candidate.email}
                 </p>
               ) : isSendingEmail ? (
                 <p className="text-sm text-muted-foreground mt-1 flex items-center justify-center gap-1">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Sending email...
+                  Enviando e-mail...
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground mt-1">
-                  Share this magic link with the candidate
+                  Compartilhe este link mágico com o candidato
                 </p>
               )}
             </div>
@@ -211,15 +212,15 @@ export function AssignAssessmentDialog({
         ) : (
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Assessment *</Label>
+              <Label>Avaliação *</Label>
               {availableAssessments.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  No active assessments available. Activate a draft in Assessment Builder or generate one from Assessments.
+                  Nenhuma avaliação ativa disponível. Ative um rascunho no Construtor de Avaliações ou gere uma nova em Avaliações.
                 </p>
               ) : (
                 <Select value={selectedAssessment} onValueChange={setSelectedAssessment}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select an assessment" />
+                    <SelectValue placeholder="Selecione uma avaliação" />
                   </SelectTrigger>
                   <SelectContent>
                     {availableAssessments.map((assessment) => (
@@ -227,10 +228,10 @@ export function AssignAssessmentDialog({
                         <div className="flex flex-col">
                           <span>
                             {assessment.title}
-                            {assessment.status === 'draft' ? ' (draft)' : ''}
+                            {assessment.status === 'draft' ? ' (rascunho)' : ''}
                           </span>
                           <span className="text-xs text-muted-foreground">
-                            {assessment.duration_minutes} min • {assessment.passing_score}% to pass
+                            {assessment.duration_minutes} min • {assessment.passing_score}% para aprovação
                           </span>
                         </div>
                       </SelectItem>
@@ -240,13 +241,13 @@ export function AssignAssessmentDialog({
               )}
               {alreadyAssigned && (
                 <p className="text-xs text-amber-600 dark:text-amber-400">
-                  This assessment was previously assigned — a new invitation will be created.
+                  Esta avaliação já foi atribuída anteriormente — um novo convite será gerado.
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <Label>Deadline (optional)</Label>
+              <Label>Prazo (opcional)</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -257,7 +258,7 @@ export function AssignAssessmentDialog({
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {deadline ? format(deadline, 'PPP') : 'No deadline'}
+                    {deadline ? format(deadline, 'PPP', { locale: ptBR }) : 'Sem prazo definido'}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -279,7 +280,7 @@ export function AssignAssessmentDialog({
                 onCheckedChange={(checked) => setSendEmail(checked === true)}
               />
               <Label htmlFor="sendEmail" className="text-sm font-normal cursor-pointer">
-                Send invitation email to {candidate.email}
+                Enviar e-mail de convite para {candidate.email}
               </Label>
             </div>
           </div>
@@ -287,17 +288,17 @@ export function AssignAssessmentDialog({
 
         <DialogFooter>
           {createdLink ? (
-            <Button onClick={handleClose}>Done</Button>
+            <Button onClick={handleClose}>Concluído</Button>
           ) : (
             <>
               <Button variant="outline" onClick={handleClose}>
-                Cancel
+                Cancelar
               </Button>
               <Button
                 onClick={handleAssign}
                 disabled={!selectedAssessment || assignAssessment.isPending}
               >
-                {assignAssessment.isPending ? 'Assigning...' : 'Assign & Generate Link'}
+                {assignAssessment.isPending ? 'Atribuindo...' : 'Atribuir e Gerar Link'}
               </Button>
             </>
           )}

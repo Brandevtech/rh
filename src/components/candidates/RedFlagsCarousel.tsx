@@ -62,7 +62,7 @@ export function RedFlagsCarousel({ flags }: RedFlagsCarouselProps) {
         {multi && (
           <button
             type="button"
-            aria-label="Previous flag"
+            aria-label="Alerta anterior"
             onClick={() => go(-1)}
             className="shrink-0 mt-0.5 p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/10"
           >
@@ -75,16 +75,16 @@ export function RedFlagsCarousel({ flags }: RedFlagsCarouselProps) {
           {multi && (
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-medium opacity-70 tabular-nums">
-                Flag {safeIndex + 1} of {flags.length}
+                Alerta {safeIndex + 1} de {flags.length}
               </span>
-              <div className="flex items-center gap-1" role="tablist" aria-label="Flag indicators">
+              <div className="flex items-center gap-1" role="tablist" aria-label="Indicadores de alertas">
                 {flags.map((_, i) => (
                   <button
                     key={i}
                     type="button"
                     role="tab"
                     aria-selected={i === safeIndex}
-                    aria-label={`Flag ${i + 1}`}
+                    aria-label={`Alerta ${i + 1}`}
                     onClick={() => setIndex(i)}
                     className={cn(
                       'h-1.5 rounded-full transition-all',
@@ -99,7 +99,7 @@ export function RedFlagsCarousel({ flags }: RedFlagsCarouselProps) {
         {multi && (
           <button
             type="button"
-            aria-label="Next flag"
+            aria-label="Próximo alerta"
             onClick={() => go(1)}
             className="shrink-0 mt-0.5 p-0.5 rounded hover:bg-black/5 dark:hover:bg-white/10"
           >

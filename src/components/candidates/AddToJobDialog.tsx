@@ -45,8 +45,8 @@ export function AddToJobDialog({ open, onOpenChange, candidate }: AddToJobDialog
     const currentJobId = (candidate as { job_id?: string | null }).job_id;
     if (currentJobId === selectedJobId) {
       toast({
-        title: 'Already on this job',
-        description: 'This candidate is already linked to the selected job.',
+        title: 'Já vinculado a esta vaga',
+        description: 'Este candidato já está vinculado à vaga selecionada.',
       });
       return;
     }
@@ -66,8 +66,8 @@ export function AddToJobDialog({ open, onOpenChange, candidate }: AddToJobDialog
       );
       if (alreadyInJob) {
         toast({
-          title: 'Already in pipeline',
-          description: 'This candidate is already active in the pipeline for that job.',
+          title: 'Já no pipeline',
+          description: 'Este candidato já está ativo no pipeline desta vaga.',
         });
         return;
       }
@@ -90,10 +90,10 @@ export function AddToJobDialog({ open, onOpenChange, candidate }: AddToJobDialog
       await queryClient.invalidateQueries({ queryKey: ['candidate-application-form'] });
       await queryClient.invalidateQueries({ queryKey: ['job-application-form-statuses'] });
 
-      const jobTitle = openJobs.find((j: { id: string }) => j.id === selectedJobId)?.title || 'the job';
+      const jobTitle = openJobs.find((j: { id: string }) => j.id === selectedJobId)?.title || 'a vaga';
       toast({
-        title: 'Added to job',
-        description: `${candidate.name} is now linked to ${jobTitle} (Pending Approval).`,
+        title: 'Adicionado à vaga',
+        description: `${candidate.name} agora está vinculado a ${jobTitle} (Aprovação Pendente).`,
       });
 
       supabase.functions
@@ -103,8 +103,8 @@ export function AddToJobDialog({ open, onOpenChange, candidate }: AddToJobDialog
       setSelectedJobId('');
       onOpenChange(false);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Could not assign job';
-      toast({ variant: 'destructive', title: 'Failed to add to job', description: message });
+      const message = err instanceof Error ? err.message : 'Não foi possível vincular à vaga';
+      toast({ variant: 'destructive', title: 'Falha ao vincular à vaga', description: message });
     } finally {
       setIsSubmitting(false);
     }
@@ -116,22 +116,22 @@ export function AddToJobDialog({ open, onOpenChange, candidate }: AddToJobDialog
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Briefcase className="h-5 w-5" />
-            Add to Job
+            Vincular à Vaga
           </DialogTitle>
           <DialogDescription>
-            Link <strong>{candidate.name}</strong> to a job. They will appear in Pending Approval for that role.
+            Vincule <strong>{candidate.name}</strong> a uma vaga. O candidato aparecerá em Aprovação Pendente para esta posição.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
-          <Label>Job</Label>
+          <Label>Vaga</Label>
           <Select value={selectedJobId} onValueChange={setSelectedJobId}>
             <SelectTrigger>
-              <SelectValue placeholder="Select an open job..." />
+              <SelectValue placeholder="Selecione uma vaga aberta..." />
             </SelectTrigger>
             <SelectContent>
               {openJobs.map((job: { id: string; title: string; status: string }) => (
                 <SelectItem key={job.id} value={job.id}>
-                  {job.title}{job.status === 'paused' ? ' (Paused)' : ''}
+                  {job.title}{job.status === 'paused' ? ' (Pausada)' : ''}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -139,13 +139,13 @@ export function AddToJobDialog({ open, onOpenChange, candidate }: AddToJobDialog
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleAssign} disabled={!selectedJobId || isSubmitting}>
             {isSubmitting ? (
-              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Adding...</>
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Vinculando...</>
             ) : (
-              'Add to Job'
+              'Vincular à Vaga'
             )}
           </Button>
         </DialogFooter>

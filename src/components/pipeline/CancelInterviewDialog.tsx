@@ -60,17 +60,17 @@ export function CancelInterviewDialog({
         overlayClassName={overlayClassName}
       >
         <DialogHeader>
-          <DialogTitle>Cancel interview?</DialogTitle>
+          <DialogTitle>Cancelar entrevista?</DialogTitle>
           <DialogDescription>
             {candidateName ? (
               <>
-                This voids the scheduled slot for <strong>{candidateName}</strong>.
-                They stay in the same pipeline stage (unscheduled). This is not a no-show or rejection.
+                Isso desmarca o horário agendado para <strong>{candidateName}</strong>.
+                O candidato permanece na mesma etapa do processo (como não agendado). Isso não conta como falta nem reprovação.
               </>
             ) : (
               <>
-                This voids the scheduled slot. The candidate stays in the same pipeline stage.
-                This is not a no-show or rejection.
+                Isso desmarca o horário agendado. O candidato permanece na mesma etapa do processo.
+                Isso não conta como falta nem reprovação.
               </>
             )}
           </DialogDescription>
@@ -78,7 +78,7 @@ export function CancelInterviewDialog({
         <div className="space-y-3 py-1">
           <div className="space-y-2">
             <Label>
-              Reason <span className="text-destructive">*</span>
+              Motivo <span className="text-destructive">*</span>
             </Label>
             <RadioGroup
               value={reason}
@@ -98,29 +98,29 @@ export function CancelInterviewDialog({
               ))}
             </RadioGroup>
             {reasonError && (
-              <p className="text-xs text-destructive">Select a reason to cancel.</p>
+              <p className="text-xs text-destructive">Selecione um motivo para o cancelamento.</p>
             )}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="cancel-interview-note">Note (optional)</Label>
+            <Label htmlFor="cancel-interview-note">Observação (opcional)</Label>
             <Textarea
               id="cancel-interview-note"
               rows={2}
-              placeholder="Anything the panel should know…"
+              placeholder="Informações relevantes para os entrevistadores…"
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            The interviewer and panelists will be notified in-app and by email.
+            Os entrevistadores envolvidos serão notificados no sistema e por e-mail.
           </p>
         </div>
         <DialogFooter>
           <Button variant="outline" disabled={isSubmitting} onClick={() => onOpenChange(false)}>
-            Keep scheduled
+            Manter agendamento
           </Button>
           <Button variant="destructive" disabled={isSubmitting || !reason} onClick={handleConfirm}>
-            {isSubmitting ? 'Cancelling…' : 'Cancel interview'}
+            {isSubmitting ? 'Cancelando…' : 'Cancelar entrevista'}
           </Button>
         </DialogFooter>
       </DialogContent>

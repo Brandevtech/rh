@@ -47,7 +47,7 @@ function AppSidebar() {
   const { data: profile } = useUserProfile();
   const { canAccess: canAccessMyInterviews } = useCanAccessMyInterviews();
   const [profileOpen, setProfileOpen] = useState(false);
-  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Profile';
+  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Perfil';
   const initials = displayName
     .split(' ')
     .map((n: string) => n[0])
@@ -57,8 +57,8 @@ function AppSidebar() {
 
   const navItems = filterMainNavItems(role, canAccessMyInterviews);
   const visibleEvalSubs = evaluationsSubItems.filter(item => !role || item.roles?.includes(role));
-  const isEvaluationsActive = evaluationPaths.some(p => location.pathname.startsWith(p));
   const visibleReportSubs = reportsSubItems.filter(item => !role || item.roles?.includes(role));
+  const isEvaluationsActive = evaluationPaths.some(p => location.pathname.startsWith(p));
   const isReportsActive = isReportsRoute(location.pathname);
   const canManageCandidates = role && ['admin', 'hr', 'recruiter'].includes(role);
   const showSettings = canAccessSettings(role);
@@ -75,7 +75,7 @@ function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className={groupLabelClass}>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel className={groupLabelClass}>Menu Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.filter(item => item.href !== '/calendar').map(item => {
@@ -86,14 +86,14 @@ function AppSidebar() {
                         <SidebarMenuButton
                           asChild
                           isActive={isEvaluationsActive}
-                          tooltip="Evaluations"
+                          tooltip="Avaliações"
                         >
                           <CollapsibleTrigger>
                             {(() => {
                               const EvalIcon = getMainNavIcon(item.href);
                               return <EvalIcon className="h-4 w-4 shrink-0" />;
                             })()}
-                            <span>Evaluations</span>
+                            <span>Avaliações</span>
                             <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                           </CollapsibleTrigger>
                         </SidebarMenuButton>
@@ -126,14 +126,14 @@ function AppSidebar() {
                         <SidebarMenuButton
                           asChild
                           isActive={isReportsActive}
-                          tooltip="Reports"
+                          tooltip="Relatórios"
                         >
                           <CollapsibleTrigger>
                             {(() => {
                               const ReportsIcon = getMainNavIcon(item.href);
                               return <ReportsIcon className="h-4 w-4 shrink-0" />;
                             })()}
-                            <span>Reports</span>
+                            <span>Relatórios</span>
                             <ChevronDown className="ml-auto h-4 w-4 shrink-0 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                           </CollapsibleTrigger>
                         </SidebarMenuButton>
@@ -183,22 +183,22 @@ function AppSidebar() {
 
         {canManageCandidates && (
           <SidebarGroup className="mt-auto">
-            <SidebarGroupLabel className={groupLabelClass}>Resources</SidebarGroupLabel>
+            <SidebarGroupLabel className={groupLabelClass}>Recursos</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isNavActive(location.pathname, '/jobs')} tooltip="Jobs">
+                  <SidebarMenuButton asChild isActive={isNavActive(location.pathname, '/jobs')} tooltip="Vagas">
                     <Link to="/jobs">
                       <Briefcase className="h-4 w-4 shrink-0" />
-                      <span>Jobs</span>
+                      <span>Vagas</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={isNavActive(location.pathname, '/database')} tooltip="Talent Database">
+                  <SidebarMenuButton asChild isActive={isNavActive(location.pathname, '/database')} tooltip="Banco de Talentos">
                     <Link to="/database">
                       <Database className="h-4 w-4 shrink-0" />
-                      <span>Talent Database</span>
+                      <span>Banco de Talentos</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -212,10 +212,10 @@ function AppSidebar() {
         <SidebarMenu>
           {showSettings && (
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={location.pathname.startsWith('/settings')} tooltip="Settings">
+              <SidebarMenuButton asChild isActive={location.pathname.startsWith('/settings')} tooltip="Configurações">
                 <Link to="/settings">
                   <Settings className="h-4 w-4 shrink-0" />
-                  <span>Settings</span>
+                  <span>Configurações</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -265,7 +265,7 @@ export function AppShell({
         href="#staff-scroll-pane"
         className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-60 focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:shadow-popover focus:outline-hidden focus:ring-2 focus:ring-ring"
       >
-        Skip to content
+        Pular para o conteúdo
       </a>
       <AppSidebar />
       <SidebarInset className="flex h-full min-h-0 min-w-0 w-full max-w-full flex-col overflow-hidden">

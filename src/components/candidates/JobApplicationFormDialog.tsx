@@ -47,12 +47,12 @@ export function JobApplicationFormDialog({
       >
         <DialogHeader className="border-b px-4 pb-3 pt-4 sm:px-6 sm:pt-6">
           <DialogTitle className="pr-6 text-left">
-            Job Application Form{candidateName ? ` — ${candidateName}` : ''}
+            Formulário de Candidatura{candidateName ? ` — ${candidateName}` : ''}
           </DialogTitle>
           <DialogDescription className="text-left">
             {isSubmitted
-              ? 'View submitted pre-screen responses.'
-              : 'Complete on behalf of the applicant. Will be marked as filled by recruiter.'}
+              ? 'Visualizar respostas enviadas da pré-triagem.'
+              : 'Preencha em nome do candidato. O formulário será marcado como preenchido pelo recrutador.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -64,15 +64,15 @@ export function JobApplicationFormDialog({
             </div>
           ) : !data ? (
             <p className="text-sm text-muted-foreground">
-              No linked application found. Close and reopen the drawer, or add the candidate to a job first.
+              Nenhuma candidatura vinculada encontrada. Feche e reabra o painel ou vincule o candidato a uma vaga primeiro.
             </p>
           ) : !data.required ? (
             <p className="text-sm text-muted-foreground">
-              Digital application form is not required for this job.
+              O formulário digital de candidatura não é obrigatório para esta vaga.
             </p>
           ) : !data.form ? (
             <p className="text-sm text-muted-foreground">
-              Preparing the form editor…
+              Preparando o editor do formulário…
             </p>
           ) : (
             <JobApplicationFormView
@@ -101,7 +101,7 @@ export function JobApplicationFormDialog({
         {showFooter && (
           <DialogFooter className="gap-2 border-t bg-background px-4 py-3 sm:px-6 sm:py-4">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              Cancelar
             </Button>
             <Button
               type="button"
@@ -110,7 +110,7 @@ export function JobApplicationFormDialog({
               disabled={submit.isPending || saveDraft.isPending}
             >
               {saveDraft.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Save Draft
+              Salvar Rascunho
             </Button>
             <Button
               type="button"
@@ -118,7 +118,7 @@ export function JobApplicationFormDialog({
               disabled={submit.isPending || saveDraft.isPending}
             >
               {submit.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Submit Application Form
+              Enviar Formulário de Candidatura
             </Button>
           </DialogFooter>
         )}

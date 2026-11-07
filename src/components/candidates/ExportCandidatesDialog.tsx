@@ -33,14 +33,14 @@ interface ExportCandidatesDialogProps {
 }
 
 const AVAILABLE_COLUMNS = [
-  { id: 'name', label: 'Name', key: 'name' },
-  { id: 'email', label: 'Email', key: 'email' },
-  { id: 'phone', label: 'Phone', key: 'phone' },
+  { id: 'name', label: 'Nome', key: 'name' },
+  { id: 'email', label: 'E-mail', key: 'email' },
+  { id: 'phone', label: 'Telefone', key: 'phone' },
   { id: 'linkedin_url', label: 'LinkedIn', key: 'linkedin_url' },
-  { id: 'role_applied', label: 'Role Applied', key: 'role_applied' },
-  { id: 'skills', label: 'Skills', key: 'skills' },
-  { id: 'notes', label: 'Notes', key: 'notes' },
-  { id: 'created_at', label: 'Added On', key: 'created_at' },
+  { id: 'role_applied', label: 'Cargo Desejado', key: 'role_applied' },
+  { id: 'skills', label: 'Habilidades', key: 'skills' },
+  { id: 'notes', label: 'Observações', key: 'notes' },
+  { id: 'created_at', label: 'Data de Cadastro', key: 'created_at' },
 ] as const;
 
 export function ExportCandidatesDialog({
@@ -70,8 +70,8 @@ export function ExportCandidatesDialog({
     if (selectedColumns.length === 0) {
       toast({
         variant: 'destructive',
-        title: 'No columns selected',
-        description: 'Please select at least one column to export.',
+        title: 'Nenhuma coluna selecionada',
+        description: 'Por favor, selecione ao menos uma coluna para exportar.',
       });
       return;
     }
@@ -95,15 +95,14 @@ export function ExportCandidatesDialog({
         };
       });
 
-      const filename = `candidates-${new Date().toISOString().split('T')[0]}`;
+      const filename = `candidatos-${new Date().toISOString().split('T')[0]}`;
       exportToCSV(candidates, columns, filename);
-      
-      toast({ title: `Exported ${candidates.length} candidates` });
+      toast({ title: `Exportados ${candidates.length} candidato(s)` });
       onOpenChange(false);
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Export failed',
+        title: 'Falha na exportação',
         description: error.message,
       });
     }
@@ -115,16 +114,16 @@ export function ExportCandidatesDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Export Candidates
+            Exportar Candidatos
           </DialogTitle>
           <DialogDescription>
-            Export candidate data to a CSV file.
+            Exporte os dados dos candidatos para um arquivo CSV.
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
           <div className="space-y-3">
-            <Label>Columns to include</Label>
+            <Label>Colunas a incluir</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {AVAILABLE_COLUMNS.map((column) => (
                 <div key={column.id} className="flex items-center space-x-2">
@@ -145,20 +144,20 @@ export function ExportCandidatesDialog({
           </div>
 
           <div className="p-3 bg-muted rounded-lg text-sm">
-            <p className="font-medium">Export summary</p>
+            <p className="font-medium">Resumo da exportação</p>
             <p className="text-muted-foreground mt-1">
-              {candidates.length} candidate(s) with {selectedColumns.length} column(s)
+              {candidates.length} candidato(s) com {selectedColumns.length} coluna(s)
             </p>
           </div>
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleExport} disabled={selectedColumns.length === 0}>
             <Download className="h-4 w-4 mr-2" />
-            Export CSV
+            Exportar CSV
           </Button>
         </DialogFooter>
       </DialogContent>
