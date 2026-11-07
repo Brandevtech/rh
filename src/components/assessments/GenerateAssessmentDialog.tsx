@@ -52,7 +52,7 @@ export function GenerateAssessmentDialog({
         body: { job_id: selectedJobId },
       });
       if (error) {
-        let description = 'Could not generate assessment';
+        let description = 'Não foi possível gerar a avaliação';
         try {
           const body = await (error as { context?: { json?: () => Promise<{ error?: string }> } }).context?.json?.();
           if (body?.error) description = body.error;
@@ -61,7 +61,7 @@ export function GenerateAssessmentDialog({
         }
         throw new Error(description);
       }
-      if (!data?.success) throw new Error(data?.error || 'Generation failed');
+      if (!data?.success) throw new Error(data?.error || 'Falha na geração');
 
       await queryClient.invalidateQueries({ queryKey: ['assessments'] });
 
@@ -76,14 +76,14 @@ export function GenerateAssessmentDialog({
       const tierLabel = tierData?.label
         ?? (tierData?.id ? assessmentTierLabels[tierData.id] : undefined);
       const statsLabel = stats
-        ? `${stats.sections ?? 3} sections, ${stats.questions ?? 6} questions`
-        : '3 sections, 6 questions';
+        ? `${stats.sections ?? 3} seções, ${stats.questions ?? 6} questões`
+        : '3 seções, 6 questões';
 
       toast({
-        title: 'Assessment generated',
+        title: 'Avaliação gerada com sucesso',
         description: tierLabel
-          ? `${tierLabel} — draft created (${statsLabel}). Review and activate before use.`
-          : `Draft created (${statsLabel}). Review and activate before use.`,
+          ? `${tierLabel} — rascunho criado (${statsLabel}). Revise e ative antes de usar.`
+          : `Rascunho criado (${statsLabel}). Revise e ative antes de usar.`,
       });
 
       onOpenChange(false);
@@ -91,8 +91,8 @@ export function GenerateAssessmentDialog({
       navigate(`/assessments/${data.assessment.id}`);
     } catch (err) {
       toast({
-        title: 'Generation failed',
-        description: err instanceof Error ? err.message : 'Could not generate assessment',
+        title: 'Falha na geração',
+        description: err instanceof Error ? err.message : 'Não foi possível gerar a avaliação',
         variant: 'destructive',
       });
     } finally {
@@ -106,25 +106,25 @@ export function GenerateAssessmentDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            Generate with AI
+            Gerar com IA
           </DialogTitle>
           <DialogDescription>
-            Select a job with a description. AI will draft a tiered assessment you can review before activating.
+            Selecione uma vaga que contenha descrição. A IA gerará um rascunho de avaliação adequado ao nível da vaga para você revisar antes de ativar.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Job</Label>
+            <Label>Vaga</Label>
             {isLoading ? (
-              <p className="text-sm text-muted-foreground">Loading jobs…</p>
+              <p className="text-sm text-muted-foreground">Carregando vagas…</p>
             ) : jobsWithDescription.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                No jobs with a description found. Add a job description in Jobs first.
+                Nenhuma vaga com descrição encontrada. Adicione uma descrição à vaga primeiro em Vagas.
               </p>
             ) : (
               <Select value={selectedJobId || undefined} onValueChange={setSelectedJobId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a job" />
+                  <SelectValue placeholder="Selecione uma vaga" />
                 </SelectTrigger>
                 <SelectContent>
                   {jobsWithDescription.map((job) => (
@@ -139,7 +139,7 @@ export function GenerateAssessmentDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isGenerating}>
-            Cancel
+            Cancelar
           </Button>
           <Button
             onClick={handleGenerate}
@@ -147,11 +147,11 @@ export function GenerateAssessmentDialog({
             className="gap-2"
           >
             {isGenerating ? (
-              'Generating…'
+              'Gerando…'
             ) : (
               <>
                 <Sparkles className="h-4 w-4" />
-                Generate Assessment
+                Gerar Avaliação
               </>
             )}
           </Button>

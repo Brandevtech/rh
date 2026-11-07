@@ -108,13 +108,13 @@ export function CreateFromTemplateDialog({
         }
       }
       
-      toast({ title: 'Assessment created from template' });
+      toast({ title: 'Avaliação criada a partir do modelo' });
       onOpenChange(false);
       navigate(`/assessments/${assessment.id}`);
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Failed to create assessment',
+        title: 'Falha ao criar avaliação',
         description: error.message,
       });
     } finally {
@@ -124,7 +124,7 @@ export function CreateFromTemplateDialog({
 
   const handleDeleteTemplate = async (e: React.MouseEvent, template: Template) => {
     e.stopPropagation();
-    if (confirm('Are you sure you want to delete this template?')) {
+    if (confirm('Tem certeza de que deseja excluir este modelo?')) {
       await deleteTemplate.mutateAsync(template.id);
       if (selectedTemplate?.id === template.id) {
         setSelectedTemplate(null);
@@ -136,9 +136,9 @@ export function CreateFromTemplateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Create from Template</DialogTitle>
+          <DialogTitle>Criar a partir de Modelo</DialogTitle>
           <DialogDescription>
-            Select a template to create a new assessment with pre-configured sections and questions.
+            Selecione um modelo para criar uma nova avaliação com seções e questões pré-configuradas.
           </DialogDescription>
         </DialogHeader>
         
@@ -146,14 +146,14 @@ export function CreateFromTemplateDialog({
           <ScrollArea className="h-[400px] pr-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-8 text-muted-foreground">
-                Loading templates...
+                Carregando modelos...
               </div>
             ) : templates.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 text-center">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No templates yet</h3>
+                <h3 className="text-lg font-semibold mb-2">Nenhum modelo ainda</h3>
                 <p className="text-muted-foreground">
-                  Create an assessment and save it as a template to use here.
+                  Crie uma avaliação e salve-a como modelo para utilizá-la aqui.
                 </p>
               </div>
             ) : (
@@ -191,10 +191,10 @@ export function CreateFromTemplateDialog({
                           {template.template_data.duration_minutes} min
                         </div>
                         <Badge variant="secondary">
-                          {template.template_data.sections.length} section(s)
+                          {template.template_data.sections.length} seção(ões)
                         </Badge>
                         <Badge variant="secondary">
-                          {template.template_data.sections.reduce((acc, s) => acc + s.questions.length, 0)} question(s)
+                          {template.template_data.sections.reduce((acc, s) => acc + s.questions.length, 0)} questão(ões)
                         </Badge>
                       </div>
                     </CardContent>
@@ -208,15 +208,15 @@ export function CreateFromTemplateDialog({
             <div className="p-4 bg-muted rounded-lg">
               <p className="font-medium">{selectedTemplate.name}</p>
               <p className="text-sm text-muted-foreground mt-1">
-                {selectedTemplate.template_data.sections.length} sections, {' '}
-                {selectedTemplate.template_data.sections.reduce((acc, s) => acc + s.questions.length, 0)} questions
+                {selectedTemplate.template_data.sections.length} seções, {' '}
+                {selectedTemplate.template_data.sections.reduce((acc, s) => acc + s.questions.length, 0)} questões
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-title">Assessment Title</Label>
+              <Label htmlFor="new-title">Título da Avaliação</Label>
               <Input
                 id="new-title"
-                placeholder="Enter a title for the new assessment"
+                placeholder="Digite o título da nova avaliação"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
               />
@@ -228,15 +228,15 @@ export function CreateFromTemplateDialog({
           {selectedTemplate ? (
             <>
               <Button variant="outline" onClick={() => setSelectedTemplate(null)}>
-                Back
+                Voltar
               </Button>
               <Button onClick={handleCreate} disabled={isCreating || !newTitle.trim()}>
-                {isCreating ? 'Creating...' : 'Create Assessment'}
+                {isCreating ? 'Criando...' : 'Criar Avaliação'}
               </Button>
             </>
           ) : (
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              Cancelar
             </Button>
           )}
         </DialogFooter>

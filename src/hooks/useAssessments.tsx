@@ -114,12 +114,12 @@ export function useAssessments() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessments'] });
-      toast({ title: 'Assessment created successfully' });
+      toast({ title: 'Avaliação criada com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to create assessment', 
+        title: 'Falha ao criar avaliação', 
         description: error.message 
       });
     },
@@ -152,12 +152,12 @@ export function useAssessments() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessments'] });
-      toast({ title: 'Assessment updated successfully' });
+      toast({ title: 'Avaliação atualizada com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to update assessment', 
+        title: 'Falha ao atualizar avaliação', 
         description: error.message 
       });
     },
@@ -174,12 +174,12 @@ export function useAssessments() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessments'] });
-      toast({ title: 'Assessment deleted successfully' });
+      toast({ title: 'Avaliação excluída com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to delete assessment', 
+        title: 'Falha ao excluir avaliação', 
         description: error.message 
       });
     },
@@ -288,12 +288,12 @@ export function useSections(assessmentId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessment', assessmentId] });
-      toast({ title: 'Section added successfully' });
+      toast({ title: 'Seção adicionada com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to add section', 
+        title: 'Falha ao adicionar seção', 
         description: error.message 
       });
     },
@@ -324,12 +324,12 @@ export function useSections(assessmentId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessment', assessmentId] });
-      toast({ title: 'Section updated successfully' });
+      toast({ title: 'Seção atualizada com sucesso' });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Failed to update section',
+        title: 'Falha ao atualizar seção',
         description: error.message,
       });
     },
@@ -346,7 +346,7 @@ export function useSections(assessmentId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessment', assessmentId] });
-      toast({ title: 'Section deleted successfully' });
+      toast({ title: 'Seção excluída com sucesso' });
     },
   });
 
@@ -398,12 +398,12 @@ export function useQuestions(assessmentId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessment', assessmentId] });
-      toast({ title: 'Question added successfully' });
+      toast({ title: 'Questão adicionada com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to add question', 
+        title: 'Falha ao adicionar questão', 
         description: error.message 
       });
     },
@@ -458,7 +458,7 @@ export function useQuestions(assessmentId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assessment', assessmentId] });
-      toast({ title: 'Question deleted successfully' });
+      toast({ title: 'Questão excluída com sucesso' });
     },
   });
 

@@ -58,8 +58,8 @@ export function CodeEditor({
         <div className="flex items-center gap-2">
           <Badge variant="outline">{language}</Badge>
           <span className="text-sm text-muted-foreground">
-            {testCases.length} test case{testCases.length !== 1 ? 's' : ''}
-            {hiddenCount > 0 && ` (${hiddenCount} hidden)`}
+            {testCases.length} caso{testCases.length !== 1 ? 's' : ''} de teste
+            {hiddenCount > 0 && ` (${hiddenCount} oculto${hiddenCount !== 1 ? 's' : ''})`}
           </span>
         </div>
         <Button
@@ -70,12 +70,12 @@ export function CodeEditor({
           {executeCode.isPending ? (
             <>
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Running...
+              Executando...
             </>
           ) : (
             <>
               <Play className="h-4 w-4 mr-2" />
-              Run Code
+              Executar Código
             </>
           )}
         </Button>
@@ -83,9 +83,9 @@ export function CodeEditor({
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="code">Code</TabsTrigger>
+          <TabsTrigger value="code">Código</TabsTrigger>
           <TabsTrigger value="testcases">
-            Test Cases
+            Casos de Teste
             {visibleTestCases.length > 0 && (
               <Badge variant="secondary" className="ml-2">
                 {visibleTestCases.length}
@@ -93,7 +93,7 @@ export function CodeEditor({
             )}
           </TabsTrigger>
           <TabsTrigger value="results">
-            Results
+            Resultados
             {executionResult && (
               <Badge
                 variant={executionResult.success ? 'default' : 'destructive'}
@@ -109,7 +109,7 @@ export function CodeEditor({
           <Textarea
             value={code}
             onChange={(e) => onCodeChange(e.target.value)}
-            placeholder="Write your code here..."
+            placeholder="Escreva seu código aqui..."
             className="min-h-[350px] font-mono text-sm"
           />
         </TabsContent>
@@ -121,8 +121,8 @@ export function CodeEditor({
                 <Card>
                   <CardContent className="pt-6 text-center text-muted-foreground">
                     <Eye className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p>All test cases are hidden.</p>
-                    <p className="text-sm">Run your code to see if it passes!</p>
+                    <p>Todos os casos de teste são ocultos.</p>
+                    <p className="text-sm">Execute seu código para verificar se ele passa nos testes!</p>
                   </CardContent>
                 </Card>
               ) : (
@@ -130,18 +130,18 @@ export function CodeEditor({
                   <Card key={idx}>
                     <CardHeader className="py-3">
                       <CardTitle className="text-sm flex items-center gap-2">
-                        Test Case {idx + 1}
+                        Caso de Teste {idx + 1}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="py-2 space-y-2">
                       <div>
-                        <span className="text-xs font-medium text-muted-foreground">Input:</span>
+                        <span className="text-xs font-medium text-muted-foreground">Entrada:</span>
                         <pre className="mt-1 p-2 bg-muted rounded text-xs overflow-x-auto">
-                          {tc.input || '(no input)'}
+                          {tc.input || '(sem entrada)'}
                         </pre>
                       </div>
                       <div>
-                        <span className="text-xs font-medium text-muted-foreground">Expected Output:</span>
+                        <span className="text-xs font-medium text-muted-foreground">Saída Esperada:</span>
                         <pre className="mt-1 p-2 bg-muted rounded text-xs overflow-x-auto">
                           {tc.expected_output}
                         </pre>
@@ -153,7 +153,7 @@ export function CodeEditor({
               {hiddenCount > 0 && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
                   <EyeOff className="h-4 w-4" />
-                  {hiddenCount} hidden test case{hiddenCount !== 1 ? 's' : ''} will be evaluated
+                  {hiddenCount} caso{hiddenCount !== 1 ? 's' : ''} de teste oculto{hiddenCount !== 1 ? 's' : ''} {hiddenCount !== 1 ? 'serão avaliados' : 'será avaliado'}
                 </div>
               )}
             </div>
@@ -172,9 +172,9 @@ export function CodeEditor({
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="h-5 w-5 text-destructive shrink-0" />
                     <div>
-                      <p className="font-medium text-destructive">Execution Error</p>
+                      <p className="font-medium text-destructive">Erro de Execução</p>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {executeCode.error?.message || 'An error occurred while executing your code.'}
+                        {executeCode.error?.message || 'Ocorreu um erro ao executar seu código.'}
                       </p>
                     </div>
                   </div>
@@ -194,10 +194,10 @@ export function CodeEditor({
                         )}
                         <div>
                           <p className="font-medium">
-                            {executionResult.success ? 'All Tests Passed!' : 'Some Tests Failed'}
+                            {executionResult.success ? 'Todos os Testes Passaram!' : 'Alguns Testes Falharam'}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {executionResult.passed_count} of {executionResult.total_count} test cases passed
+                            {executionResult.passed_count} de {executionResult.total_count} casos de teste passaram
                           </p>
                         </div>
                       </div>
@@ -220,7 +220,7 @@ export function CodeEditor({
               <Card>
                 <CardContent className="pt-6 text-center text-muted-foreground">
                   <Play className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>Run your code to see the results</p>
+                  <p>Execute seu código para ver os resultados</p>
                 </CardContent>
               </Card>
             )}
@@ -246,11 +246,11 @@ function TestResultCard({ result, index }: TestResultCardProps) {
           ) : (
             <XCircle className="h-4 w-4 text-red-500" />
           )}
-          Test Case {index + 1}
+          Caso de Teste {index + 1}
           {result.is_hidden && (
             <Badge variant="outline" className="ml-2">
               <EyeOff className="h-3 w-3 mr-1" />
-              Hidden
+              Oculto
             </Badge>
           )}
           {result.execution_time !== undefined && (
@@ -263,7 +263,7 @@ function TestResultCard({ result, index }: TestResultCardProps) {
       <CardContent className="py-2 space-y-2">
         {result.error ? (
           <div>
-            <span className="text-xs font-medium text-red-500">Error:</span>
+            <span className="text-xs font-medium text-red-500">Erro:</span>
             <pre className="mt-1 p-2 bg-red-50 dark:bg-red-950/30 rounded text-xs overflow-x-auto text-red-700 dark:text-red-300">
               {result.error}
             </pre>
@@ -273,13 +273,13 @@ function TestResultCard({ result, index }: TestResultCardProps) {
             {!result.is_hidden && (
               <>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">Input:</span>
+                  <span className="text-xs font-medium text-muted-foreground">Entrada:</span>
                   <pre className="mt-1 p-2 bg-muted rounded text-xs overflow-x-auto">
-                    {result.input || '(no input)'}
+                    {result.input || '(sem entrada)'}
                   </pre>
                 </div>
                 <div>
-                  <span className="text-xs font-medium text-muted-foreground">Expected:</span>
+                  <span className="text-xs font-medium text-muted-foreground">Esperado:</span>
                   <pre className="mt-1 p-2 bg-muted rounded text-xs overflow-x-auto">
                     {result.expected_output}
                   </pre>
@@ -287,13 +287,13 @@ function TestResultCard({ result, index }: TestResultCardProps) {
               </>
             )}
             <div>
-              <span className="text-xs font-medium text-muted-foreground">Your Output:</span>
+              <span className="text-xs font-medium text-muted-foreground">Sua Saída:</span>
               <pre className={`mt-1 p-2 rounded text-xs overflow-x-auto ${
                 result.passed 
                   ? 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300' 
                   : 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300'
               }`}>
-                {result.actual_output || '(no output)'}
+                {result.actual_output || '(sem saída)'}
               </pre>
             </div>
           </>

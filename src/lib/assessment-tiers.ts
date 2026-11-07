@@ -16,12 +16,12 @@ export const ASSESSMENT_TIERS: AssessmentTier[] = [
 ];
 
 export const assessmentTierLabels: Record<AssessmentTier, string> = {
-  tech_fresher: 'Technical — Fresher (0–1 yr)',
-  tech_junior: 'Technical — Junior (1–3 yrs)',
-  tech_mid: 'Technical — Mid (3–5 yrs)',
-  tech_senior: 'Technical — Senior (5+ yrs)',
-  nontech_fresher: 'Non-Technical — Fresher (0–1 yr)',
-  nontech_experienced: 'Non-Technical — Experienced (2+ yrs)',
+  tech_fresher: 'Técnico — Iniciante (0–1 ano)',
+  tech_junior: 'Técnico — Júnior (1–3 anos)',
+  tech_mid: 'Técnico — Pleno (3–5 anos)',
+  tech_senior: 'Técnico — Sênior (5+ anos)',
+  nontech_fresher: 'Não-técnico — Iniciante (0–1 ano)',
+  nontech_experienced: 'Não-técnico — Experiente (2+ anos)',
 };
 
 export function isNonTechAssessmentTier(tier: AssessmentTier): boolean {

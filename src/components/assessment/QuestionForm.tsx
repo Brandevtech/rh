@@ -174,7 +174,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
       {/* Question Type */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Question Type</Label>
+          <Label>Tipo de Questão</Label>
           <Select
             value={form.type}
             onValueChange={(value: QuestionType) => setForm(prev => ({ ...prev, type: value }))}
@@ -184,15 +184,15 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="mcq">Multiple Choice</SelectItem>
-              <SelectItem value="coding">Coding</SelectItem>
-              <SelectItem value="subjective">Subjective</SelectItem>
-              <SelectItem value="file_upload">File Upload</SelectItem>
+              <SelectItem value="mcq">Múltipla Escolha</SelectItem>
+              <SelectItem value="coding">Programação</SelectItem>
+              <SelectItem value="subjective">Dissertativa</SelectItem>
+              <SelectItem value="file_upload">Envio de Arquivo</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="marks">Marks</Label>
+          <Label htmlFor="marks">Pontos</Label>
           <Input
             id="marks"
             type="number"
@@ -205,10 +205,10 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
 
       {/* Question Text */}
       <div className="space-y-2">
-        <Label htmlFor="questionText">Question</Label>
+        <Label htmlFor="questionText">Enunciado da Questão</Label>
         <Textarea
           id="questionText"
-          placeholder="Enter your question here..."
+          placeholder="Digite o enunciado da questão aqui..."
           rows={3}
           value={form.question_text}
           onChange={(e) => setForm(prev => ({ ...prev, question_text: e.target.value }))}
@@ -218,7 +218,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
       {/* MCQ Options */}
       {form.type === 'mcq' && (
         <div className="space-y-4">
-          <Label>Answer Options</Label>
+          <Label>Opções de Resposta</Label>
           <div className="space-y-3">
             {form.options.map((option, index) => (
               <div key={option.id} className="flex items-center gap-3">
@@ -234,7 +234,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
                   </span>
                 </div>
                 <Input
-                  placeholder={`Option ${String.fromCharCode(65 + index)}`}
+                  placeholder={`Opção ${String.fromCharCode(65 + index)}`}
                   value={option.text}
                   onChange={(e) => updateOption(option.id, { text: e.target.value })}
                   className="flex-1"
@@ -253,10 +253,10 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
           </div>
           <Button variant="outline" size="sm" onClick={addOption} className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Option
+            Adicionar Opção
           </Button>
           <p className="text-xs text-muted-foreground">
-            Check the box next to correct answer(s). Multiple correct answers are allowed.
+            Marque a caixa ao lado da(s) alternativa(s) correta(s). Múltiplas alternativas corretas são permitidas.
           </p>
         </div>
       )}
@@ -265,7 +265,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
       {form.type === 'coding' && (
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Programming Language</Label>
+            <Label>Linguagem de Programação</Label>
             <Select
               value={form.coding_language}
               onValueChange={(value) => setForm(prev => ({ ...prev, coding_language: value }))}
@@ -287,10 +287,10 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="starterCode">Starter Code (optional)</Label>
+            <Label htmlFor="starterCode">Código Inicial (opcional)</Label>
             <Textarea
               id="starterCode"
-              placeholder="// Starter code for candidates..."
+              placeholder="// Código inicial disponibilizado para o candidato..."
               rows={4}
               className="font-mono text-sm"
               value={form.coding_starter_code}
@@ -299,18 +299,18 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
           </div>
 
           <div className="space-y-3">
-            <Label>Test Cases</Label>
+            <Label>Casos de Teste</Label>
             {form.coding_test_cases.map((tc, index) => (
               <div key={index} className="p-4 border rounded-lg space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Test Case {index + 1}</span>
+                  <span className="text-sm font-medium">Caso de Teste {index + 1}</span>
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
                       <Switch
                         checked={tc.is_hidden}
                         onCheckedChange={(checked) => updateTestCase(index, { is_hidden: checked })}
                       />
-                      <span className="text-xs text-muted-foreground">Hidden</span>
+                      <span className="text-xs text-muted-foreground">Oculto</span>
                     </div>
                     <Button
                       variant="ghost"
@@ -325,9 +325,9 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <Label className="text-xs">Input</Label>
+                    <Label className="text-xs">Entrada (Input)</Label>
                     <Textarea
-                      placeholder="Test input..."
+                      placeholder="Entrada do teste..."
                       rows={2}
                       className="font-mono text-sm"
                       value={tc.input}
@@ -335,9 +335,9 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label className="text-xs">Expected Output</Label>
+                    <Label className="text-xs">Saída Esperada (Expected Output)</Label>
                     <Textarea
-                      placeholder="Expected output..."
+                      placeholder="Saída esperada..."
                       rows={2}
                       className="font-mono text-sm"
                       value={tc.expected_output}
@@ -349,7 +349,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
             ))}
             <Button variant="outline" size="sm" onClick={addTestCase} className="gap-2">
               <Plus className="h-4 w-4" />
-              Add Test Case
+              Adicionar Caso de Teste
             </Button>
           </div>
         </div>
@@ -359,7 +359,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
       {form.type === 'subjective' && (
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="maxWords">Maximum Words</Label>
+            <Label htmlFor="maxWords">Máximo de Palavras</Label>
             <Input
               id="maxWords"
               type="number"
@@ -368,10 +368,10 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="rubric">Grading Rubric (for evaluators)</Label>
+            <Label htmlFor="rubric">Critério de Correção / Rubrica (para avaliadores)</Label>
             <Textarea
               id="rubric"
-              placeholder="Describe how this answer should be evaluated..."
+              placeholder="Descreva como esta resposta deve ser avaliada..."
               rows={4}
               value={form.subjective_rubric}
               onChange={(e) => setForm(prev => ({ ...prev, subjective_rubric: e.target.value }))}
@@ -384,8 +384,8 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
       {form.type === 'file_upload' && (
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Candidates can upload one image or PDF (max 10 MB) and/or paste a Google Drive share link.
-            Files over 10 MB must use a Drive link. Scored manually like subjective questions.
+            Os candidatos podem enviar um arquivo (imagem ou PDF, máx. 10 MB) e/ou colar um link compartilhado do Google Drive.
+            Arquivos com mais de 10 MB devem usar link do Drive. Corrigido manualmente como questões dissertativas.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex items-center gap-2">
@@ -398,7 +398,7 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
                   }))
                 }
               />
-              <Label>Allow file upload</Label>
+              <Label>Permitir envio de arquivo</Label>
             </div>
             <div className="flex items-center gap-2">
               <Switch
@@ -410,14 +410,14 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
                   }))
                 }
               />
-              <Label>Allow Google Drive link</Label>
+              <Label>Permitir link do Google Drive</Label>
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="fileRubric">Review Rubric (for evaluators)</Label>
+            <Label htmlFor="fileRubric">Critério de Avaliação / Rubrica (para avaliadores)</Label>
             <Textarea
               id="fileRubric"
-              placeholder="Describe how this submission should be evaluated..."
+              placeholder="Descreva como este envio deve ser avaliado..."
               rows={4}
               value={form.subjective_rubric}
               onChange={(e) => setForm(prev => ({ ...prev, subjective_rubric: e.target.value }))}
@@ -428,9 +428,9 @@ export function QuestionForm({ assessmentId, sectionId, question, onSaved, onCan
 
       {/* Actions */}
       <div className="flex justify-end gap-3 pt-4 border-t">
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button variant="outline" onClick={onCancel}>Cancelar</Button>
         <Button onClick={handleSave} disabled={isPending || !form.question_text.trim()}>
-          {isPending ? 'Saving...' : isEditing ? 'Update Question' : 'Add Question'}
+          {isPending ? 'Salvando...' : isEditing ? 'Atualizar Questão' : 'Adicionar Questão'}
         </Button>
       </div>
     </div>

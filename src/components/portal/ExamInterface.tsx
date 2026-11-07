@@ -103,7 +103,6 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
   // Calculate remaining time
   useEffect(() => {
     if (assessmentInfo.started_at && isStarted) {
-      // The server enforces the same end (plus a short grace): start + duration or the deadline.
       const endTime = examEndsAt(
         assessmentInfo.started_at,
         assessmentInfo.assessment.duration_minutes,
@@ -147,7 +146,7 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
   const logIntegrityRef = useRef(logIntegrity);
   logIntegrityRef.current = logIntegrity;
 
-  // Current question context for integrity events (ref avoids rebinding visibility handler)
+  // Current question context for integrity events
   const currentQuestionRef = useRef<{
     question_id: string;
     question_index: number;
@@ -246,13 +245,10 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
     [integrityLog, hiddenSince, currentAwaySeconds]
   );
 
-  // Keep a ref to responses so beacon can access latest state
   const responsesRef = useRef(responses);
   useEffect(() => { responsesRef.current = responses; }, [responses]);
   const isSubmittedRef = useRef(false);
 
-  // sendBeacon cannot carry the signed-in session, so the dashboard path
-  // resolves the attempt's link token up front for the browser-close fallback.
   const beaconTokenRef = useRef<string | null>(accessToken === 'session' ? null : accessToken);
   useEffect(() => {
     if (!isStarted) return;
@@ -265,9 +261,7 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
       .then((token) => {
         if (!cancelled) beaconTokenRef.current = token;
       })
-      .catch(() => {
-        /* no fallback token; the server-side sweep still submits overdue attempts */
-      });
+      .catch(() => {});
     return () => {
       cancelled = true;
     };
@@ -295,13 +289,11 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isSubmittedRef.current) return;
       e.preventDefault();
-      // Modern browsers ignore custom messages but still show a prompt
       e.returnValue = '';
     };
 
-    const handlePageHide = (e: PageTransitionEvent) => {
+    const handlePageHide = () => {
       if (isSubmittedRef.current) return;
-      // Use sendBeacon to notify the backend to auto-complete the assessment
       sendAutoCompleteBeacon();
     };
 
@@ -343,8 +335,6 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
         })
       );
     const results = await Promise.allSettled(savePromises);
-    // A save refused because the attempt is already over (submitted, or past
-    // its time limit and auto-submitted by the server) must not block submit.
     const blocking = results.find(
       (r): r is PromiseRejectedResult => r.status === 'rejected' && !isAttemptOverError(r.reason),
     );
@@ -364,7 +354,6 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
     } catch (err) {
       isSubmittedRef.current = false;
       console.error('Auto-submit failed:', err);
-      // Fallback: use sendBeacon as last resort
       sendAutoCompleteBeacon();
     }
   };
@@ -380,10 +369,10 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
       setIsSubmitted(true);
     } catch (err) {
       isSubmittedRef.current = false;
-      const message = err instanceof Error ? err.message : 'Failed to submit assessment';
+      const message = err instanceof Error ? err.message : 'Falha ao enviar a avaliação';
       toast({
         variant: 'destructive',
-        title: 'Failed to submit',
+        title: 'Falha ao enviar',
         description: message,
       });
     }
@@ -419,12 +408,12 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
           <Card className="max-w-md w-full">
             <CardContent className="pt-6 text-center">
               <Clock className="h-12 w-12 mx-auto text-primary mb-4" />
-              <h2 className="text-xl font-semibold mb-2">Ready to Begin?</h2>
+              <h2 className="text-xl font-semibold mb-2">Pronto para Começar?</h2>
               <p className="text-muted-foreground mb-6">
-                You have {assessmentInfo.assessment.duration_minutes} minutes to complete {allQuestions.length} questions.
+                Você terá {assessmentInfo.assessment.duration_minutes} minutos para responder a {allQuestions.length} questões.
               </p>
               <Button onClick={handleStart} disabled={startAssessment.isPending} className="w-full">
-                {startAssessment.isPending ? 'Starting...' : 'Begin Assessment'}
+                {startAssessment.isPending ? 'Iniciando...' : 'Iniciar Avaliação'}
               </Button>
             </CardContent>
           </Card>
@@ -441,12 +430,12 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
           <Card className="max-w-md w-full">
             <CardContent className="pt-6 text-center">
               <CheckCircle2 className="h-12 w-12 mx-auto text-green-500 mb-4" />
-              <h2 className="text-xl font-semibold mb-2">Assessment Completed</h2>
+              <h2 className="text-xl font-semibold mb-2">Avaliação Concluída</h2>
               <p className="text-muted-foreground mb-2">
-                You have successfully completed {assessmentInfo.assessment.title}.
+                Você concluiu {assessmentInfo.assessment.title} com sucesso.
               </p>
               <p className="text-sm text-muted-foreground">
-                Your responses have been submitted. The hiring team will review your assessment and follow up.
+                Suas respostas foram enviadas. A equipe de recrutamento analisará sua avaliação e entrará em contato.
               </p>
             </CardContent>
           </Card>
@@ -469,9 +458,9 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
             <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-200 text-xs sm:text-sm">
               <Eye className="h-3.5 w-3.5 shrink-0" />
               <span className="whitespace-nowrap">
-                {integrityStats.tabSwitchCount} switch{integrityStats.tabSwitchCount !== 1 ? 'es' : ''}
+                {integrityStats.tabSwitchCount} {integrityStats.tabSwitchCount === 1 ? 'troca' : 'trocas'}
                 {' · '}
-                {formatSecondsAway(integrityStats.totalSecondsAway)} away
+                {formatSecondsAway(integrityStats.totalSecondsAway)} fora
               </span>
             </div>
 
@@ -490,25 +479,25 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
               <AlertDialogTrigger asChild>
                 <Button size="sm" disabled={submitAssessment.isPending}>
                   <Send className="h-4 w-4 mr-2" />
-                  Submit
+                  Enviar Prova
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Submit Assessment?</AlertDialogTitle>
+                  <AlertDialogTitle>Enviar Avaliação?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    You have answered {answeredCount} of {allQuestions.length} questions.
+                    Você respondeu {answeredCount} de {allQuestions.length} questões.
                     {answeredCount < allQuestions.length && (
-                      <span className="block mt-2 text-amber-600">
+                      <span className="block mt-2 text-amber-600 font-medium">
                         <AlertTriangle className="h-4 w-4 inline mr-1" />
-                        Some questions are unanswered!
+                        Atenção: algumas questões ainda não foram respondidas!
                       </span>
                     )}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Continue Test</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleSubmit}>Submit Now</AlertDialogAction>
+                  <AlertDialogCancel>Continuar Prova</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleSubmit}>Enviar Agora</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
@@ -517,7 +506,7 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
         <div className="container mx-auto px-4 pb-2">
           <p className="text-xs text-muted-foreground flex items-center gap-1.5">
             <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-            Integrity events are recorded and shared with the hiring team.
+            Eventos de integridade são registrados e compartilhados com a equipe de recrutamento.
           </p>
         </div>
       </header>
@@ -525,7 +514,7 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
       <div className="flex-1 flex">
         {/* Question Palette */}
         <aside className="hidden md:block w-64 border-r bg-muted/30 p-4 overflow-y-auto">
-          <h3 className="text-sm font-medium mb-3">Questions</h3>
+          <h3 className="text-sm font-medium mb-3">Questões</h3>
           <div className="grid grid-cols-5 gap-2">
             {allQuestions.map((q, idx) => {
               const isAnswered =
@@ -553,25 +542,25 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
           <div className="mt-4 text-xs text-muted-foreground space-y-1">
             <div className="flex items-center gap-2">
               <span className="w-4 h-4 rounded bg-green-100 dark:bg-green-900/50 border border-green-300 dark:border-green-700"></span>
-              <span>Answered ({answeredCount})</span>
+              <span>Respondidas ({answeredCount})</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-4 h-4 rounded bg-background border"></span>
-              <span>Unanswered ({allQuestions.length - answeredCount})</span>
+              <span>Não respondidas ({allQuestions.length - answeredCount})</span>
             </div>
           </div>
 
           <div className="mt-6 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/80 dark:bg-amber-950/30 p-3 space-y-2">
             <p className="text-xs font-medium text-amber-800 dark:text-amber-200 flex items-center gap-1.5">
               <Eye className="h-3.5 w-3.5" />
-              Integrity Monitor
+              Monitor de Integridade
             </p>
             <div className="text-xs text-amber-700 dark:text-amber-300 space-y-1">
-              <p>Tab switches: <span className="font-medium">{integrityStats.tabSwitchCount}</span></p>
-              <p>Time away: <span className="font-medium">{formatSecondsAway(integrityStats.totalSecondsAway)}</span></p>
+              <p>Trocas de aba: <span className="font-medium">{integrityStats.tabSwitchCount}</span></p>
+              <p>Tempo fora: <span className="font-medium">{formatSecondsAway(integrityStats.totalSecondsAway)}</span></p>
             </div>
             <p className="text-[11px] text-amber-700/90 dark:text-amber-300/90 leading-snug">
-              Integrity events are recorded and shared with the hiring team.
+              Eventos de integridade são registrados e compartilhados com a equipe de recrutamento.
             </p>
           </div>
         </aside>
@@ -598,13 +587,13 @@ export default function ExamInterface({ assessmentInfo, accessToken, consentSour
               disabled={currentIndex === 0}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
-              Previous
+              Anterior
             </Button>
             <Button
               onClick={() => setCurrentIndex((prev) => Math.min(allQuestions.length - 1, prev + 1))}
               disabled={currentIndex === allQuestions.length - 1}
             >
-              Next
+              Próxima
               <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
@@ -643,15 +632,14 @@ function QuestionDisplay({
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'mcq': return 'Multiple Choice';
-      case 'coding': return 'Coding';
-      case 'subjective': return 'Subjective';
-      case 'file_upload': return 'File Upload';
+      case 'mcq': return 'Múltipla Escolha';
+      case 'coding': return 'Programação';
+      case 'subjective': return 'Dissertativa';
+      case 'file_upload': return 'Envio de Arquivo';
       default: return type;
     }
   };
 
-  // Parse response for coding questions to extract code
   const getCodeFromResponse = (): string => {
     if (response === undefined || response === null) {
       return question.coding_starter_code ?? '';
@@ -710,8 +698,8 @@ function QuestionDisplay({
     if (file.size > ASSESSMENT_FILE_MAX_BYTES) {
       toast({
         variant: 'destructive',
-        title: 'File too large',
-        description: 'Maximum size is 10 MB. Please upload a smaller file or paste a Google Drive link.',
+        title: 'Arquivo muito grande',
+        description: 'O tamanho máximo permitido é 10 MB. Envie um arquivo menor ou cole um link do Google Drive.',
       });
       return;
     }
@@ -719,8 +707,8 @@ function QuestionDisplay({
     if (!fileCfg.allowed_mime_types.includes(file.type)) {
       toast({
         variant: 'destructive',
-        title: 'Unsupported file type',
-        description: 'Please upload an image (JPEG, PNG, GIF, WebP) or PDF.',
+        title: 'Tipo de arquivo não suportado',
+        description: 'Envie uma imagem (JPEG, PNG, GIF, WebP) ou PDF.',
       });
       return;
     }
@@ -734,12 +722,12 @@ function QuestionDisplay({
         accessToken,
       });
       commitFileUploadParts({ file: uploaded, link: currentLink });
-      toast({ title: 'File uploaded' });
+      toast({ title: 'Arquivo enviado com sucesso' });
     } catch (err) {
       toast({
         variant: 'destructive',
-        title: 'Upload failed',
-        description: err instanceof Error ? err.message : 'Could not upload file',
+        title: 'Falha no envio',
+        description: err instanceof Error ? err.message : 'Não foi possível enviar o arquivo',
       });
     } finally {
       setUploading(false);
@@ -749,11 +737,11 @@ function QuestionDisplay({
   const handleSaveLink = () => {
     const url = linkInput.trim();
     if (!url) {
-      setLinkError('Enter a Google Drive link');
+      setLinkError('Informe um link do Google Drive');
       return;
     }
     if (!isAllowedGoogleDriveLink(url)) {
-      setLinkError('Only Google Drive or Google Docs share links are allowed (https).');
+      setLinkError('Apenas links de compartilhamento do Google Drive ou Google Docs são permitidos (https).');
       return;
     }
     setLinkError(null);
@@ -767,12 +755,12 @@ function QuestionDisplay({
         <div className="flex items-center justify-between">
           <Badge variant="outline">{question.sectionTitle}</Badge>
           <span className="text-sm text-muted-foreground">
-            Question {questionNumber} of {totalQuestions}
+            Questão {questionNumber} de {totalQuestions}
           </span>
         </div>
         <div className="flex items-center gap-2 mt-2">
           <Badge>{getTypeLabel(question.type)}</Badge>
-          <Badge variant="secondary">{question.marks} marks</Badge>
+          <Badge variant="secondary">{question.marks} {question.marks === 1 ? 'ponto' : 'pontos'}</Badge>
         </div>
       </CardHeader>
       <CardContent>
@@ -803,12 +791,12 @@ function QuestionDisplay({
             <Textarea
               value={String(response ?? '')}
               onChange={(e) => onResponseChange(e.target.value)}
-              placeholder="Type your answer here..."
+              placeholder="Digite sua resposta aqui..."
               className="min-h-[200px]"
             />
             {question.subjective_max_words && (
               <p className="text-xs text-muted-foreground text-right">
-                Max words: {question.subjective_max_words}
+                Máximo de palavras: {question.subjective_max_words}
               </p>
             )}
           </div>
@@ -829,15 +817,15 @@ function QuestionDisplay({
         {question.type === 'file_upload' && (
           <div className="space-y-6">
             <p className="text-sm text-muted-foreground">
-              Submit one file (image or PDF, max 10 MB) and/or a Google Drive share link.
-              Files over 10 MB must use a Drive link.
+              Envie um arquivo (imagem ou PDF, máx. 10 MB) e/ou um link compartilhado do Google Drive.
+              Arquivos com mais de 10 MB devem usar o link do Drive.
             </p>
 
             {fileCfg.allow_file && (
               <div className="space-y-3">
                 <Label className="flex items-center gap-2">
                   <Upload className="h-4 w-4" />
-                  File upload
+                  Envio de arquivo
                 </Label>
                 {currentFile ? (
                   <div className="flex items-center gap-3 rounded-lg border p-3">
@@ -872,7 +860,7 @@ function QuestionDisplay({
                     {uploading && (
                       <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                        Uploading…
+                        Enviando…
                       </p>
                     )}
                   </div>
@@ -884,7 +872,7 @@ function QuestionDisplay({
               <div className="space-y-3">
                 <Label className="flex items-center gap-2">
                   <Link2 className="h-4 w-4" />
-                  Google Drive link
+                  Link do Google Drive
                 </Label>
                 {currentLink ? (
                   <div className="flex items-center gap-3 rounded-lg border p-3">
@@ -924,7 +912,7 @@ function QuestionDisplay({
                       className="flex-1"
                     />
                     <Button type="button" variant="outline" onClick={handleSaveLink}>
-                      Save link
+                      Salvar link
                     </Button>
                   </div>
                 )}

@@ -3,7 +3,6 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { useParams, useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,14 +34,14 @@ import {
   ArrowLeft, 
   Save, 
   Plus, 
-  Trash2,
-  Pencil,
-  GripVertical,
-  FileText,
-  Code,
-  MessageSquare,
-  Settings,
-  LayoutTemplate,
+  Trash2, 
+  Pencil, 
+  GripVertical, 
+  FileText, 
+  Code, 
+  MessageSquare, 
+  Settings, 
+  LayoutTemplate, 
   AlertTriangle,
   Upload,
 } from 'lucide-react';
@@ -54,26 +53,19 @@ import { supabase } from '@/integrations/supabase/client';
 import type { AssessmentSection, AssessmentStatus, QuestionType } from '@/types/database';
 
 const statusOptions: { value: AssessmentStatus; label: string }[] = [
-  { value: 'draft', label: 'Draft' },
-  { value: 'active', label: 'Active' },
-  { value: 'archived', label: 'Archived' },
+  { value: 'draft', label: 'Rascunho' },
+  { value: 'active', label: 'Ativa' },
+  { value: 'archived', label: 'Arquivada' },
 ];
 
-const questionTypeIcons: Record<QuestionType, React.ReactNode> = {
-  mcq: <FileText className="h-4 w-4" />,
-  coding: <Code className="h-4 w-4" />,
-  subjective: <MessageSquare className="h-4 w-4" />,
-  file_upload: <Upload className="h-4 w-4" />,
-};
-
 export default function AssessmentBuilder() {
-  usePageTitle('Assessment Builder');
+  usePageTitle('Construtor de Avaliação');
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: assessment, isLoading, refetch } = useAssessmentDetails(id);
   const { updateAssessment } = useAssessments();
   const { createSection, updateSection, deleteSection } = useSections(id);
-  const { createQuestion, deleteQuestion } = useQuestions(id);
+  const { deleteQuestion } = useQuestions(id);
 
   const [isSectionDialogOpen, setIsSectionDialogOpen] = useState(false);
   const [isQuestionDialogOpen, setIsQuestionDialogOpen] = useState(false);
@@ -160,7 +152,7 @@ export default function AssessmentBuilder() {
     if (!needsConfirm) return true;
 
     return confirm(
-      'This assessment is not a draft or has been assigned to candidates. Changing section details (especially weightage or skill tags) may affect scoring. Continue?'
+      'Esta avaliação não é um rascunho ou já foi atribuída a candidatos. Alterar os detalhes da seção (especialmente peso ou tags de habilidades) pode afetar a pontuação. Deseja continuar?'
     );
   };
 
@@ -194,13 +186,13 @@ export default function AssessmentBuilder() {
   };
 
   const handleDeleteSection = async (sectionId: string) => {
-    if (confirm('Delete this section and all its questions?')) {
+    if (confirm('Deseja excluir esta seção e todas as suas questões?')) {
       await deleteSection.mutateAsync(sectionId);
     }
   };
 
   const handleDeleteQuestion = async (questionId: string) => {
-    if (confirm('Delete this question?')) {
+    if (confirm('Deseja excluir esta questão?')) {
       await deleteQuestion.mutateAsync(questionId);
     }
   };
@@ -242,8 +234,8 @@ export default function AssessmentBuilder() {
     return (
       <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Assessment not found</h1>
-          <Button onClick={() => navigate('/assessments')}>Back to Assessments</Button>
+          <h1 className="text-2xl font-bold mb-4">Avaliação não encontrada</h1>
+          <Button onClick={() => navigate('/assessments')}>Voltar para Avaliações</Button>
         </main>
       </div>
     );
@@ -268,9 +260,9 @@ export default function AssessmentBuilder() {
         {(assessmentForm.status === 'draft' || assessment.status === 'draft') && (
           <Alert className="mb-6 border-amber-500/50 bg-amber-50 text-amber-950 dark:bg-amber-950/30 dark:text-amber-50">
             <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-            <AlertTitle>Draft assessment</AlertTitle>
+            <AlertTitle>Avaliação em rascunho</AlertTitle>
             <AlertDescription>
-              This assessment is a draft. Set status to <strong>Active</strong> and save before assigning to candidates or linking on jobs.
+              Esta avaliação é um rascunho. Altere o status para <strong>Ativa</strong> e salve antes de atribuí-la a candidatos ou vinculá-la a vagas.
             </AlertDescription>
           </Alert>
         )}
@@ -284,26 +276,26 @@ export default function AssessmentBuilder() {
             <div>
               <h1 className="text-2xl font-bold text-foreground">{assessment.title}</h1>
               <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                <span>{assessment.sections.length} sections</span>
+                <span>{assessment.sections.length} seções</span>
                 <span>•</span>
-                <span>{totalQuestions} questions</span>
+                <span>{totalQuestions} questões</span>
                 <span>•</span>
-                <span>{totalMarks} marks</span>
+                <span>{totalMarks} pontos</span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => setIsTemplateDialogOpen(true)}>
               <LayoutTemplate className="h-4 w-4 mr-2" />
-              Save as Template
+              Salvar como Modelo
             </Button>
             <Button variant="outline" onClick={() => setIsSettingsOpen(true)}>
               <Settings className="h-4 w-4 mr-2" />
-              Settings
+              Configurações
             </Button>
             <Button onClick={handleSaveAssessment} disabled={updateAssessment.isPending}>
               <Save className="h-4 w-4 mr-2" />
-              {updateAssessment.isPending ? 'Saving...' : 'Save'}
+              {updateAssessment.isPending ? 'Salvando...' : 'Salvar'}
             </Button>
           </div>
         </div>
@@ -317,11 +309,11 @@ export default function AssessmentBuilder() {
         {/* Assessment Settings Card */}
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Assessment Details</CardTitle>
+            <CardTitle>Detalhes da Avaliação</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Título</Label>
               <Input
                 id="title"
                 value={assessmentForm.title || assessment.title}
@@ -345,7 +337,7 @@ export default function AssessmentBuilder() {
               </Select>
             </div>
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Descrição</Label>
               <Textarea
                 id="description"
                 value={assessmentForm.description || assessment.description || ''}
@@ -353,7 +345,7 @@ export default function AssessmentBuilder() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="duration">Duration (minutes)</Label>
+              <Label htmlFor="duration">Duração (minutos)</Label>
               <Input
                 id="duration"
                 type="number"
@@ -362,7 +354,7 @@ export default function AssessmentBuilder() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="passing">Passing Score (%)</Label>
+              <Label htmlFor="passing">Nota de Corte (%)</Label>
               <Input
                 id="passing"
                 type="number"
@@ -375,10 +367,10 @@ export default function AssessmentBuilder() {
 
         {/* Sections */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Sections</h2>
+          <h2 className="text-xl font-semibold">Seções</h2>
           <Button onClick={openAddSection} variant="outline" className="gap-2">
             <Plus className="h-4 w-4" />
-            Add Section
+            Adicionar Seção
           </Button>
         </div>
 
@@ -386,13 +378,13 @@ export default function AssessmentBuilder() {
           <Card className="text-center py-12">
             <CardContent>
               <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No sections yet</h3>
+              <h3 className="text-lg font-semibold mb-2">Nenhuma seção ainda</h3>
               <p className="text-muted-foreground mb-4">
-                Add sections to organize your assessment questions.
+                Adicione seções para organizar as questões da sua avaliação.
               </p>
               <Button onClick={openAddSection} className="gap-2">
                 <Plus className="h-4 w-4" />
-                Add Section
+                Adicionar Seção
               </Button>
             </CardContent>
           </Card>
@@ -408,9 +400,9 @@ export default function AssessmentBuilder() {
                     <div className="text-left">
                       <div className="font-medium">{section.title}</div>
                       <div className="text-sm text-muted-foreground">
-                        {section.questions.length} questions • {section.weightage}% weightage
+                        {section.questions.length} questões • {section.weightage}% do peso total
                         {skillTags.length > 0 && (
-                          <span className="ml-2">• Skills: {skillTags.join(', ')}</span>
+                          <span className="ml-2">• Habilidades: {skillTags.join(', ')}</span>
                         )}
                       </div>
                     </div>
@@ -441,7 +433,7 @@ export default function AssessmentBuilder() {
                       onClick={() => openAddQuestion(section.id)}
                     >
                       <Plus className="h-4 w-4" />
-                      Add Question
+                      Adicionar Questão
                     </Button>
                     <Button
                       variant="ghost"
@@ -450,7 +442,7 @@ export default function AssessmentBuilder() {
                       onClick={() => openEditSection(section)}
                     >
                       <Pencil className="h-4 w-4" />
-                      Edit Section
+                      Editar Seção
                     </Button>
                     <Button
                       variant="ghost"
@@ -459,7 +451,7 @@ export default function AssessmentBuilder() {
                       onClick={() => handleDeleteSection(section.id)}
                     >
                       <Trash2 className="h-4 w-4" />
-                      Delete Section
+                      Excluir Seção
                     </Button>
                   </div>
                 </AccordionContent>
@@ -479,34 +471,34 @@ export default function AssessmentBuilder() {
         >
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingSectionId ? 'Edit Section' : 'Add Section'}</DialogTitle>
+              <DialogTitle>{editingSectionId ? 'Editar Seção' : 'Adicionar Seção'}</DialogTitle>
               <DialogDescription>
                 {editingSectionId
-                  ? 'Update this section title, weightage, or skill tags.'
-                  : 'Create a new section to organize related questions.'}
+                  ? 'Atualize o título, peso ou tags de habilidades desta seção.'
+                  : 'Crie uma nova seção para organizar questões relacionadas.'}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="sectionTitle">Section Title</Label>
+                <Label htmlFor="sectionTitle">Título da Seção</Label>
                 <Input
                   id="sectionTitle"
-                  placeholder="e.g., Technical Skills"
+                  placeholder="Ex: Conhecimentos Técnicos"
                   value={sectionForm.title}
                   onChange={(e) => setSectionForm(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="sectionDesc">Description (optional)</Label>
+                <Label htmlFor="sectionDesc">Descrição (opcional)</Label>
                 <Textarea
                   id="sectionDesc"
-                  placeholder="Brief description of this section..."
+                  placeholder="Breve descrição desta seção..."
                   value={sectionForm.description}
                   onChange={(e) => setSectionForm(prev => ({ ...prev, description: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weightage">Weightage (%)</Label>
+                <Label htmlFor="weightage">Peso (%)</Label>
                 <Input
                   id="weightage"
                   type="number"
@@ -514,31 +506,31 @@ export default function AssessmentBuilder() {
                   onChange={(e) => setSectionForm(prev => ({ ...prev, weightage: parseInt(e.target.value) || 0 }))}
                 />
                 <p className={`text-xs ${projectedWeightageTotal === 100 ? 'text-muted-foreground' : 'text-amber-600 dark:text-amber-400'}`}>
-                  Sections total {projectedWeightageTotal}% (target 100%)
+                  Total das seções: {projectedWeightageTotal}% (meta: 100%)
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="skillTags">Skill Tags (comma-separated)</Label>
+                <Label htmlFor="skillTags">Tags de Habilidades (separadas por vírgula)</Label>
                 <Input
                   id="skillTags"
-                  placeholder="e.g., React, TypeScript, Frontend"
+                  placeholder="Ex: React, TypeScript, Frontend"
                   value={sectionForm.skill_tags}
                   onChange={(e) => setSectionForm(prev => ({ ...prev, skill_tags: e.target.value }))}
                 />
                 <p className="text-xs text-muted-foreground">
-                  Link skills to this section. Assessment performance will verify candidate proficiency in these skills.
+                  Vincule habilidades a esta seção. O desempenho na avaliação comprovará a proficiência do candidato nessas habilidades.
                 </p>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={resetSectionDialog}>Cancel</Button>
+              <Button variant="outline" onClick={resetSectionDialog}>Cancelar</Button>
               <Button
                 onClick={handleSaveSection}
                 disabled={createSection.isPending || updateSection.isPending || !sectionForm.title.trim()}
               >
                 {editingSectionId
-                  ? (updateSection.isPending ? 'Saving...' : 'Save Section')
-                  : (createSection.isPending ? 'Adding...' : 'Add Section')}
+                  ? (updateSection.isPending ? 'Salvando...' : 'Salvar Seção')
+                  : (createSection.isPending ? 'Adicionando...' : 'Adicionar Seção')}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -548,9 +540,9 @@ export default function AssessmentBuilder() {
         <Dialog open={isQuestionDialogOpen} onOpenChange={setIsQuestionDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90dvh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingQuestionId ? 'Edit Question' : 'Add Question'}</DialogTitle>
+              <DialogTitle>{editingQuestionId ? 'Editar Questão' : 'Adicionar Questão'}</DialogTitle>
               <DialogDescription>
-                {activeSection && `Adding to: ${activeSection.title}`}
+                {activeSection && `Adicionando em: ${activeSection.title}`}
               </DialogDescription>
             </DialogHeader>
             {activeSectionId && (
@@ -569,16 +561,16 @@ export default function AssessmentBuilder() {
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Assessment Settings</DialogTitle>
+              <DialogTitle>Configurações da Avaliação</DialogTitle>
               <DialogDescription>
-                Configure how candidates experience this assessment.
+                Configure como os candidatos realizam esta avaliação.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-6 py-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Randomize Questions</Label>
-                  <p className="text-sm text-muted-foreground">Shuffle question order for each candidate</p>
+                  <Label>Embaralhar Questões</Label>
+                  <p className="text-sm text-muted-foreground">Alterna a ordem das questões para cada candidato</p>
                 </div>
                 <Switch
                   checked={assessmentForm.settings.randomize_questions}
@@ -590,8 +582,8 @@ export default function AssessmentBuilder() {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Show Score Immediately</Label>
-                  <p className="text-sm text-muted-foreground">Display score after submission</p>
+                  <Label>Exibir Nota Imediatamente</Label>
+                  <p className="text-sm text-muted-foreground">Mostra a nota ao candidato logo após o envio</p>
                 </div>
                 <Switch
                   checked={assessmentForm.settings.show_score_immediately}
@@ -603,8 +595,8 @@ export default function AssessmentBuilder() {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Allow Review</Label>
-                  <p className="text-sm text-muted-foreground">Let candidates review answers before submitting</p>
+                  <Label>Permitir Revisão</Label>
+                  <p className="text-sm text-muted-foreground">Permite que o candidato revise as respostas antes de enviar</p>
                 </div>
                 <Switch
                   checked={assessmentForm.settings.allow_review}
@@ -616,7 +608,7 @@ export default function AssessmentBuilder() {
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={() => setIsSettingsOpen(false)}>Done</Button>
+              <Button onClick={() => setIsSettingsOpen(false)}>Concluído</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

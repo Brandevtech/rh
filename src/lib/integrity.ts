@@ -75,13 +75,13 @@ export function formatSecondsAway(seconds: number): string {
 export function getIntegrityEventLabel(type?: string): string {
   switch (normalizeIntegrityEventType(type)) {
     case 'tab_switch':
-      return 'Tab switch';
+      return 'Troca de aba';
     case 'focus_lost':
-      return 'Focus lost';
+      return 'Perda de foco';
     case 'fullscreen_exit':
-      return 'Fullscreen exit';
+      return 'Saída de tela cheia';
     default:
-      return 'Unknown event';
+      return 'Evento desconhecido';
   }
 }
 
@@ -92,20 +92,20 @@ export function getTabSwitchWarningMessage(switchCount: number): {
 } {
   if (switchCount >= 5) {
     return {
-      title: 'Integrity warning',
-      description: 'Repeated tab switches may affect your evaluation. Stay on this page.',
+      title: 'Aviso de integridade',
+      description: 'Trocas repetidas de aba podem comprometer sua avaliação. Permaneça nesta página.',
       variant: 'destructive',
     };
   }
   if (switchCount >= 3) {
     return {
-      title: 'Serious integrity notice',
-      description: 'Multiple tab switches have been recorded. Please return to your assessment.',
+      title: 'Aviso importante de integridade',
+      description: 'Múltiplas trocas de aba foram registradas. Por favor, retorne à sua prova.',
       variant: 'destructive',
     };
   }
   return {
-    title: 'Tab switch recorded',
-    description: 'Leaving this tab is monitored and shared with the hiring team.',
+    title: 'Troca de aba registrada',
+    description: 'Sair desta aba é monitorado e compartilhado com a equipe de recrutamento.',
   };
 }

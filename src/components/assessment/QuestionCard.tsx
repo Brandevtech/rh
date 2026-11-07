@@ -7,22 +7,22 @@ import { parseFileConfig } from '@/lib/assessmentFileUpload';
 
 const typeConfig: Record<QuestionType, { label: string; icon: React.ReactNode; color: string }> = {
   mcq: { 
-    label: 'MCQ', 
+    label: 'Múltipla Escolha', 
     icon: <FileText className="h-3.5 w-3.5" />, 
     color: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' 
   },
   coding: { 
-    label: 'Coding', 
+    label: 'Programação', 
     icon: <Code className="h-3.5 w-3.5" />, 
     color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300' 
   },
   subjective: { 
-    label: 'Subjective', 
+    label: 'Dissertativa', 
     icon: <MessageSquare className="h-3.5 w-3.5" />, 
     color: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' 
   },
   file_upload: {
-    label: 'File Upload',
+    label: 'Envio de Arquivo',
     icon: <Upload className="h-3.5 w-3.5" />,
     color: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
   },
@@ -51,14 +51,14 @@ export function QuestionCard({ question, index, onEdit, onDelete }: QuestionCard
                 {config.icon}
                 {config.label}
               </Badge>
-              <Badge variant="outline">{question.marks} {question.marks === 1 ? 'mark' : 'marks'}</Badge>
+              <Badge variant="outline">{question.marks} {question.marks === 1 ? 'ponto' : 'pontos'}</Badge>
             </div>
             <p className="text-sm font-medium line-clamp-2">{question.question_text}</p>
             
             {/* MCQ Preview */}
             {question.type === 'mcq' && question.options && (
               <div className="mt-2 space-y-1">
-                {question.options.slice(0, 4).map((opt, i) => (
+                {question.options.slice(0, 4).map((opt) => (
                   <div key={opt.id} className="flex items-center gap-2 text-xs text-muted-foreground">
                     {opt.is_correct ? (
                       <CheckCircle className="h-3 w-3 text-green-500" />
@@ -74,15 +74,15 @@ export function QuestionCard({ question, index, onEdit, onDelete }: QuestionCard
             {/* Coding Preview */}
             {question.type === 'coding' && question.coding_language && (
               <div className="mt-2 text-xs text-muted-foreground">
-                Language: {question.coding_language}
-                {question.coding_test_cases && ` • ${question.coding_test_cases.length} test cases`}
+                Linguagem: {question.coding_language}
+                {question.coding_test_cases && ` • ${question.coding_test_cases.length} caso(s) de teste`}
               </div>
             )}
 
             {/* Subjective Preview */}
             {question.type === 'subjective' && question.subjective_max_words && (
               <div className="mt-2 text-xs text-muted-foreground">
-                Max words: {question.subjective_max_words}
+                Máximo de palavras: {question.subjective_max_words}
               </div>
             )}
 
@@ -90,11 +90,11 @@ export function QuestionCard({ question, index, onEdit, onDelete }: QuestionCard
             {question.type === 'file_upload' && (() => {
               const cfg = parseFileConfig(question.file_config);
               const parts: string[] = [];
-              if (cfg.allow_file) parts.push('File (≤10 MB)');
-              if (cfg.allow_link) parts.push('Google Drive link');
+              if (cfg.allow_file) parts.push('Arquivo (≤10 MB)');
+              if (cfg.allow_link) parts.push('Link do Google Drive');
               return (
                 <div className="mt-2 text-xs text-muted-foreground">
-                  {parts.join(' · ') || 'File or Drive link'}
+                  {parts.join(' · ') || 'Arquivo ou link do Drive'}
                 </div>
               );
             })()}

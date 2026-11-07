@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useTemplates, assessmentToTemplateData, type TemplateData } from '@/hooks/useTemplates';
+import { useTemplates, assessmentToTemplateData } from '@/hooks/useTemplates';
 import type { AssessmentWithDetails } from '@/types/database';
 
 interface SaveAsTemplateDialogProps {
@@ -26,7 +26,7 @@ export function SaveAsTemplateDialog({
   assessment,
 }: SaveAsTemplateDialogProps) {
   const { createTemplate } = useTemplates();
-  const [name, setName] = useState(assessment.title + ' Template');
+  const [name, setName] = useState(assessment.title + ' (Modelo)');
   const [description, setDescription] = useState(assessment.description || '');
 
   const handleSave = async () => {
@@ -45,46 +45,46 @@ export function SaveAsTemplateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Save as Template</DialogTitle>
+          <DialogTitle>Salvar como Modelo</DialogTitle>
           <DialogDescription>
-            Save this assessment as a reusable template for future use.
+            Salve esta avaliação como um modelo reutilizável para futuras vagas e testes.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="template-name">Template Name</Label>
+            <Label htmlFor="template-name">Nome do Modelo</Label>
             <Input
               id="template-name"
-              placeholder="e.g., Frontend Developer Template"
+              placeholder="Ex: Modelo de Desenvolvedor Frontend"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="template-description">Description</Label>
+            <Label htmlFor="template-description">Descrição</Label>
             <Textarea
               id="template-description"
-              placeholder="Brief description of this template..."
+              placeholder="Breve descrição deste modelo..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           <div className="text-sm text-muted-foreground">
-            This template will include:
+            Este modelo incluirá:
             <ul className="list-disc list-inside mt-1 space-y-1">
-              <li>{assessment.sections.length} section(s)</li>
-              <li>{assessment.sections.reduce((acc, s) => acc + s.questions.length, 0)} question(s)</li>
-              <li>Duration: {assessment.duration_minutes} minutes</li>
-              <li>Passing score: {assessment.passing_score}%</li>
+              <li>{assessment.sections.length} seção(ões)</li>
+              <li>{assessment.sections.reduce((acc, s) => acc + s.questions.length, 0)} questão(ões)</li>
+              <li>Duração: {assessment.duration_minutes} minutos</li>
+              <li>Nota de corte: {assessment.passing_score}%</li>
             </ul>
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleSave} disabled={createTemplate.isPending || !name.trim()}>
-            {createTemplate.isPending ? 'Saving...' : 'Save Template'}
+            {createTemplate.isPending ? 'Salvando...' : 'Salvar Modelo'}
           </Button>
         </DialogFooter>
       </DialogContent>

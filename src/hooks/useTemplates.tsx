@@ -93,12 +93,12 @@ export function useTemplates() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
-      toast({ title: 'Template saved successfully' });
+      toast({ title: 'Modelo salvo com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to save template', 
+        title: 'Falha ao salvar modelo', 
         description: error.message 
       });
     },
@@ -115,12 +115,12 @@ export function useTemplates() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['templates'] });
-      toast({ title: 'Template deleted successfully' });
+      toast({ title: 'Modelo excluído com sucesso' });
     },
     onError: (error) => {
       toast({ 
         variant: 'destructive', 
-        title: 'Failed to delete template', 
+        title: 'Falha ao excluir modelo', 
         description: error.message 
       });
     },

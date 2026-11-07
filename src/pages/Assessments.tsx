@@ -20,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -31,13 +30,13 @@ import { GenerateAssessmentDialog } from '@/components/assessments/GenerateAsses
 import type { AssessmentStatus } from '@/types/database';
 
 const statusConfig: Record<AssessmentStatus, { label: string; variant: 'default' | 'secondary' | 'outline' }> = {
-  draft: { label: 'Draft', variant: 'secondary' },
-  active: { label: 'Active', variant: 'default' },
-  archived: { label: 'Archived', variant: 'outline' },
+  draft: { label: 'Rascunho', variant: 'secondary' },
+  active: { label: 'Ativa', variant: 'default' },
+  archived: { label: 'Arquivada', variant: 'outline' },
 };
 
 export default function Assessments() {
-  usePageTitle('Assessments');
+  usePageTitle('Avaliações');
   const navigate = useNavigate();
   const { assessments, isLoading, createAssessment, deleteAssessment } = useAssessments();
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,7 +64,7 @@ export default function Assessments() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this assessment?')) {
+    if (confirm('Tem certeza de que deseja excluir esta avaliação?')) {
       await deleteAssessment.mutateAsync(id);
     }
   };
@@ -75,55 +74,55 @@ export default function Assessments() {
       <main className="container mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Assessments</h1>
-            <p className="text-muted-foreground mt-1">Create and manage candidate assessments</p>
+            <h1 className="text-3xl font-bold text-foreground">Avaliações</h1>
+            <p className="text-muted-foreground mt-1">Crie e gerencie provas e testes para candidatos</p>
           </div>
           
           <div className="flex gap-2">
             <Button variant="outline" className="gap-2" onClick={() => setIsGenerateDialogOpen(true)}>
               <Sparkles className="h-4 w-4" />
-              Generate with AI
+              Gerar com IA
             </Button>
             <Button variant="outline" className="gap-2" onClick={() => setIsTemplateDialogOpen(true)}>
               <LayoutTemplate className="h-4 w-4" />
-              From Template
+              Usar Modelo
             </Button>
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
               <DialogTrigger asChild>
                 <Button className="gap-2">
                   <Plus className="h-4 w-4" />
-                  New Assessment
+                  Nova Avaliação
                 </Button>
               </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create New Assessment</DialogTitle>
+                <DialogTitle>Criar Nova Avaliação</DialogTitle>
                 <DialogDescription>
-                  Set up the basic details for your assessment. You can add sections and questions after creation.
+                  Defina os detalhes básicos da sua avaliação. Você poderá adicionar seções e questões após a criação.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title">Título</Label>
                   <Input
                     id="title"
-                    placeholder="e.g., Frontend Developer Assessment"
+                    placeholder="Ex: Avaliação de Desenvolvedor Frontend"
                     value={newAssessment.title}
                     onChange={(e) => setNewAssessment(prev => ({ ...prev, title: e.target.value }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">Descrição</Label>
                   <Textarea
                     id="description"
-                    placeholder="Brief description of this assessment..."
+                    placeholder="Breve descrição desta avaliação..."
                     value={newAssessment.description}
                     onChange={(e) => setNewAssessment(prev => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="duration">Duration (minutes)</Label>
+                    <Label htmlFor="duration">Duração (minutos)</Label>
                     <Input
                       id="duration"
                       type="number"
@@ -132,7 +131,7 @@ export default function Assessments() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="passing">Passing Score (%)</Label>
+                    <Label htmlFor="passing">Nota de Corte (%)</Label>
                     <Input
                       id="passing"
                       type="number"
@@ -143,9 +142,9 @@ export default function Assessments() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancel</Button>
+                <Button variant="outline" onClick={() => setIsCreateOpen(false)}>Cancelar</Button>
                 <Button onClick={handleCreate} disabled={createAssessment.isPending}>
-                  {createAssessment.isPending ? 'Creating...' : 'Create Assessment'}
+                  {createAssessment.isPending ? 'Criando...' : 'Criar Avaliação'}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -167,7 +166,7 @@ export default function Assessments() {
           <div className="relative max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search assessments..."
+              placeholder="Buscar avaliações..."
               className="pl-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -194,13 +193,13 @@ export default function Assessments() {
           <Card className="text-center py-12">
             <CardContent>
               <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No assessments yet</h3>
+              <h3 className="text-lg font-semibold mb-2">Nenhuma avaliação encontrada</h3>
               <p className="text-muted-foreground mb-4">
-                Create your first assessment to start evaluating candidates.
+                Crie sua primeira avaliação para começar a testar seus candidatos.
               </p>
               <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
                 <Plus className="h-4 w-4" />
-                Create Assessment
+                Criar Avaliação
               </Button>
             </CardContent>
           </Card>
@@ -228,18 +227,18 @@ export default function Assessments() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigate(`/assessments/${assessment.id}`); }}>
                           <Edit className="h-4 w-4 mr-2" />
-                          Edit
+                          Editar
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                           <Copy className="h-4 w-4 mr-2" />
-                          Duplicate
+                          Duplicar
                         </DropdownMenuItem>
                         <DropdownMenuItem 
                           className="text-destructive"
                           onClick={(e) => { e.stopPropagation(); handleDelete(assessment.id); }}
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
+                          Excluir
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -257,7 +256,7 @@ export default function Assessments() {
                       </div>
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4" />
-                        {assessment.passing_score}% to pass
+                        {assessment.passing_score}% para aprovação
                       </div>
                     </div>
                   </CardContent>

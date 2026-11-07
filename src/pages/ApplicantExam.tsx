@@ -4,17 +4,18 @@ import { useParams, useNavigate } from 'react-router';
 import { useApplicantAuth } from '@/hooks/useApplicantAuth';
 import { useApplicantAssessments, useApplicantCandidateRecord } from '@/hooks/useApplicantPortal';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, AlertCircle, ShieldX, Clock, CheckCircle2 } from 'lucide-react';
+import { Loader2, AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { AssessmentPortalHeader } from '@/components/CompanyLogo';
 import ExamInterface from '@/components/portal/ExamInterface';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
 export default function ApplicantExam() {
-  usePageTitle('Assessment');
+  usePageTitle('Avaliação');
   const { assessmentId } = useParams<{ assessmentId: string }>();
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useApplicantAuth();
@@ -39,7 +40,7 @@ export default function ApplicantExam() {
 
       const candidateAssessment = assessments.find(a => a.id === assessmentId);
       if (!candidateAssessment) {
-        setError('Assessment not found or not assigned to you');
+        setError('Avaliação não encontrada ou não atribuída a você');
         setIsLoadingDetails(false);
         return;
       }
@@ -125,7 +126,7 @@ export default function ApplicantExam() {
             : [],
           candidate: {
             id: candidateAssessment.candidate_id,
-            name: candidateRecord?.name ?? 'Candidate',
+            name: candidateRecord?.name ?? 'Candidato',
             email: candidateRecord?.email ?? '',
           },
           assessment: {
@@ -136,7 +137,7 @@ export default function ApplicantExam() {
         setIsLoadingDetails(false);
       } catch (err: any) {
         console.error('Error loading assessment:', err);
-        setError(err.message || 'Failed to load assessment');
+        setError(err.message || 'Falha ao carregar a avaliação');
         setIsLoadingDetails(false);
       }
     };
@@ -149,7 +150,7 @@ export default function ApplicantExam() {
       <PortalLayout>
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-          <p className="text-muted-foreground">Loading your assessment...</p>
+          <p className="text-muted-foreground">Carregando sua avaliação...</p>
         </div>
       </PortalLayout>
     );
@@ -161,9 +162,9 @@ export default function ApplicantExam() {
         <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center">
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Access Denied</h2>
-            <p className="text-muted-foreground mb-4">{error || 'Assessment not found'}</p>
-            <Button onClick={() => navigate('/applicant')}>Back to Dashboard</Button>
+            <h2 className="text-xl font-semibold mb-2">Acesso Negado</h2>
+            <p className="text-muted-foreground mb-4">{error || 'Avaliação não encontrada'}</p>
+            <Button onClick={() => navigate('/applicant')}>Voltar ao Painel</Button>
           </CardContent>
         </Card>
       </PortalLayout>
@@ -176,11 +177,11 @@ export default function ApplicantExam() {
         <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center">
             <Clock className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Assessment Expired</h2>
+            <h2 className="text-xl font-semibold mb-2">Avaliação Expirada</h2>
             <p className="text-muted-foreground mb-4">
-              This assessment was due by {format(new Date(assessmentInfo.deadline!), 'PPP')}.
+              O prazo para esta avaliação encerrou em {format(new Date(assessmentInfo.deadline!), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}.
             </p>
-            <Button onClick={() => navigate('/applicant')}>Back to Dashboard</Button>
+            <Button onClick={() => navigate('/applicant')}>Voltar ao Painel</Button>
           </CardContent>
         </Card>
       </PortalLayout>
@@ -193,19 +194,19 @@ export default function ApplicantExam() {
         <Card className="max-w-md mx-auto">
           <CardContent className="pt-6 text-center">
             <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Assessment Completed</h2>
+            <h2 className="text-xl font-semibold mb-2">Avaliação Concluída</h2>
             <p className="text-muted-foreground mb-2">
-              You have successfully completed {assessmentInfo.assessment.title}.
+              Você concluiu {assessmentInfo.assessment.title} com sucesso.
             </p>
             {assessmentInfo.completed_at && (
               <p className="text-sm text-muted-foreground mb-4">
-                Submitted on {format(new Date(assessmentInfo.completed_at), 'PPP p')}
+                Enviada em {format(new Date(assessmentInfo.completed_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
               </p>
             )}
             <p className="text-sm text-muted-foreground mb-4">
-              Your responses have been submitted. The hiring team will review your assessment and follow up.
+              Suas respostas foram enviadas. A equipe de recrutamento analisará sua avaliação e entrará em contato.
             </p>
-            <Button onClick={() => navigate('/applicant')}>Back to Dashboard</Button>
+            <Button onClick={() => navigate('/applicant')}>Voltar ao Painel</Button>
           </CardContent>
         </Card>
       </PortalLayout>
@@ -257,40 +258,40 @@ function WelcomeScreen({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
           <div className="p-4 bg-muted rounded-lg">
             <p className="text-2xl font-bold">{assessmentInfo.assessment.duration_minutes}</p>
-            <p className="text-sm text-muted-foreground">Minutes</p>
+            <p className="text-sm text-muted-foreground">Minutos</p>
           </div>
           <div className="p-4 bg-muted rounded-lg">
             <p className="text-2xl font-bold">{assessmentInfo.assessment.passing_score}%</p>
-            <p className="text-sm text-muted-foreground">Passing Score</p>
+            <p className="text-sm text-muted-foreground">Nota de Corte</p>
           </div>
         </div>
 
         {assessmentInfo.deadline && (
-          <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg text-center">
-            <p className="text-orange-800">
+          <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg text-center dark:bg-orange-950/30 dark:border-orange-800">
+            <p className="text-orange-800 dark:text-orange-200">
               <Clock className="h-4 w-4 inline mr-2" />
-              Complete before: {format(new Date(assessmentInfo.deadline), 'PPP p')}
+              Realizar até: {format(new Date(assessmentInfo.deadline), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
             </p>
           </div>
         )}
 
         <div className="border-t pt-6">
-          <h3 className="font-semibold mb-2">Before you start:</h3>
+          <h3 className="font-semibold mb-2">Antes de começar:</h3>
           <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-            <li>Ensure you have a stable internet connection</li>
-            <li>Find a quiet place without distractions</li>
-            <li>The timer will start once you begin</li>
-            <li>You cannot pause the assessment once started</li>
-            <li>Your progress will be auto-saved</li>
-            <li>Tab switches and focus loss are monitored</li>
-            <li>After you start, a live counter shows tab switches and time away from the exam</li>
+            <li>Certifique-se de ter uma conexão estável com a internet</li>
+            <li>Escolha um local tranquilo e sem distrações</li>
+            <li>O cronômetro começará assim que você clicar em Iniciar</li>
+            <li>Não é possível pausar a avaliação após o início</li>
+            <li>Seu progresso será salvo automaticamente</li>
+            <li>Trocas de aba e saídas de foco são monitoradas</li>
+            <li>Durante a prova, um contador registrará trocas de aba e tempo fora da página</li>
           </ul>
         </div>
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-sm">
-          <p className="font-medium text-amber-800 dark:text-amber-200 mb-2">Integrity monitoring</p>
+          <p className="font-medium text-amber-800 dark:text-amber-200 mb-2">Monitoramento de integridade</p>
           <p className="text-amber-700 dark:text-amber-300">
-            Leaving the exam tab is recorded and shared with the hiring team. Stay on this page for the best experience.
+            Sair da aba da prova é registrado e compartilhado com a equipe de recrutamento. Permaneça nesta página para uma melhor experiência.
           </p>
         </div>
 
@@ -301,17 +302,16 @@ function WelcomeScreen({
             onCheckedChange={(checked) => setConsentChecked(checked === true)}
           />
           <Label htmlFor="applicant-exam-consent" className="text-sm font-normal leading-snug cursor-pointer">
-            I consent to my responses, exam activity (including integrity monitoring), and results being
-            processed for recruitment evaluation purposes.
+            Concordo que minhas respostas, atividade na prova (incluindo monitoramento de integridade) e resultados sejam processados para fins de avaliação no processo seletivo.
           </Label>
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 justify-center pt-4">
           <Button variant="outline" onClick={onBack}>
-            Back to Dashboard
+            Voltar ao Painel
           </Button>
           <Button size="lg" onClick={onStart} disabled={!consentChecked}>
-            Start Assessment
+            Iniciar Avaliação
           </Button>
         </div>
       </CardContent>
