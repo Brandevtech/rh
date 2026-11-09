@@ -41,17 +41,17 @@ interface ExportReportDialogProps {
 }
 
 const AVAILABLE_COLUMNS = [
-  { id: 'candidate_name', label: 'Candidate Name', key: 'candidate.name' },
-  { id: 'candidate_email', label: 'Candidate Email', key: 'candidate.email' },
-  { id: 'role_applied', label: 'Role Applied', key: 'candidate.role_applied' },
-  { id: 'assessment', label: 'Assessment', key: 'assessment.title' },
+  { id: 'candidate_name', label: 'Nome do Candidato', key: 'candidate.name' },
+  { id: 'candidate_email', label: 'Email do Candidato', key: 'candidate.email' },
+  { id: 'role_applied', label: 'Cargo Pretendido', key: 'candidate.role_applied' },
+  { id: 'assessment', label: 'Avaliação', key: 'assessment.title' },
   { id: 'status', label: 'Status', key: 'status' },
-  { id: 'passed', label: 'Passed', key: 'passed' },
-  { id: 'percentage', label: 'Score (%)', key: 'percentage' },
-  { id: 'total_score', label: 'Total Score', key: 'total_score' },
-  { id: 'started_at', label: 'Started At', key: 'started_at' },
-  { id: 'completed_at', label: 'Completed At', key: 'completed_at' },
-  { id: 'integrity_issues', label: 'Integrity Issues', key: 'integrity_log' },
+  { id: 'passed', label: 'Aprovado', key: 'passed' },
+  { id: 'percentage', label: 'Nota (%)', key: 'percentage' },
+  { id: 'total_score', label: 'Pontuação Total', key: 'total_score' },
+  { id: 'started_at', label: 'Iniciado em', key: 'started_at' },
+  { id: 'completed_at', label: 'Concluído em', key: 'completed_at' },
+  { id: 'integrity_issues', label: 'Incidentes de Integridade', key: 'integrity_log' },
 ] as const;
 
 export function ExportReportDialog({
@@ -83,8 +83,8 @@ export function ExportReportDialog({
     if (selectedColumns.length === 0) {
       toast({
         variant: 'destructive',
-        title: 'No columns selected',
-        description: 'Please select at least one column to export.',
+        title: 'Nenhuma coluna selecionada',
+        description: 'Selecione pelo menos uma coluna para exportar.',
       });
       return;
     }
@@ -113,12 +113,12 @@ export function ExportReportDialog({
       const filename = `evaluations-report-${new Date().toISOString().split('T')[0]}`;
       exportToCSV(evaluations, columns, filename);
       
-      toast({ title: `Exported ${evaluations.length} records` });
+      toast({ title: `${evaluations.length} registro(s) exportado(s) com sucesso` });
       onOpenChange(false);
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Export failed',
+        title: 'Falha na exportação',
         description: error.message,
       });
     }
@@ -130,16 +130,16 @@ export function ExportReportDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Export Report
+            Exportar Relatório
           </DialogTitle>
           <DialogDescription>
-            Export evaluation data to a CSV file.
+            Exporte os dados das avaliações para um arquivo CSV.
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
           <div className="space-y-3">
-            <Label>Columns to include</Label>
+            <Label>Colunas a incluir</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {AVAILABLE_COLUMNS.map((column) => (
                 <div key={column.id} className="flex items-center space-x-2">
@@ -160,20 +160,20 @@ export function ExportReportDialog({
           </div>
 
           <div className="p-3 bg-muted rounded-lg text-sm">
-            <p className="font-medium">Export summary</p>
+            <p className="font-medium">Resumo da exportação</p>
             <p className="text-muted-foreground mt-1">
-              {evaluations.length} evaluation(s) with {selectedColumns.length} column(s)
+              {evaluations.length} avaliação(ões) com {selectedColumns.length} coluna(s)
             </p>
           </div>
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleExport} disabled={selectedColumns.length === 0}>
             <Download className="h-4 w-4 mr-2" />
-            Export CSV
+            Exportar CSV
           </Button>
         </DialogFooter>
       </DialogContent>

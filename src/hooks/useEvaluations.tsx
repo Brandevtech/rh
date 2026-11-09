@@ -272,12 +272,12 @@ export function useGradeResponse() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['evaluation', variables.candidateAssessmentId] });
       queryClient.invalidateQueries({ queryKey: ['pending-evaluations'] });
-      toast({ title: 'Response graded successfully' });
+      toast({ title: 'Resposta avaliada com sucesso' });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Failed to grade response',
+        title: 'Falha ao avaliar resposta',
         description: error.message,
       });
     },
@@ -350,12 +350,12 @@ export function useCreateResponseForGrading() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['evaluation', variables.candidateAssessmentId] });
       queryClient.invalidateQueries({ queryKey: ['pending-evaluations'] });
-      toast({ title: 'Score assigned successfully' });
+      toast({ title: 'Nota atribuída com sucesso' });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Failed to assign score',
+        title: 'Falha ao atribuir nota',
         description: error.message,
       });
     },
@@ -396,19 +396,19 @@ export function useAiGradeAssessment() {
       const graded = totals?.graded ?? 0;
       const failed = totals?.failed ?? 0;
       toast({
-        title: graded > 0 ? 'AI grading complete' : 'Nothing new to grade',
+        title: graded > 0 ? 'Correção por IA concluída' : 'Nenhuma resposta pendente para corrigir',
         description:
           failed > 0
-            ? `Graded ${graded} question(s); ${failed} failed. You can retry or edit manually.`
+            ? `${graded} questão(ões) corrigida(s); ${failed} com falha. Você pode tentar novamente ou editar manualmente.`
             : graded > 0
-              ? `Updated scores for ${graded} question(s). Review and override via Edit if needed.`
-              : 'Unscored non-MCQ questions were already graded, human-scored, or skipped.',
+              ? `Notas atualizadas para ${graded} questão(ões). Revise ou ajuste via Editar, se necessário.`
+              : 'Questões dissertativas e de código já foram corrigidas, avaliadas manualmente ou ignoradas.',
       });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'AI grading failed',
+        title: 'Falha na correção por IA',
         description: error.message,
       });
     },
@@ -435,12 +435,12 @@ export function useMarkAsEvaluated() {
       queryClient.invalidateQueries({ queryKey: ['evaluation', candidateAssessmentId] });
       queryClient.invalidateQueries({ queryKey: ['pending-evaluations'] });
       queryClient.invalidateQueries({ queryKey: ['candidates'] });
-      toast({ title: 'Evaluation completed' });
+      toast({ title: 'Avaliação concluída com sucesso' });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Failed to complete evaluation',
+        title: 'Falha ao concluir avaliação',
         description: error.message,
       });
     },
@@ -469,12 +469,12 @@ export function useOverrideResult() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['evaluation', variables.candidateAssessmentId] });
       queryClient.invalidateQueries({ queryKey: ['pending-evaluations'] });
-      toast({ title: `Result overridden to ${variables.passed ? 'Passed' : 'Failed'}` });
+      toast({ title: `Resultado alterado para ${variables.passed ? 'Aprovado' : 'Reprovado'}` });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Failed to override result',
+        title: 'Falha ao alterar resultado',
         description: error.message,
       });
     },
@@ -502,12 +502,12 @@ export function useSaveEvaluatorNotes() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['evaluation', variables.candidateAssessmentId] });
-      toast({ title: 'Notes saved' });
+      toast({ title: 'Anotações salvas com sucesso' });
     },
     onError: (error) => {
       toast({
         variant: 'destructive',
-        title: 'Failed to save notes',
+        title: 'Falha ao salvar anotações',
         description: error.message,
       });
     },

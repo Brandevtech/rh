@@ -53,7 +53,7 @@ type SortOrder = 'asc' | 'desc';
 type StatusFilter = 'all' | 'pending' | 'passed' | 'failed';
 
 export default function Evaluations() {
-  usePageTitle('Evaluations');
+  usePageTitle('Avaliações');
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -123,19 +123,19 @@ export default function Evaluations() {
 
   const getStatusBadge = (status: string, passed?: boolean | null, gradingPending = false) => {
     if (gradingPending) {
-      return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30">AI grading</Badge>;
+      return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30">Correção por IA</Badge>;
     }
     if (status === 'completed') {
-      return <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30">Pending Review</Badge>;
+      return <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30">Revisão Pendente</Badge>;
     }
     if (status === 'evaluated') {
       if (passed === true) {
-        return <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">Passed</Badge>;
+        return <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/30">Aprovado</Badge>;
       }
       if (passed === false) {
-        return <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">Failed</Badge>;
+        return <Badge variant="outline" className="bg-red-500/10 text-red-600 border-red-500/30">Reprovado</Badge>;
       }
-      return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30">Evaluated</Badge>;
+      return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/30">Avaliado</Badge>;
     }
     return <Badge variant="secondary">{status}</Badge>;
   };
@@ -164,40 +164,40 @@ export default function Evaluations() {
     <div className="flex flex-col flex-1 min-w-0 max-w-full">
       <main className="container mx-auto px-4 py-6 sm:py-8 min-w-0 max-w-full space-y-6 pb-safe">
         <PageHeader
-          title="Evaluations"
-          subtitle="Review and grade candidate assessments"
+          title="Avaliações"
+          subtitle="Revise e atribua notas às avaliações dos candidatos"
         />
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="surface-card border-0">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Pending Review</CardTitle>
+              <CardTitle className="text-sm font-medium">Revisão Pendente</CardTitle>
               <Clock className="h-4 w-4 text-amber-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{completedCount}</div>
-              <p className="text-xs text-muted-foreground">Awaiting evaluation</p>
+              <p className="text-xs text-muted-foreground">Aguardando avaliação</p>
             </CardContent>
           </Card>
           <Card className="surface-card border-0">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Evaluated</CardTitle>
+              <CardTitle className="text-sm font-medium">Avaliadas</CardTitle>
               <CheckCircle2 className="h-4 w-4 text-green-500" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{evaluatedCount}</div>
-              <p className="text-xs text-muted-foreground">Completed reviews</p>
+              <p className="text-xs text-muted-foreground">Revisões concluídas</p>
             </CardContent>
           </Card>
           <Card className="surface-card border-0">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Submissions</CardTitle>
+              <CardTitle className="text-sm font-medium">Total de Envios</CardTitle>
               <ClipboardCheck className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{evaluations.length}</div>
-              <p className="text-xs text-muted-foreground">All time</p>
+              <p className="text-xs text-muted-foreground">Histórico completo</p>
             </CardContent>
           </Card>
         </div>
@@ -208,7 +208,7 @@ export default function Evaluations() {
           <div className="relative flex-1 min-w-[200px] max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search by candidate or assessment..."
+              placeholder="Buscar por candidato ou avaliação..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-9"
@@ -222,10 +222,10 @@ export default function Evaluations() {
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="pending">Pending Review</SelectItem>
-              <SelectItem value="passed">Passed</SelectItem>
-              <SelectItem value="failed">Failed</SelectItem>
+              <SelectItem value="all">Todos os Status</SelectItem>
+              <SelectItem value="pending">Revisão Pendente</SelectItem>
+              <SelectItem value="passed">Aprovado</SelectItem>
+              <SelectItem value="failed">Reprovado</SelectItem>
             </SelectContent>
           </Select>
 
@@ -240,7 +240,7 @@ export default function Evaluations() {
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateFrom ? format(dateFrom, "MMM d, yyyy") : "From"}
+                {dateFrom ? format(dateFrom, "dd/MM/yyyy") : "De"}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -264,7 +264,7 @@ export default function Evaluations() {
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateTo ? format(dateTo, "MMM d, yyyy") : "To"}
+                {dateTo ? format(dateTo, "dd/MM/yyyy") : "Até"}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -299,7 +299,7 @@ export default function Evaluations() {
 
         {/* Results count */}
         <p className="text-sm text-muted-foreground">
-          Showing {filteredAndSortedEvaluations.length} of {evaluations.length} evaluations
+          Exibindo {filteredAndSortedEvaluations.length} de {evaluations.length} {evaluations.length === 1 ? 'avaliação' : 'avaliações'}
         </p>
 
         {/* Evaluations Table */}
@@ -323,7 +323,7 @@ export default function Evaluations() {
                       )} />
                     </Button>
                   </TableHead>
-                  <TableHead>Assessment</TableHead>
+                  <TableHead>Avaliação</TableHead>
                   <TableHead>
                     <Button 
                       variant="ghost" 
@@ -353,21 +353,21 @@ export default function Evaluations() {
                     </Button>
                   </TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Integrity</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>Integridade</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      Loading evaluations...
+                      Carregando avaliações...
                     </TableCell>
                   </TableRow>
                 ) : filteredAndSortedEvaluations.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      No evaluations found
+                      Nenhuma avaliação encontrada
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -387,12 +387,12 @@ export default function Evaluations() {
                       <TableCell>{evaluation.assessment?.title}</TableCell>
                       <TableCell>
                         {evaluation.completed_at
-                          ? format(new Date(evaluation.completed_at), 'MMM d, yyyy HH:mm')
+                          ? format(new Date(evaluation.completed_at), 'dd/MM/yyyy HH:mm')
                           : '-'}
                       </TableCell>
                       <TableCell>
                         {isGradingPending(evaluation) ? (
-                          <span className="text-muted-foreground italic">Grading…</span>
+                          <span className="text-muted-foreground italic">Corrigindo…</span>
                         ) : evaluation.percentage !== null ? (
                           <span className={evaluation.passed ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
                             {evaluation.percentage?.toFixed(1)}%
@@ -406,10 +406,10 @@ export default function Evaluations() {
                         {(() => {
                           const stats = computeIntegrityStats(normalizeIntegrityLog(evaluation.integrity_log));
                           if (stats.eventCount === 0) {
-                            return <span className="text-green-600 text-sm">Clean</span>;
+                            return <span className="text-green-600 text-sm">Sem incidentes</span>;
                           }
                           return (
-                            <div className="flex items-center gap-1 text-amber-600" title={`${stats.tabSwitchCount} tab switches, ${stats.eventCount} events`}>
+                            <div className="flex items-center gap-1 text-amber-600" title={`${stats.tabSwitchCount} troca(s) de aba, ${stats.eventCount} evento(s)`}>
                               <AlertTriangle className="h-4 w-4" />
                               <span className="text-sm">{stats.tabSwitchCount}</span>
                             </div>
@@ -422,7 +422,7 @@ export default function Evaluations() {
                           size="sm"
                           onClick={() => navigate(`/evaluations/${evaluation.id}`)}
                         >
-                          {evaluation.status === 'completed' ? 'Review' : 'View'}
+                          {evaluation.status === 'completed' ? 'Revisar' : 'Visualizar'}
                         </Button>
                       </TableCell>
                     </TableRow>

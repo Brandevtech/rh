@@ -78,7 +78,7 @@ function AssessmentFilePreview({ path, name, mime }: { path: string; name: strin
         .createSignedUrl(path, 3600);
       if (cancelled) return;
       if (signError || !data?.signedUrl) {
-        setError(signError?.message ?? 'Could not open file');
+        setError(signError?.message ?? 'Não foi possível abrir o arquivo');
         setSignedUrl(null);
       } else {
         setSignedUrl(data.signedUrl);
@@ -94,13 +94,13 @@ function AssessmentFilePreview({ path, name, mime }: { path: string; name: strin
     return (
       <p className="text-sm text-muted-foreground flex items-center gap-2">
         <Loader2 className="h-4 w-4 animate-spin" />
-        Loading file…
+        Carregando arquivo…
       </p>
     );
   }
 
   if (error || !signedUrl) {
-    return <p className="text-sm text-destructive">{error ?? 'File unavailable'}</p>;
+    return <p className="text-sm text-destructive">{error ?? 'Arquivo indisponível'}</p>;
   }
 
   const isImage = mime.startsWith('image/');
@@ -202,7 +202,7 @@ function ResponseCard({
       
       return (
         <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm font-mono">
-          {String(code || 'No code submitted')}
+          {String(code || 'Nenhum código enviado')}
         </pre>
       );
     }
@@ -214,7 +214,7 @@ function ResponseCard({
       
       return (
         <div className="bg-muted p-4 rounded-lg">
-          <p className="whitespace-pre-wrap">{String(answer || 'No answer submitted')}</p>
+          <p className="whitespace-pre-wrap">{String(answer || 'Nenhuma resposta enviada')}</p>
         </div>
       );
     }
@@ -222,7 +222,7 @@ function ResponseCard({
     if (question.type === 'file_upload') {
       const parsed = parseFileUploadResponse(responseData);
       if (!parsed) {
-        return <p className="text-muted-foreground">No submission</p>;
+        return <p className="text-muted-foreground">Nenhum envio realizado</p>;
       }
       return (
         <div className="space-y-4">
@@ -235,7 +235,7 @@ function ResponseCard({
           )}
           {parsed.link?.url && (
             <div>
-              <Label className="text-sm text-muted-foreground mb-2 block">Google Drive link</Label>
+              <Label className="text-sm text-muted-foreground mb-2 block">Link do Google Drive</Label>
               {safeExternalUrl(parsed.link.url) ? (
               <Button variant="outline" size="sm" asChild>
                 <a href={safeExternalUrl(parsed.link.url)!} target="_blank" rel="noopener noreferrer">
@@ -244,7 +244,7 @@ function ResponseCard({
                 </a>
               </Button>
               ) : (
-                <p className="text-sm text-muted-foreground">Link is not a valid http(s) URL</p>
+                <p className="text-sm text-muted-foreground">O link não é uma URL http(s) válida</p>
               )}
               <p className="text-xs text-muted-foreground mt-2 break-all">{parsed.link.url}</p>
             </div>
@@ -253,7 +253,7 @@ function ResponseCard({
       );
     }
 
-    return <p className="text-muted-foreground">No response</p>;
+    return <p className="text-muted-foreground">Sem resposta enviada</p>;
   };
 
   const handleSaveGrade = () => {
@@ -264,14 +264,14 @@ function ResponseCard({
   return (
     <div className="space-y-4">
       <div>
-        <Label className="text-sm text-muted-foreground mb-2 block">Response</Label>
+        <Label className="text-sm text-muted-foreground mb-2 block">Resposta do Candidato</Label>
         {renderResponse()}
       </div>
 
       {((question.type === 'subjective' || question.type === 'file_upload') && question.subjective_rubric) && (
         <div>
           <Label className="text-sm text-muted-foreground mb-2 block">
-            {question.type === 'file_upload' ? 'Review Rubric' : 'Grading Rubric'}
+            {question.type === 'file_upload' ? 'Critérios de Avaliação' : 'Critérios de Correção'}
           </Label>
           <div className="bg-blue-500/5 border border-blue-500/20 p-3 rounded-lg text-sm">
             {question.subjective_rubric}
@@ -284,10 +284,10 @@ function ResponseCard({
       <div className="flex items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <Label>Score</Label>
+            <Label>Pontuação / Nota</Label>
             {response.auto_score !== null && response.auto_score !== undefined && (
               <Badge variant="secondary" className="text-xs">
-                Auto: {response.auto_score}
+                Automática: {response.auto_score}
               </Badge>
             )}
           </div>
@@ -300,7 +300,7 @@ function ResponseCard({
                 value={score}
                 onChange={(e) => setScore(e.target.value)}
                 className="w-24"
-                placeholder="Score"
+                placeholder="Nota"
               />
               <span className="text-muted-foreground">/ {question.marks}</span>
             </div>
@@ -320,17 +320,17 @@ function ResponseCard({
         </div>
 
         <div className="flex-2">
-          <Label className="mb-2 block">Feedback</Label>
+          <Label className="mb-2 block">Parecer / Feedback</Label>
           {isEditing ? (
             <Textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              placeholder="Provide feedback for the candidate..."
+              placeholder="Insira o feedback detalhado para o candidato..."
               rows={2}
             />
           ) : (
             <p className="text-sm text-muted-foreground">
-              {response.feedback || 'No feedback provided'}
+              {response.feedback || 'Nenhum feedback fornecido'}
             </p>
           )}
         </div>
@@ -374,21 +374,21 @@ function UnansweredQuestionCard({
   return (
     <div className="space-y-4">
       <div>
-        <Label className="text-sm text-muted-foreground mb-2 block">Response</Label>
+        <Label className="text-sm text-muted-foreground mb-2 block">Resposta do Candidato</Label>
         <div className="bg-amber-500/5 border border-amber-500/20 p-4 rounded-lg">
           <div className="flex items-center gap-2 text-amber-600">
             <AlertTriangle className="h-4 w-4" />
-            <span className="font-medium">Not Attempted</span>
+            <span className="font-medium">Não Respondida</span>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            The candidate did not submit a response for this question.
+            O candidato não enviou resposta para esta questão.
           </p>
         </div>
       </div>
 
       {question.type === 'mcq' && question.options && (
         <div>
-          <Label className="text-sm text-muted-foreground mb-2 block">Options (correct answer shown)</Label>
+          <Label className="text-sm text-muted-foreground mb-2 block">Alternativas (resposta correta indicada)</Label>
           <div className="space-y-2">
             {question.options.map((opt: MCQOption) => (
               <div
@@ -415,7 +415,7 @@ function UnansweredQuestionCard({
 
       <div className="flex items-start gap-4">
         <div className="flex-1">
-          <Label className="mb-2 block">Assign Score</Label>
+          <Label className="mb-2 block">Atribuir Nota</Label>
           {isEditing ? (
             <div className="flex items-center gap-2">
               <Input
@@ -445,11 +445,11 @@ function UnansweredQuestionCard({
 
         {isEditing && (
           <div className="flex-2">
-            <Label className="mb-2 block">Feedback</Label>
+            <Label className="mb-2 block">Parecer / Feedback</Label>
             <Textarea
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              placeholder="Optional feedback..."
+              placeholder="Feedback opcional..."
               rows={2}
             />
           </div>
@@ -501,10 +501,10 @@ function QuestionCard({
 
   const getTypeBadge = () => {
     switch (question.type) {
-      case 'mcq': return 'Multiple Choice';
-      case 'coding': return 'Coding';
-      case 'subjective': return 'Subjective';
-      case 'file_upload': return 'File Upload';
+      case 'mcq': return 'Múltipla Escolha';
+      case 'coding': return 'Código';
+      case 'subjective': return 'Dissertativa';
+      case 'file_upload': return 'Envio de Arquivo';
       default: return question.type;
     }
   };
@@ -533,7 +533,7 @@ function QuestionCard({
           <div className="flex items-center gap-2">
             <Badge variant="outline">{getTypeBadge()}</Badge>
             <Badge variant="secondary">
-              {question.marks} {question.marks === 1 ? 'mark' : 'marks'}
+              {question.marks} {question.marks === 1 ? 'ponto' : 'pontos'}
             </Badge>
             {!response && (
               <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30">
@@ -567,7 +567,7 @@ function QuestionCard({
 }
 
 export default function EvaluationDetail() {
-  usePageTitle('Evaluation Detail');
+  usePageTitle('Detalhes da Avaliação');
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -627,7 +627,7 @@ export default function EvaluationDetail() {
     return (
       <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8">
-          <p className="text-muted-foreground">Loading evaluation...</p>
+          <p className="text-muted-foreground">Carregando avaliação...</p>
         </main>
       </div>
     );
@@ -637,7 +637,7 @@ export default function EvaluationDetail() {
     return (
       <div className="min-h-screen bg-background">
         <main className="container mx-auto px-4 py-8">
-          <p className="text-muted-foreground">Evaluation not found</p>
+          <p className="text-muted-foreground">Avaliação não encontrada</p>
         </main>
       </div>
     );
@@ -728,13 +728,13 @@ export default function EvaluationDetail() {
                 ) : (
                   <Sparkles className="h-4 w-4 mr-2" />
                 )}
-                {hasUnscoredAiTargets ? 'AI Grade' : 'Re-grade with AI'}
+                {hasUnscoredAiTargets ? 'Corrigir com IA' : 'Recorrigir com IA'}
               </Button>
             )}
             {ca.status === 'completed' && (
               <Button onClick={handleCompleteEvaluation} disabled={markAsEvaluated.isPending}>
                 <CheckCircle2 className="h-4 w-4 mr-2" />
-                Mark as Evaluated
+                Marcar como Avaliada
               </Button>
             )}
           </div>
@@ -744,7 +744,7 @@ export default function EvaluationDetail() {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Score</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Pontuação</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
@@ -754,11 +754,11 @@ export default function EvaluationDetail() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Percentage</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Aproveitamento (%)</CardTitle>
             </CardHeader>
             <CardContent>
               {gradingPending ? (
-                <div className="text-2xl font-bold text-muted-foreground">Grading…</div>
+                <div className="text-2xl font-bold text-muted-foreground">Corrigindo…</div>
               ) : (
                 <div className={`text-2xl font-bold ${
                   ca.passed ? 'text-green-600' : ca.passed === false ? 'text-red-600' : ''
@@ -770,7 +770,7 @@ export default function EvaluationDetail() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Result</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Resultado</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2 mb-3">
@@ -782,7 +782,7 @@ export default function EvaluationDetail() {
                     'bg-amber-500 text-white border-amber-500 text-base px-3 py-1'
                   }
                 >
-                  {gradingPending ? 'AI GRADING' : ca.passed ? 'PASSED' : ca.passed === false ? 'FAILED' : 'PENDING'}
+                  {gradingPending ? 'CORREÇÃO POR IA' : ca.passed ? 'APROVADO' : ca.passed === false ? 'REPROVADO' : 'PENDENTE'}
                 </Badge>
               </div>
               {/* Override buttons - Admin/HR and Interviewers only, not Recruiters */}
@@ -798,13 +798,13 @@ export default function EvaluationDetail() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Override to Passed?</AlertDialogTitle>
+                        <AlertDialogTitle>Alterar resultado para Aprovado?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This will manually mark {ca.candidate?.name} as passed, regardless of their score ({ca.percentage?.toFixed(1)}%).
+                          Isso marcará manualmente {ca.candidate?.name} como aprovado, independentemente da nota ({ca.percentage?.toFixed(1)}%).
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
                         <AlertDialogAction onClick={() => handleOverrideResult(true)}>
                           Confirm Pass
                         </AlertDialogAction>
@@ -822,13 +822,13 @@ export default function EvaluationDetail() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Override to Failed?</AlertDialogTitle>
+                        <AlertDialogTitle>Alterar resultado para Reprovado?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This will manually mark {ca.candidate?.name} as failed, regardless of their score ({ca.percentage?.toFixed(1)}%).
+                          Isso marcará manualmente {ca.candidate?.name} como reprovado, independentemente da nota ({ca.percentage?.toFixed(1)}%).
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
                         <AlertDialogAction onClick={() => handleOverrideResult(false)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                           Confirm Fail
                         </AlertDialogAction>
@@ -842,37 +842,37 @@ export default function EvaluationDetail() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Attempted</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Questões Respondidas</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {answeredCount} / {totalQuestionsCount}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {totalQuestionsCount - answeredCount} unanswered
+                {totalQuestionsCount - answeredCount} não respondida(s)
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Integrity</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Integridade</CardTitle>
             </CardHeader>
             <CardContent>
               {integrityStats.eventCount > 0 ? (
                 <div className="space-y-2 text-amber-600">
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="h-5 w-5" />
-                    <span className="font-medium">{integrityStats.eventCount} events</span>
+                    <span className="font-medium">{integrityStats.eventCount} incidentes</span>
                   </div>
                   <div className="text-sm space-y-1">
-                    <p>Tab switches: <span className="font-medium">{integrityStats.tabSwitchCount}</span></p>
-                    <p>Time away: <span className="font-medium">{formatSecondsAway(integrityStats.totalSecondsAway)}</span></p>
+                    <p>Trocas de aba: <span className="font-medium">{integrityStats.tabSwitchCount}</span></p>
+                    <p>Tempo ausente: <span className="font-medium">{formatSecondsAway(integrityStats.totalSecondsAway)}</span></p>
                   </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-2 text-green-600">
                   <CheckCircle2 className="h-5 w-5" />
-                  <span className="font-medium">Clean</span>
+                  <span className="font-medium">Sem incidentes</span>
                 </div>
               )}
             </CardContent>
@@ -907,9 +907,9 @@ export default function EvaluationDetail() {
                           {event.section_title ? ` · ${event.section_title}` : ''}
                         </span>
                       )}
-                      <span>{format(new Date(event.timestamp), 'MMM d, yyyy HH:mm:ss')}</span>
+                      <span>{format(new Date(event.timestamp), 'dd/MM/yyyy HH:mm:ss')}</span>
                       {event.duration_seconds !== undefined && (
-                        <span>Away for {formatSecondsAway(event.duration_seconds)}</span>
+                        <span>Ausente por {formatSecondsAway(event.duration_seconds)}</span>
                       )}
                     </div>
                   </li>
@@ -931,7 +931,7 @@ export default function EvaluationDetail() {
             <Textarea
               value={notesValue}
               onChange={(e) => setEvaluatorNotes(e.target.value)}
-              placeholder="Add overall evaluation notes, observations, or recommendations..."
+              placeholder="Adicione observações gerais da avaliação, pontos observados ou recomendações..."
               rows={3}
             />
             <div className="flex justify-end mt-3">
@@ -952,14 +952,14 @@ export default function EvaluationDetail() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">
-              Questions & Responses ({answeredCount}/{totalQuestionsCount} answered)
+              Questões & Respostas ({answeredCount}/{totalQuestionsCount} respondidas)
             </h2>
           </div>
           
           {allQuestions.length === 0 ? (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
-                No questions found for this assessment.
+                Nenhuma questão encontrada para esta avaliação.
               </CardContent>
             </Card>
           ) : (
