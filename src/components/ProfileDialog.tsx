@@ -106,7 +106,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
   const uploadAvatarMutation = useMutation({
     mutationFn: async (file: File) => {
       if (!isAllowedAvatarInput(file)) {
-        throw new Error('Please upload a JPEG, PNG, or WebP image');
+        throw new Error('Por favor, envie uma imagem nos formatos JPEG, PNG ou WebP');
       }
 
       const blob = await prepareAvatarImage(file);
@@ -130,10 +130,10 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
     },
     onSuccess: () => {
       invalidateProfile();
-      toast({ title: 'Profile photo updated' });
+      toast({ title: 'Foto de perfil atualizada com sucesso' });
     },
     onError: (err: Error) => {
-      toast({ title: 'Upload failed', description: avatarUploadErrorMessage(err), variant: 'destructive' });
+      toast({ title: 'Falha no envio da foto', description: avatarUploadErrorMessage(err), variant: 'destructive' });
     },
   });
 
@@ -154,10 +154,10 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
     },
     onSuccess: () => {
       invalidateProfile();
-      toast({ title: 'Profile photo removed' });
+      toast({ title: 'Foto de perfil removida com sucesso' });
     },
     onError: (err: Error) => {
-      toast({ title: 'Failed to remove photo', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao remover a foto', description: err.message, variant: 'destructive' });
     },
   });
 
@@ -171,7 +171,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
 
   const handleSaveProfile = async () => {
     if (!fullName.trim()) {
-      toast({ title: 'Name cannot be empty', variant: 'destructive' });
+      toast({ title: 'O nome não pode ficar vazio', variant: 'destructive' });
       return;
     }
     setSavingProfile(true);
@@ -183,10 +183,10 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
       invalidateProfile();
       if (authRes.error) throw authRes.error;
       if (profileRes.error) throw profileRes.error;
-      toast({ title: 'Profile updated' });
+      toast({ title: 'Perfil atualizado com sucesso' });
       onOpenChange(false);
     } catch (err: any) {
-      toast({ title: 'Failed to update profile', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao atualizar o perfil', description: err.message, variant: 'destructive' });
     } finally {
       setSavingProfile(false);
     }
@@ -194,23 +194,23 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
 
   const handleChangePassword = async () => {
     if (newPassword.length < 6) {
-      toast({ title: 'Password must be at least 6 characters', variant: 'destructive' });
+      toast({ title: 'A senha deve ter pelo menos 6 caracteres', variant: 'destructive' });
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast({ title: 'Passwords do not match', variant: 'destructive' });
+      toast({ title: 'As senhas não coincidem', variant: 'destructive' });
       return;
     }
     setSavingPassword(true);
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
-      toast({ title: 'Password changed successfully' });
+      toast({ title: 'Senha alterada com sucesso' });
       setNewPassword('');
       setConfirmPassword('');
       onOpenChange(false);
     } catch (err: any) {
-      toast({ title: 'Failed to change password', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao alterar a senha', description: err.message, variant: 'destructive' });
     } finally {
       setSavingPassword(false);
     }
@@ -220,9 +220,9 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md min-w-0 max-h-[90dvh] overflow-x-hidden overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>My Profile</DialogTitle>
+          <DialogTitle>Meu Perfil</DialogTitle>
           <DialogDescription className="sr-only">
-            Update your profile details, timezone, password, and notification settings.
+            Atualize seus dados de perfil, fuso horário, senha e preferências de notificação.
           </DialogDescription>
         </DialogHeader>
 
@@ -234,7 +234,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
                 className="group relative rounded-full focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 onClick={() => !avatarBusy && fileInputRef.current?.click()}
                 disabled={avatarBusy}
-                aria-label="Change profile photo"
+                aria-label="Alterar foto de perfil"
               >
                 <Avatar className="w-16 h-16 border-2 border-primary/20 group-hover:border-primary/40 transition-colors">
                   {avatarUrl && <AvatarImage src={avatarUrl} alt={displayName} />}
@@ -269,7 +269,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
                 disabled={avatarBusy}
                 onClick={() => removeAvatarMutation.mutate()}
               >
-                Remove
+                Remover
               </button>
             )}
           </div>
@@ -283,43 +283,43 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
           <TabsList className="grid h-auto w-full grid-cols-3 p-1">
             <TabsTrigger value="profile" className="min-w-0 gap-1.5 px-2 py-2 text-xs sm:gap-2 sm:px-3 sm:text-sm">
               <User className="h-4 w-4 shrink-0" />
-              <span className="truncate">Edit Profile</span>
+              <span className="truncate">Editar Perfil</span>
             </TabsTrigger>
             <TabsTrigger value="password" className="min-w-0 gap-1.5 px-2 py-2 text-xs sm:gap-2 sm:px-3 sm:text-sm">
               <Lock className="h-4 w-4 shrink-0" />
-              <span className="truncate">Change Password</span>
+              <span className="truncate">Alterar Senha</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="min-w-0 gap-1.5 px-2 py-2 text-xs sm:gap-2 sm:px-3 sm:text-sm">
               <Bell className="h-4 w-4 shrink-0" />
-              <span className="truncate">Notifications</span>
+              <span className="truncate">Notificações</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="profile" className="min-w-0 space-y-4 pt-2">
             <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">Nome Completo</Label>
               <Input
                 id="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="Your full name"
+                placeholder="Seu nome completo"
                 disabled={savingProfile}
               />
             </div>
             <div className="space-y-2">
-              <Label>Email</Label>
+              <Label>E-mail</Label>
               <Input value={user?.email ?? ''} disabled className="bg-muted" />
-              <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
+              <p className="text-xs text-muted-foreground">O e-mail não pode ser alterado.</p>
             </div>
             <div className="space-y-2">
               <Label className="flex items-center gap-1.5">
                 <Globe className="w-3.5 h-3.5 text-muted-foreground" />
-                Timezone
+                Fuso Horário
               </Label>
               <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
                 <Select value={timezone} onValueChange={setTimezone} disabled={savingProfile}>
                   <SelectTrigger className="w-full min-w-0 sm:flex-1">
-                    <SelectValue placeholder="Select timezone" />
+                    <SelectValue placeholder="Selecionar fuso horário" />
                   </SelectTrigger>
                   <SelectContent>
                     {timezoneOptions.map(opt => (
@@ -335,11 +335,11 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
                   disabled={savingProfile}
                   onClick={() => setTimezone(resolveTimezoneOptionValue(detectBrowserTimezone()))}
                 >
-                  Auto-detect
+                  Detectar automaticamente
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                Used to display interview times in your local time.
+                Usado para exibir os horários das entrevistas no seu fuso horário local.
               </p>
             </div>
             <Button
@@ -347,13 +347,13 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
               disabled={savingProfile}
               className="w-full btn-gradient text-primary-foreground"
             >
-              {savingProfile ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Saving...</> : 'Save Changes'}
+              {savingProfile ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Salvando...</> : 'Salvar Alterações'}
             </Button>
           </TabsContent>
 
           <TabsContent value="password" className="min-w-0 space-y-4 pt-2">
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword">Nova Senha</Label>
               <Input
                 id="newPassword"
                 type="password"
@@ -364,7 +364,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">Confirmar Nova Senha</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -379,7 +379,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
               disabled={savingPassword}
               className="w-full btn-gradient text-primary-foreground"
             >
-              {savingPassword ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Updating...</> : 'Change Password'}
+              {savingPassword ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Atualizando...</> : 'Alterar Senha'}
             </Button>
           </TabsContent>
 
@@ -397,7 +397,7 @@ export function ProfileDialog({ open, onOpenChange, onSignOut }: ProfileDialogPr
               onClick={() => { onSignOut(); onOpenChange(false); }}
             >
               <LogOut className="w-4 h-4" />
-              Sign Out
+              Sair
             </Button>
           </>
         )}
