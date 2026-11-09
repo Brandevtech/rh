@@ -81,10 +81,10 @@ export function ApplicantAvatarUpload({
       return urlWithCache;
     },
     onSuccess: () => {
-      toast({ title: 'Profile photo updated' });
+      toast({ title: 'Foto de perfil atualizada' });
     },
     onError: (err: Error) => {
-      toast({ title: 'Upload failed', description: avatarUploadErrorMessage(err), variant: 'destructive' });
+      toast({ title: 'Falha no envio', description: avatarUploadErrorMessage(err), variant: 'destructive' });
     },
   });
 
@@ -101,10 +101,10 @@ export function ApplicantAvatarUpload({
       if (error) throw error;
     },
     onSuccess: () => {
-      toast({ title: 'Profile photo removed' });
+      toast({ title: 'Foto de perfil removida' });
     },
     onError: (err: Error) => {
-      toast({ title: 'Failed to remove photo', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao remover foto', description: err.message, variant: 'destructive' });
     },
   });
 
@@ -128,7 +128,7 @@ export function ApplicantAvatarUpload({
           disabled={busy}
           onClick={() => fileInputRef.current?.click()}
           className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border bg-background shadow-xs hover:bg-muted disabled:opacity-50"
-          aria-label="Change profile photo"
+          aria-label="Alterar foto de perfil"
         >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
         </button>
@@ -142,8 +142,8 @@ export function ApplicantAvatarUpload({
       </div>
       {showLabel && (
         <div className="min-w-0">
-          <p className="text-sm font-medium">Profile photo</p>
-          <p className="text-xs text-muted-foreground">Optional — JPEG, PNG, or WebP</p>
+          <p className="text-sm font-medium">Foto de perfil</p>
+          <p className="text-xs text-muted-foreground">Opcional — JPEG, PNG ou WebP</p>
           {avatarUrl && (
             <Button
               type="button"
@@ -154,7 +154,7 @@ export function ApplicantAvatarUpload({
               onClick={() => removeMutation.mutate()}
             >
               <X className="h-3 w-3 mr-1" />
-              Remove photo
+              Remover foto
             </Button>
           )}
         </div>

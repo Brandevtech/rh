@@ -100,7 +100,7 @@ export function getApplicationEligibility(
         canApply: false,
         reason: 'already_applied',
         activeApplication: existingApp,
-        blockMessage: 'You already have an application for this position.',
+        blockMessage: 'Você já possui uma candidatura para esta vaga.',
       };
     }
   }
@@ -110,7 +110,7 @@ export function getApplicationEligibility(
       canApply: false,
       reason: 'hired',
       blockMessage:
-        'You are not eligible to apply while employed through our hiring process.',
+        'Você não pode se candidatar enquanto estiver contratado em nosso processo seletivo.',
     };
   }
 
@@ -121,12 +121,12 @@ export function getApplicationEligibility(
   );
 
   if (activeApp && (!targetJobId || activeApp.job_id !== targetJobId)) {
-    const jobTitle = activeApp.job?.title || 'another role';
+    const jobTitle = activeApp.job?.title || 'outra vaga';
     return {
       canApply: false,
       reason: 'active_application',
       activeApplication: activeApp,
-      blockMessage: `You already have an active application for ${jobTitle}. You can apply to other roles once this application is closed (rejected).`,
+      blockMessage: `Você já possui uma candidatura ativa para ${jobTitle}. Você poderá se candidatar a outras vagas assim que esta candidatura for encerrada.`,
     };
   }
 
@@ -134,10 +134,10 @@ export function getApplicationEligibility(
 }
 
 export const HIRED_BLOCK_MESSAGE =
-  'You are not eligible to apply while employed through our hiring process.';
+  'Você não pode se candidatar enquanto estiver contratado em nosso processo seletivo.';
 
 export function activeApplicationBlockMessage(jobTitle: string): string {
-  return `You already have an active application for ${jobTitle}. You can apply to other roles once this application is closed (rejected).`;
+  return `Você já possui uma candidatura ativa para ${jobTitle}. Você poderá se candidatar a outras vagas assim que esta candidatura for encerrada.`;
 }
 
 async function hasApplicantSession(): Promise<boolean> {
@@ -214,14 +214,14 @@ export function formatPortalApplyError(error: unknown): string {
   if (error && typeof error === 'object') {
     const err = error as { code?: string; message?: string };
     if (isDuplicateKeyError(err)) {
-      return 'You already have an application for this position.';
+      return 'Você já possui uma candidatura para esta vaga.';
     }
     if (err.message && !err.message.includes('duplicate key')) {
       return err.message;
     }
   }
 
-  return 'Something went wrong. Please try again.';
+  return 'Ocorreu um erro. Por favor, tente novamente.';
 }
 
 function parsePortalApplyRpcResult(value: unknown): PortalApplyResult {
@@ -260,7 +260,7 @@ export async function submitPortalJobApplication(data: {
     if (eligibility.reason === 'already_applied' && eligibility.activeApplication?.id) {
       return { status: 'already_applied', applicationId: eligibility.activeApplication.id };
     }
-    throw new Error(eligibility.blockMessage || 'You are not eligible to apply at this time');
+    throw new Error(eligibility.blockMessage || 'Você não pode se candidatar no momento');
   }
 
   const { data: rpcResult, error: rpcError } = await supabase.rpc('portal_submit_job_application', {

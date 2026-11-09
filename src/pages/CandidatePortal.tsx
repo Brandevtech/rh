@@ -12,7 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
 export default function CandidatePortal() {
-  usePageTitle('Assessment Portal');
+  usePageTitle('Portal de Avaliação');
   const [searchParams] = useSearchParams();
   const accessToken = searchParams.get('token') ?? undefined;
   const { data: assessmentInfo, isLoading, error } = useValidateAccessToken(accessToken);
@@ -23,8 +23,8 @@ export default function CandidatePortal() {
       <PortalLayout>
         <ErrorCard
           icon={<ShieldX className="h-12 w-12 text-destructive" />}
-          title="Invalid Access Link"
-          description="This assessment link is missing the access token. Please use the link provided in your invitation email."
+          title="Link de Acesso Inválido"
+          description="O token de acesso não foi informado. Por favor, utilize o link recebido no seu e-mail de convite."
         />
       </PortalLayout>
     );
@@ -35,7 +35,7 @@ export default function CandidatePortal() {
       <PortalLayout>
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-          <p className="text-muted-foreground">Validating your access...</p>
+          <p className="text-muted-foreground">Validando seu acesso...</p>
         </div>
       </PortalLayout>
     );
@@ -46,8 +46,8 @@ export default function CandidatePortal() {
       <PortalLayout>
         <ErrorCard
           icon={<AlertCircle className="h-12 w-12 text-destructive" />}
-          title="Access Denied"
-          description="This assessment link is invalid or has expired. Please contact HR for a new link."
+          title="Acesso Negado"
+          description="Este link de avaliação é inválido ou expirou. Por favor, entre em contato com o RH para obter um novo convite."
         />
       </PortalLayout>
     );
@@ -58,8 +58,8 @@ export default function CandidatePortal() {
       <PortalLayout>
         <ErrorCard
           icon={<Clock className="h-12 w-12 text-muted-foreground" />}
-          title="Assessment Expired"
-          description={`This assessment was due by ${format(new Date(assessmentInfo.deadline!), 'PPP')}. Please contact HR if you need a new invitation.`}
+          title="Avaliação Expirada"
+          description={`Esta avaliação expirou em ${format(new Date(assessmentInfo.deadline!), 'dd/MM/yyyy')}. Entre em contato com o RH se precisar de um novo convite.`}
         />
       </PortalLayout>
     );
@@ -138,7 +138,7 @@ function WelcomeCard({
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="bg-muted/50 rounded-lg p-4">
-          <p className="text-sm text-muted-foreground mb-1">Welcome,</p>
+          <p className="text-sm text-muted-foreground mb-1">Bem-vindo(a),</p>
           <p className="text-lg font-medium">{assessmentInfo.candidate.name}</p>
           <p className="text-sm text-muted-foreground">{assessmentInfo.candidate.email}</p>
         </div>
@@ -146,33 +146,33 @@ function WelcomeCard({
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-muted/30 rounded-lg p-3">
             <p className="text-2xl font-bold text-primary">{assessmentInfo.assessment.duration_minutes}</p>
-            <p className="text-xs text-muted-foreground">Minutes</p>
+            <p className="text-xs text-muted-foreground">Minutos</p>
           </div>
           <div className="bg-muted/30 rounded-lg p-3">
             <p className="text-2xl font-bold text-primary">{totalQuestions}</p>
-            <p className="text-xs text-muted-foreground">Questions</p>
+            <p className="text-xs text-muted-foreground">Questões</p>
           </div>
           <div className="bg-muted/30 rounded-lg p-3">
             <p className="text-2xl font-bold text-primary">{totalMarks}</p>
-            <p className="text-xs text-muted-foreground">Total Marks</p>
+            <p className="text-xs text-muted-foreground">Pontos Totais</p>
           </div>
         </div>
 
         {assessmentInfo.deadline && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
-            <span>Deadline: {format(new Date(assessmentInfo.deadline), 'PPP p')}</span>
+            <span>Prazo: {format(new Date(assessmentInfo.deadline), 'dd/MM/yyyy HH:mm')}</span>
           </div>
         )}
 
         <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-sm">
-          <p className="font-medium text-amber-800 dark:text-amber-200 mb-2">Important Instructions:</p>
+          <p className="font-medium text-amber-800 dark:text-amber-200 mb-2">Instruções Importantes:</p>
           <ul className="list-disc list-inside text-amber-700 dark:text-amber-300 space-y-1">
-            <li>Once started, the timer cannot be paused</li>
-            <li>Your responses are auto-saved every 30 seconds</li>
-            <li>Tab switches and focus loss are monitored</li>
-            <li>After you start, a live counter shows tab switches and time away from the exam</li>
-            <li>Ensure a stable internet connection</li>
+            <li>Após o início, o cronômetro não pode ser pausado</li>
+            <li>Suas respostas são salvas automaticamente a cada 30 segundos</li>
+            <li>Trocas de aba e perda de foco são monitoradas</li>
+            <li>Após iniciar, um contador registra trocas de aba e tempo fora da prova</li>
+            <li>Certifique-se de manter uma conexão de internet estável</li>
           </ul>
         </div>
 
@@ -183,13 +183,12 @@ function WelcomeCard({
             onCheckedChange={(checked) => setConsentChecked(checked === true)}
           />
           <Label htmlFor="exam-consent" className="text-sm font-normal leading-snug cursor-pointer">
-            I consent to my responses, exam activity (including integrity monitoring), and results being
-            processed for recruitment evaluation purposes.
+            Concordo que minhas respostas, atividade na prova (incluindo monitoramento de integridade) e resultados sejam processados para fins de avaliação no processo seletivo.
           </Label>
         </div>
 
         <Button onClick={onStart} className="w-full" size="lg" disabled={!consentChecked}>
-          Start Assessment
+          Iniciar Avaliação
         </Button>
       </CardContent>
     </Card>
@@ -207,19 +206,19 @@ function CompletedCard({
         <div className="flex justify-center mb-4">
           <CheckCircle2 className="h-12 w-12 text-green-500" />
         </div>
-        <h2 className="text-xl font-semibold mb-2">Assessment Completed</h2>
+        <h2 className="text-xl font-semibold mb-2">Avaliação Concluída</h2>
         <p className="text-muted-foreground mb-6">
-          You have successfully completed the {assessmentInfo.assessment.title}.
+          Você concluiu com sucesso a prova {assessmentInfo.assessment.title}.
         </p>
 
         {assessmentInfo.completed_at && (
           <p className="text-sm text-muted-foreground mb-4">
-            Submitted on {format(new Date(assessmentInfo.completed_at), 'PPP p')}
+            Enviada em {format(new Date(assessmentInfo.completed_at), 'dd/MM/yyyy HH:mm')}
           </p>
         )}
 
         <p className="text-sm text-muted-foreground">
-          Your responses have been submitted. The hiring team will review your assessment and follow up.
+          Suas respostas foram enviadas. A equipe de recrutamento analisará sua avaliação e entrará em contato em breve.
         </p>
       </CardContent>
     </Card>

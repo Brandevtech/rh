@@ -107,13 +107,13 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
             {job.application_deadline && (
               <p className={`text-sm flex items-center gap-1 ${deadlinePassed ? 'text-destructive' : 'text-muted-foreground'}`}>
                 <Clock className="h-4 w-4" />
-                {deadlinePassed ? 'Deadline passed' : `Deadline: ${format(new Date(job.application_deadline), 'PP')}`}
+                {deadlinePassed ? 'Prazo encerrado' : `Prazo: ${format(new Date(job.application_deadline), 'dd/MM/yyyy')}`}
               </p>
             )}
           </div>
           <Button onClick={() => onApply(job)} className="gap-2" disabled={!!deadlinePassed}>
             <Send className="h-4 w-4" />
-            {deadlinePassed ? 'Closed' : 'Apply Now'}
+            {deadlinePassed ? 'Encerrada' : 'Candidatar-se'}
           </Button>
         </div>
       </CardContent>
@@ -128,7 +128,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
     <div className="max-w-4xl mx-auto">
       <Button variant="ghost" onClick={onBack} className="mb-6 gap-2">
         <ArrowLeft className="h-4 w-4" />
-        Back to all jobs
+        Voltar para todas as vagas
       </Button>
 
       <Card>
@@ -149,7 +149,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
                 {deadlinePassed && (
                   <Badge variant="destructive" className="gap-1">
                     <AlertTriangle className="h-3 w-3" />
-                    Deadline Passed
+                    Prazo Encerrado
                   </Badge>
                 )}
               </div>
@@ -166,7 +166,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
               <div className="flex items-center gap-2">
                 <Briefcase className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-muted-foreground">Domain</p>
+                  <p className="text-muted-foreground">Área</p>
                   <p className="font-medium">{(job as any).domain}</p>
                 </div>
               </div>
@@ -175,7 +175,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
               <div className="flex items-center gap-2">
                 <Building2 className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-muted-foreground">Team</p>
+                  <p className="text-muted-foreground">Equipe</p>
                   <p className="font-medium">{job.department}</p>
                 </div>
               </div>
@@ -184,7 +184,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
               <div className="flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-muted-foreground">Location</p>
+                  <p className="text-muted-foreground">Localização</p>
                   <p className="font-medium">{job.location}</p>
                 </div>
               </div>
@@ -193,7 +193,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
               <div className="flex items-center gap-2">
                 <GraduationCap className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-muted-foreground">Experience</p>
+                  <p className="text-muted-foreground">Experiência</p>
                   <p className="font-medium">
                     {experienceLevelLabels[job.experience_level]}
                     {(job as any).experience_years_range && (
@@ -209,14 +209,14 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
 
           {job.description && (
             <div>
-              <h3 className="font-semibold mb-2">About this role</h3>
+              <h3 className="font-semibold mb-2">Sobre esta vaga</h3>
               <p className="text-muted-foreground whitespace-pre-wrap">{job.description}</p>
             </div>
           )}
 
           {job.required_skills.length > 0 && (
             <div>
-              <h3 className="font-semibold mb-2">Required Skills</h3>
+              <h3 className="font-semibold mb-2">Habilidades Necessárias</h3>
               <div className="flex flex-wrap gap-2">
                 {job.required_skills.map(skill => (
                   <Badge key={skill} variant="secondary">
@@ -230,8 +230,8 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
           {job.application_deadline && (
             <p className={`text-sm flex items-center gap-2 pt-4 border-t ${deadlinePassed ? 'text-destructive' : 'text-muted-foreground'}`}>
               <Clock className="h-4 w-4" />
-              Application deadline: {format(new Date(job.application_deadline), 'PPP')}
-              {deadlinePassed && ' (passed)'}
+              Prazo de candidatura: {format(new Date(job.application_deadline), 'dd/MM/yyyy')}
+              {deadlinePassed && ' (encerrado)'}
             </p>
           )}
         </CardContent>
@@ -242,7 +242,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
 
 export default function Careers() {
   const companyName = useCompanyDisplayName();
-  usePageTitle(companyName ? `Careers | ${companyName}` : 'Careers');
+  usePageTitle(companyName ? `Carreiras | ${companyName}` : 'Carreiras');
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -289,8 +289,8 @@ export default function Careers() {
     
     if (!session?.user) {
       toast({ 
-        title: 'Login required', 
-        description: 'Please log in to your applicant portal to apply for jobs.',
+        title: 'Autenticação necessária', 
+        description: 'Por favor, faça login no portal do candidato para se candidatar às vagas.',
       });
       navigate('/applicant/login');
       return;
@@ -303,7 +303,7 @@ export default function Careers() {
       .maybeSingle();
 
     if (!profile) {
-      toast({ title: 'Profile not found', description: 'Please complete your applicant profile first.', variant: 'destructive' });
+      toast({ title: 'Perfil não encontrado', description: 'Por favor, complete seu perfil de candidato primeiro.', variant: 'destructive' });
       navigate('/applicant/profile');
       return;
     }
@@ -311,7 +311,7 @@ export default function Careers() {
     const eligibility = await fetchApplicantApplicationEligibility(profile.email, job.id);
     if (!eligibility.canApply) {
       toast({
-        title: eligibility.reason === 'already_applied' ? 'Already applied' : 'Cannot apply',
+        title: eligibility.reason === 'already_applied' ? 'Já candidatou-se' : 'Não é possível candidatar-se',
         description: eligibility.blockMessage,
         variant: eligibility.reason === 'hired' ? 'destructive' : 'default',
       });
@@ -320,8 +320,8 @@ export default function Careers() {
 
     if (isProfileIncomplete(profile)) {
       toast({
-        title: 'Complete your profile first',
-        description: 'Add your name, phone, LinkedIn, resume, and work experience to apply.',
+        title: 'Complete seu perfil primeiro',
+        description: 'Adicione seu nome, telefone, LinkedIn, currículo e experiência para se candidatar.',
         variant: 'destructive',
       });
       navigate('/applicant/profile');
@@ -371,11 +371,11 @@ export default function Careers() {
     if (file) {
       const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
       if (!validTypes.includes(file.type)) {
-        toast({ title: 'Invalid file type', description: 'Please upload a PDF or Word document', variant: 'destructive' });
+        toast({ title: 'Tipo de arquivo inválido', description: 'Por favor, envie um documento PDF ou Word', variant: 'destructive' });
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
-        toast({ title: 'File too large', description: 'Maximum file size is 10MB', variant: 'destructive' });
+        toast({ title: 'Arquivo muito grande', description: 'O tamanho máximo do arquivo é 10MB', variant: 'destructive' });
         return;
       }
       setForm(prev => ({ ...prev, resume_file: file }));
@@ -392,12 +392,12 @@ export default function Careers() {
     if (!selectedJob || !form.name.trim() || !form.email.trim()) return;
     
     if (!form.linkedin_url.trim() || !validateLinkedIn(form.linkedin_url)) {
-      toast({ title: 'Invalid LinkedIn URL', description: 'Please provide a valid LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)', variant: 'destructive' });
+      toast({ title: 'URL do LinkedIn inválida', description: 'Informe uma URL válida do perfil no LinkedIn (ex: https://linkedin.com/in/seunome)', variant: 'destructive' });
       return;
     }
 
     if (!form.resume_file && !useProfileResume) {
-      toast({ title: 'Resume required', description: 'Please upload your resume (PDF or Word)', variant: 'destructive' });
+      toast({ title: 'Currículo obrigatório', description: 'Por favor, envie seu currículo (PDF ou Word)', variant: 'destructive' });
       return;
     }
 
@@ -434,7 +434,7 @@ export default function Careers() {
 
       setIsSubmitted(true);
     } catch (error: any) {
-      toast({ title: 'Submission failed', description: error.message, variant: 'destructive' });
+      toast({ title: 'Falha no envio', description: error.message, variant: 'destructive' });
     } finally {
       setIsUploading(false);
     }
@@ -448,18 +448,18 @@ export default function Careers() {
             <Link to="/careers" className="flex items-center gap-3">
               <CompanyLogo />
               <div className="hidden sm:block">
-                <span className="text-xl font-bold text-foreground">Careers</span>
+                <span className="text-xl font-bold text-foreground">Carreiras</span>
                 <p className="text-xs text-muted-foreground">
-                  {companyName ? `Join the ${companyName} team` : 'Explore open positions'}
+                  {companyName ? `Faça parte do time ${companyName}` : 'Explore nossas vagas abertas'}
                 </p>
               </div>
             </Link>
             <div className="flex items-center gap-2">
               <Link to="/applicant/login">
-                <Button variant="default" size="sm">Applicant Login</Button>
+                <Button variant="default" size="sm">Portal do Candidato</Button>
               </Link>
               <Link to="/auth">
-                <Button variant="outline" size="sm">HR Login</Button>
+                <Button variant="outline" size="sm">Acesso RH</Button>
               </Link>
             </div>
           </div>
@@ -477,11 +477,10 @@ export default function Careers() {
           <>
             <div className="text-center mb-12">
               <h1 className="text-4xl font-bold mb-4">
-                {companyName ? `Join the ${companyName} Team` : 'Join Our Team'}
+                {companyName ? `Faça Parte do Time ${companyName}` : 'Faça Parte da Nossa Equipe'}
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                We're looking for talented individuals to help us build innovative solutions. 
-                Explore our open positions and take the next step in your career.
+                Buscamos talentos excepcionais para construir o futuro conosco. Conheça nossas vagas abertas e dê o próximo passo na sua carreira.
               </p>
             </div>
 
@@ -503,9 +502,9 @@ export default function Careers() {
               <Card className="text-center py-12 max-w-md mx-auto">
                 <CardContent>
                   <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No open positions</h3>
+                  <h3 className="text-lg font-semibold mb-2">Nenhuma vaga aberta no momento</h3>
                   <p className="text-muted-foreground">
-                    Check back later for new opportunities.
+                    Volte em breve para conferir novas oportunidades.
                   </p>
                 </CardContent>
               </Card>
@@ -530,33 +529,32 @@ export default function Careers() {
                       <CheckCircle className="h-8 w-8 text-primary" />
                     </div>
                   </div>
-                  <DialogTitle className="text-center">Application Submitted!</DialogTitle>
+                  <DialogTitle className="text-center">Candidatura Enviada!</DialogTitle>
                   <DialogDescription className="text-center">
-                    Thank you for applying to {selectedJob?.title}. We'll review your application 
-                    and get back to you soon.
+                    Obrigado por se candidatar para {selectedJob?.title}. Analisaremos sua candidatura e retornaremos em breve.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <Button onClick={() => setIsApplyOpen(false)} className="w-full">
-                    Close
+                    Fechar
                   </Button>
                 </DialogFooter>
               </>
             ) : (
               <>
                 <DialogHeader>
-                  <DialogTitle>Apply for {selectedJob?.title}</DialogTitle>
+                  <DialogTitle>Candidatar-se para {selectedJob?.title}</DialogTitle>
                   <DialogDescription>
-                    Fill out the form below to submit your application.
+                    Preencha o formulário abaixo para enviar sua candidatura.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="name">Full Name *</Label>
+                      <Label htmlFor="name">Nome Completo *</Label>
                       <Input
                         id="name"
-                        placeholder="Rahul Sharma"
+                        placeholder="Seu Nome Completo"
                         value={form.name}
                         onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                       />
@@ -574,7 +572,7 @@ export default function Careers() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="phone">Phone</Label>
+                      <Label htmlFor="phone">Telefone</Label>
                       <Input
                         id="phone"
                         placeholder="+91 98765 43210"
@@ -583,17 +581,17 @@ export default function Careers() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="linkedin">LinkedIn Profile *</Label>
+                      <Label htmlFor="linkedin">Perfil no LinkedIn *</Label>
                       <Input
                         id="linkedin"
-                        placeholder="https://linkedin.com/in/yourname"
+                        placeholder="https://linkedin.com/in/seunome"
                         value={form.linkedin_url}
                         onChange={(e) => setForm(prev => ({ ...prev, linkedin_url: e.target.value }))}
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="resume">Resume (PDF/Word, max 10MB) *</Label>
+                    <Label htmlFor="resume">Currículo (PDF/Word, máx. 10MB) *</Label>
                     <Input
                       id="resume"
                       type="file"
@@ -601,14 +599,14 @@ export default function Careers() {
                       onChange={handleFileChange}
                     />
                     {useProfileResume && !form.resume_file && (
-                      <p className="text-xs text-muted-foreground">Using resume from your profile</p>
+                      <p className="text-xs text-muted-foreground">Utilizando currículo do seu perfil</p>
                     )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="cover_letter">Cover Letter (optional)</Label>
+                    <Label htmlFor="cover_letter">Carta de Apresentação (opcional)</Label>
                     <Textarea
                       id="cover_letter"
-                      placeholder="Tell us why you'd be a great fit..."
+                      placeholder="Conte-nos por que você é ideal para esta vaga..."
                       className="min-h-[100px]"
                       value={form.cover_letter}
                       onChange={(e) => setForm(prev => ({ ...prev, cover_letter: e.target.value }))}
@@ -617,7 +615,7 @@ export default function Careers() {
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsApplyOpen(false)}>
-                    Cancel
+                    Cancelar
                   </Button>
                   <Button
                     onClick={handleSubmit}
@@ -625,7 +623,7 @@ export default function Careers() {
                     className="gap-2"
                   >
                     <Send className="h-4 w-4" />
-                    {isUploading || submitApplication.isPending ? 'Submitting...' : 'Submit Application'}
+                    {isUploading || submitApplication.isPending ? 'Enviando...' : 'Enviar Candidatura'}
                   </Button>
                 </DialogFooter>
               </>
@@ -651,15 +649,15 @@ export default function Careers() {
               </div>
               <DialogTitle className="text-center">Application Submitted!</DialogTitle>
               <DialogDescription className="text-center">
-                Thank you for applying to {selectedJob?.title}. We&apos;ll review your application and get back to you soon.
+                Obrigado por se candidatar para {selectedJob?.title}. Analisaremos sua candidatura e retornaremos em breve.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex-col sm:flex-col gap-2">
               <Button onClick={() => navigate('/applicant')} className="w-full">
-                View My Applications
+                Ver Minhas Candidaturas
               </Button>
               <Button variant="outline" onClick={() => setIsSubmitted(false)} className="w-full">
-                Close
+                Fechar
               </Button>
             </DialogFooter>
           </DialogContent>

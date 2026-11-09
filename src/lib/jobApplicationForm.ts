@@ -56,7 +56,7 @@ export type PrescreenCategory = (typeof PRESCREEN_CATEGORIES)[number];
 export type CategorizedQuestionKeys = Record<string, string[]>;
 
 export const COMBINED_NEXT_CAREER_MOVE_LEGACY_TEXT =
-  "What are you looking for in your next career move? / Describe the workplace where you'll be the most happy and productive?";
+  "O que você busca no seu próximo passo de carreira? / Descreva o ambiente de trabalho onde você seria mais feliz e produtivo?";
 
 const COMPANY_PLACEHOLDER = '{{company_name}}';
 
@@ -78,7 +78,7 @@ export function resolvePrescreenQuestionText(
 }
 
 export function substituteCompanyName(text: string, companyName: string | null): string {
-  const name = companyName?.trim() || 'the company';
+  const name = companyName?.trim() || 'a empresa';
   return text.replaceAll(COMPANY_PLACEHOLDER, name);
 }
 
@@ -206,10 +206,10 @@ export function getReferenceContactFieldErrors(refs: EmploymentReference[]): Rec
     if (!isReferenceComplete(ref)) return;
     if (!isValidReferencePhone(ref.phone)) {
       errors[referenceContactFieldKey(index, 'phone')] =
-        'Enter a valid phone number (7–15 digits).';
+        'Informe um número de telefone válido (7–15 dígitos).';
     }
     if (!isValidReferenceEmail(ref.email)) {
-      errors[referenceContactFieldKey(index, 'email')] = 'Enter a valid email address.';
+      errors[referenceContactFieldKey(index, 'email')] = 'Informe um endereço de e-mail válido.';
     }
   });
   return errors;
@@ -229,14 +229,14 @@ export function isReferenceComplete(ref: EmploymentReference): boolean {
 export function validateReferences(refs: EmploymentReference[]): string | null {
   const complete = refs.filter(isReferenceComplete);
   if (complete.length < MIN_EMPLOYMENT_REFERENCES) {
-    return `Please provide at least ${MIN_EMPLOYMENT_REFERENCES} complete employment references.`;
+    return `Por favor, forneça pelo menos ${MIN_EMPLOYMENT_REFERENCES} referências profissionais completas.`;
   }
 
   const contactErrors = getReferenceContactFieldErrors(refs);
   const firstKey = Object.keys(contactErrors)[0];
   if (firstKey) {
     const index = Number(firstKey.split('-')[0]);
-    return `Reference ${index + 1}: ${contactErrors[firstKey]}`;
+    return `Referência ${index + 1}: ${contactErrors[firstKey]}`;
   }
 
   return null;
@@ -248,7 +248,7 @@ export function validateQuestionAnswers(
 ): string | null {
   for (const key of assignedKeys) {
     if (!answers[key]?.trim()) {
-      return 'Please answer all assigned questions before submitting.';
+      return 'Por favor, responda a todas as perguntas atribuídas antes de enviar.';
     }
   }
   return null;

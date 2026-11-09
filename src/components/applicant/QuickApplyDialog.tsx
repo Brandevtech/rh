@@ -49,26 +49,26 @@ export function QuickApplyDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Quick Apply</DialogTitle>
+          <DialogTitle>Candidatura Rápida</DialogTitle>
           <DialogDescription>
-            Apply to {job?.title} using your saved profile.
+            Candidate-se para {job?.title} usando seu perfil salvo.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
-          <Label htmlFor="cover_letter">Cover Letter (optional)</Label>
+          <Label htmlFor="cover_letter">Carta de Apresentação (opcional)</Label>
           <Textarea
             id="cover_letter"
-            placeholder="Tell us why you're a great fit for this role..."
+            placeholder="Conte-nos por que você tem o perfil ideal para esta vaga..."
             value={coverLetter}
             onChange={(e) => setCoverLetter(e.target.value)}
             rows={4}
           />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => handleOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleApply} disabled={isPending} className="gap-1">
             {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-            Submit Application
+            Enviar Candidatura
           </Button>
         </DialogFooter>
       </DialogContent>

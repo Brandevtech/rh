@@ -20,7 +20,7 @@ interface JobApplicationFormReadOnlyViewProps {
 }
 
 function EmptyValue() {
-  return <span className="text-muted-foreground italic">No answer</span>;
+  return <span className="text-muted-foreground italic">Sem resposta</span>;
 }
 
 function AnswerText({ value }: { value: string | undefined }) {
@@ -41,7 +41,7 @@ function ReferenceCard({ reference, index }: { reference: EmploymentReference; i
 
   return (
     <div className="rounded-lg bg-muted/30 p-3 space-y-1">
-      <p className="text-xs font-medium text-muted-foreground">Reference {index + 1}</p>
+      <p className="text-xs font-medium text-muted-foreground">Referência {index + 1}</p>
       <p className="text-sm font-medium">{primary || '—'}</p>
       {contact ? <p className="text-xs text-muted-foreground">{contact}</p> : null}
     </div>
@@ -133,7 +133,7 @@ export function JobApplicationFormReadOnlyView({
   return (
     <div className="space-y-4">
       <ReadOnlySection
-        title="Employment References"
+        title="Referências Profissionais"
         icon={Users}
         count={visibleReferences.length}
       >
@@ -144,12 +144,12 @@ export function JobApplicationFormReadOnlyView({
             ))}
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground italic">No references provided</p>
+          <p className="text-sm text-muted-foreground italic">Nenhuma referência informada</p>
         )}
       </ReadOnlySection>
 
       <ReadOnlySection
-        title="Application Questions"
+        title="Perguntas da Candidatura"
         icon={FileText}
         count={displayQuestions.length}
       >

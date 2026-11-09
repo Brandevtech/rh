@@ -19,10 +19,10 @@ export default function ApplicantJobApplicationForm() {
 
   usePageTitle(
     data?.application?.job?.title
-      ? `Application Form | ${data.application.job.title}`
+      ? `Formulário de Candidatura | ${data.application.job.title}`
       : companyName
-        ? `${companyName} | Application Form`
-        : 'Application Form',
+        ? `${companyName} | Formulário de Candidatura`
+        : 'Formulário de Candidatura',
   );
 
   useEffect(() => {
@@ -48,8 +48,8 @@ export default function ApplicantJobApplicationForm() {
       <div className="min-h-screen bg-background flex flex-col">
         <ApplicantPortalHeader homeHref="/applicant" />
         <main className="max-w-3xl mx-auto px-4 py-8 w-full text-center">
-          <p className="text-muted-foreground mb-4">Application not found.</p>
-          <Button asChild><Link to="/applicant">Back to Dashboard</Link></Button>
+          <p className="text-muted-foreground mb-4">Candidatura não encontrada.</p>
+          <Button asChild><Link to="/applicant">Voltar ao Painel</Link></Button>
         </main>
       </div>
     );
@@ -60,8 +60,8 @@ export default function ApplicantJobApplicationForm() {
       <div className="min-h-screen bg-background flex flex-col">
         <ApplicantPortalHeader homeHref="/applicant" />
         <main className="max-w-3xl mx-auto px-4 py-8 w-full text-center">
-          <p className="text-muted-foreground mb-4">This job does not require a digital application form.</p>
-          <Button asChild><Link to={`/applicant/applications/${id}`}>Back to Application</Link></Button>
+          <p className="text-muted-foreground mb-4">Esta vaga não exige formulário digital de candidatura.</p>
+          <Button asChild><Link to={`/applicant/applications/${id}`}>Voltar para a Candidatura</Link></Button>
         </main>
       </div>
     );
@@ -79,14 +79,14 @@ export default function ApplicantJobApplicationForm() {
         <Button variant="ghost" size="sm" asChild className="gap-1 -ml-2">
           <Link to={`/applicant/applications/${id}`}>
             <ArrowLeft className="h-4 w-4" />
-            Back to Application
+            Voltar para a Candidatura
           </Link>
         </Button>
 
         <div>
-          <h1 className="text-2xl font-bold">Job Application Form</h1>
+          <h1 className="text-2xl font-bold">Formulário de Candidatura</h1>
           <p className="text-muted-foreground mt-1">
-            {data.application.job?.title} — complete this before your interview rounds.
+            {data.application.job?.title} — preencha este formulário antes das suas etapas de entrevista.
           </p>
         </div>
 

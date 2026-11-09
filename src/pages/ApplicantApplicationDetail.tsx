@@ -32,19 +32,19 @@ const statusColors: Record<string, string> = {
 };
 
 const statusLabels: Record<string, string> = {
-  new: 'Submitted',
-  reviewing: 'Under Review',
-  shortlisted: 'Shortlisted',
-  rejected: 'Not Selected',
-  converted: 'Interview Stage',
+  new: 'Enviada',
+  reviewing: 'Em Análise',
+  shortlisted: 'Pré-selecionado',
+  rejected: 'Não Selecionado',
+  converted: 'Etapa de Entrevistas',
 };
 
 const assessmentStatusLabels: Record<string, string> = {
-  invited: 'Assessment Assigned',
-  in_progress: 'Assessment In Progress',
-  completed: 'Assessment Submitted',
-  evaluated: 'Assessment Reviewed',
-  expired: 'Assessment Expired',
+  invited: 'Avaliação Atribuída',
+  in_progress: 'Avaliação em Andamento',
+  completed: 'Avaliação Enviada',
+  evaluated: 'Avaliação Analisada',
+  expired: 'Avaliação Expirada',
 };
 
 export default function ApplicantApplicationDetail() {
@@ -57,10 +57,10 @@ export default function ApplicantApplicationDetail() {
 
   usePageTitle(
     data?.application?.job?.title
-      ? `${data.application.job.title} | Application`
+      ? `${data.application.job.title} | Candidatura`
       : companyName
-        ? `${companyName} | Application`
-        : 'Application',
+        ? `${companyName} | Candidatura`
+        : 'Candidatura',
   );
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function ApplicantApplicationDetail() {
       <div className="min-h-screen bg-background flex flex-col">
         <ApplicantPortalHeader homeHref="/applicant" />
         <main className="max-w-3xl mx-auto px-4 py-8 w-full text-center">
-          <p className="text-muted-foreground mb-4">Application not found or you don&apos;t have access.</p>
+          <p className="text-muted-foreground mb-4">Candidatura não encontrada ou você não tem permissão de acesso.</p>
           <Button asChild><Link to="/applicant">Back to Dashboard</Link></Button>
         </main>
       </div>
@@ -109,7 +109,7 @@ export default function ApplicantApplicationDetail() {
         <Button variant="ghost" size="sm" asChild className="gap-1 -ml-2">
           <Link to="/applicant">
             <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
+            Voltar ao Painel
           </Link>
         </Button>
 
@@ -132,7 +132,7 @@ export default function ApplicantApplicationDetail() {
                 )}
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
-                  Applied {format(new Date(application.created_at), 'MMM d, yyyy')}
+                  Candidatou-se em {format(new Date(application.created_at), 'dd/MM/yyyy')}
                 </span>
               </div>
             </div>
@@ -148,15 +148,15 @@ export default function ApplicantApplicationDetail() {
               <div className="flex gap-3">
                 <FileText className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium">Complete your job application form</p>
+                  <p className="font-medium">Preencha seu formulário de candidatura</p>
                   <p className="text-sm text-muted-foreground">
-                    Please submit this before any interview rounds.
+                    Por favor, envie o formulário antes das etapas de entrevista.
                   </p>
                 </div>
               </div>
               <Button asChild className="shrink-0">
                 <Link to={`/applicant/applications/${application.id}/form`}>
-                  Complete Job Application
+                  Preencher Formulário
                 </Link>
               </Button>
             </CardContent>
@@ -169,12 +169,12 @@ export default function ApplicantApplicationDetail() {
               <div className="flex gap-3">
                 <CheckCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium">Job application form submitted</p>
-                  <p className="text-sm text-muted-foreground">Your pre-screen responses are on file.</p>
+                  <p className="font-medium">Formulário de candidatura enviado</p>
+                  <p className="text-sm text-muted-foreground">Suas respostas da triagem estão registradas.</p>
                 </div>
               </div>
               <Button variant="outline" size="sm" asChild className="shrink-0">
-                <Link to={`/applicant/applications/${application.id}/form`}>View Responses</Link>
+                <Link to={`/applicant/applications/${application.id}/form`}>Ver Respostas</Link>
               </Button>
             </CardContent>
           </Card>
@@ -182,12 +182,12 @@ export default function ApplicantApplicationDetail() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Application Timeline</CardTitle>
-            <CardDescription>Track your progress through the hiring process</CardDescription>
+            <CardTitle>Linha do Tempo da Candidatura</CardTitle>
+            <CardDescription>Acompanhe o seu progresso pelas etapas do processo seletivo</CardDescription>
           </CardHeader>
           <CardContent>
             {timeline.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No timeline events yet.</p>
+              <p className="text-sm text-muted-foreground">Nenhum evento registrado até o momento.</p>
             ) : (
               <ol className="relative border-l border-muted ml-3 space-y-6">
                 {timeline.map((event, idx) => (
@@ -211,7 +211,7 @@ export default function ApplicantApplicationDetail() {
                       </div>
                       {event.date && (
                         <time className="text-xs text-muted-foreground shrink-0">
-                          {format(new Date(event.date), 'MMM d, yyyy')}
+                          {format(new Date(event.date), 'dd/MM/yyyy')}
                         </time>
                       )}
                     </div>
@@ -227,7 +227,7 @@ export default function ApplicantApplicationDetail() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ClipboardCheck className="h-5 w-5" />
-                Assessments
+                Avaliações
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -242,7 +242,7 @@ export default function ApplicantApplicationDetail() {
                   {(a.status === 'invited' || a.status === 'in_progress') && (
                     <Button size="sm" asChild>
                       <Link to={`/exam/${a.id}`}>
-                        {a.status === 'in_progress' ? 'Continue' : 'Start'}
+                        {a.status === 'in_progress' ? 'Continuar' : 'Iniciar'}
                       </Link>
                     </Button>
                   )}
@@ -255,7 +255,7 @@ export default function ApplicantApplicationDetail() {
         {application.cover_letter && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Cover Letter</CardTitle>
+              <CardTitle className="text-lg">Carta de Apresentação</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm whitespace-pre-wrap">{application.cover_letter}</p>

@@ -145,11 +145,11 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
 
     const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!validTypes.includes(file.type)) {
-      toast({ title: 'Invalid file type', description: 'Please upload a PDF or Word document', variant: 'destructive' });
+      toast({ title: 'Tipo de arquivo inválido', description: 'Por favor, envie um documento PDF ou Word', variant: 'destructive' });
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      toast({ title: 'File too large', description: 'Maximum file size is 10MB', variant: 'destructive' });
+      toast({ title: 'Arquivo muito grande', description: 'O tamanho máximo do arquivo é 10MB', variant: 'destructive' });
       return;
     }
 
@@ -179,10 +179,10 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
       if (parseGeneration !== parseGenerationRef.current) return;
 
       setProfileForm((prev) => ({ ...prev, resume_url: fileName }));
-      toast({ title: 'Resume uploaded successfully' });
+      toast({ title: 'Currículo enviado com sucesso' });
 
       setIsParsing(true);
-      toast({ title: `Parsing ${file.name}…`, description: 'Extracting your details with AI' });
+      toast({ title: `Analisando ${file.name}…`, description: 'Extraindo seus dados com IA' });
 
       try {
         const { data: parseData, error: parseError } = await supabase.functions.invoke('parse-resume', {
@@ -208,12 +208,12 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
           setWorkExperience(parseWorkExperience(mapped.work_experience));
           setEducation(parseEducation(mapped.education));
           setSkills(mapped.skills);
-          toast({ title: 'Resume parsed!', description: 'Your details have been auto-filled. Review and save.' });
+          toast({ title: 'Currículo analisado!', description: 'Seus dados foram preenchidos automaticamente. Revise e salve.' });
         }
       } catch (parseErr) {
         if (parseGeneration !== parseGenerationRef.current) return;
         console.error('Resume parse error:', parseErr);
-        toast({ title: 'Could not auto-fill from resume', description: 'You can still enter details manually.' });
+        toast({ title: 'Não foi possível preencher a partir do currículo', description: 'Você ainda pode preencher os dados manualmente.' });
       } finally {
         if (parseGeneration === parseGenerationRef.current) {
           setIsParsing(false);
@@ -222,8 +222,8 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
       }
     } catch (error: unknown) {
       if (parseGeneration === parseGenerationRef.current) {
-        const message = error instanceof Error ? error.message : 'Upload failed';
-        toast({ title: 'Upload failed', description: message, variant: 'destructive' });
+        const message = error instanceof Error ? error.message : 'Falha no envio';
+        toast({ title: 'Falha no envio', description: message, variant: 'destructive' });
       }
     } finally {
       if (parseGeneration === parseGenerationRef.current) {
@@ -261,7 +261,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
         uploaded_at: new Date().toISOString(),
       };
       setDocuments((prev) => [...prev, newDoc]);
-      toast({ title: 'Document uploaded' });
+      toast({ title: 'Documento enviado com sucesso' });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Upload failed';
       toast({ title: 'Upload failed', description: message, variant: 'destructive' });
@@ -312,8 +312,8 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
 
     if (hasSensitiveFields && !sensitiveDataConsent && !profile?.sensitive_data_consent_at) {
       toast({
-        title: 'Consent required',
-        description: 'Please confirm consent to collect personal details (DOB, gender, marital status, blood group) for employment verification.',
+        title: 'Consentimento obrigatório',
+        description: 'Por favor, confirme o consentimento para a coleta de dados pessoais (data de nascimento, gênero, estado civil, tipo sanguíneo) para fins de contratação.',
         variant: 'destructive',
       });
       return;
@@ -351,16 +351,16 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl max-h-[90dvh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Your Profile</DialogTitle>
+          <DialogTitle>Seu Perfil</DialogTitle>
           <DialogDescription>
-            Keep your profile complete — details here will auto-fill when you apply for jobs.
+            Mantenha seu perfil completo — os dados informados aqui preencherão suas candidaturas automaticamente.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <ApplicantAvatarUpload avatarUrl={profile?.avatar_url} showLabel />
 
           <div className="space-y-2">
-            <Label htmlFor="profile_email">Email</Label>
+            <Label htmlFor="profile_email">E-mail</Label>
             <Input
               id="profile_email"
               value={profile?.email || user?.email || ''}
@@ -370,28 +370,28 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="profile_first_name">First Name *</Label>
+              <Label htmlFor="profile_first_name">Nome *</Label>
               <Input
                 id="profile_first_name"
-                placeholder="First name"
+                placeholder="Nome"
                 value={profileForm.first_name}
                 onChange={(e) => setProfileForm((prev) => ({ ...prev, first_name: e.target.value }))}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="profile_middle_name">Middle Name</Label>
+              <Label htmlFor="profile_middle_name">Nome do Meio</Label>
               <Input
                 id="profile_middle_name"
-                placeholder="Optional"
+                placeholder="Opcional"
                 value={profileForm.middle_name}
                 onChange={(e) => setProfileForm((prev) => ({ ...prev, middle_name: e.target.value }))}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="profile_last_name">Last Name *</Label>
+              <Label htmlFor="profile_last_name">Sobrenome *</Label>
               <Input
                 id="profile_last_name"
-                placeholder="Last name"
+                placeholder="Sobrenome"
                 value={profileForm.last_name}
                 onChange={(e) => setProfileForm((prev) => ({ ...prev, last_name: e.target.value }))}
               />
@@ -401,39 +401,39 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
           <div className="space-y-3 pt-2 border-t">
             <Label className="text-base font-semibold flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              Personal Details
+              Dados Pessoais
             </Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="profile_dob_documented">Date of Birth (on documents) *</Label>
+                <Label htmlFor="profile_dob_documented">Data de Nascimento (conforme documentos) *</Label>
                 <Input
                   id="profile_dob_documented"
                   type="date"
                   value={profileForm.dob_documented}
                   onChange={(e) => setProfileForm((prev) => ({ ...prev, dob_documented: e.target.value }))}
                 />
-                <p className="text-xs text-muted-foreground">As shown on your official ID or certificates</p>
+                <p className="text-xs text-muted-foreground">Conforme consta no seu documento oficial de identidade</p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="profile_dob_actual">Date of Birth (actual)</Label>
+                <Label htmlFor="profile_dob_actual">Data de Nascimento (real)</Label>
                 <Input
                   id="profile_dob_actual"
                   type="date"
                   value={profileForm.dob_actual}
                   onChange={(e) => setProfileForm((prev) => ({ ...prev, dob_actual: e.target.value }))}
                 />
-                <p className="text-xs text-muted-foreground">Optional, if different from documents</p>
+                <p className="text-xs text-muted-foreground">Opcional, se diferente dos documentos</p>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label>Gender *</Label>
+                <Label>Gênero *</Label>
                 <Select
                   value={profileForm.gender || undefined}
                   onValueChange={(value) => setProfileForm((prev) => ({ ...prev, gender: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select" />
+                    <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
                     {GENDER_OPTIONS.map((option) => (
@@ -445,7 +445,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Marital Status *</Label>
+                <Label>Estado Civil *</Label>
                 <Select
                   value={profileForm.marital_status || undefined}
                   onValueChange={(value) => setProfileForm((prev) => ({ ...prev, marital_status: value }))}
@@ -465,7 +465,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
               <div className="space-y-2">
                 <Label className="flex items-center gap-1">
                   <Heart className="h-3 w-3" />
-                  Blood Group *
+                  Tipo Sanguíneo *
                 </Label>
                 <Select
                   value={profileForm.blood_group || undefined}
@@ -492,7 +492,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                   onCheckedChange={(checked) => setSensitiveDataConsent(checked === true)}
                 />
                 <Label htmlFor="sensitive-data-consent" className="text-sm font-normal leading-snug cursor-pointer">
-                  I consent to the collection of my date of birth, gender, marital status, and blood group solely for employment verification and onboarding purposes.
+                  Autorizo a coleta da minha data de nascimento, gênero, estado civil e tipo sanguíneo exclusivamente para fins de verificação de emprego e admissão.
                   {compliance.privacy_policy_url && safeExternalUrl(compliance.privacy_policy_url) && (
                     <>
                       {' '}
@@ -502,7 +502,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                         rel="noopener noreferrer"
                         className="underline underline-offset-2"
                       >
-                        Privacy policy
+                        Política de privacidade
                       </a>
                     </>
                   )}
@@ -510,7 +510,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
               </div>
               {profile?.sensitive_data_consent_at && (
                 <p className="text-xs text-muted-foreground pl-6">
-                  Consent recorded {new Date(profile.sensitive_data_consent_at).toLocaleString()}
+                  Consentimento registrado em {new Date(profile.sensitive_data_consent_at).toLocaleString()}
                 </p>
               )}
             </div>
@@ -520,7 +520,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
             <div className="space-y-2">
               <Label htmlFor="profile_phone" className="flex items-center gap-1">
                 <Phone className="h-3 w-3" />
-                Phone Number
+                Número de Telefone
               </Label>
               <Input
                 id="profile_phone"
@@ -532,11 +532,11 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
             <div className="space-y-2">
               <Label htmlFor="profile_emergency_phone" className="flex items-center gap-1">
                 <Phone className="h-3 w-3" />
-                Emergency Phone
+                Telefone de Emergência
               </Label>
               <Input
                 id="profile_emergency_phone"
-                placeholder="Alternative contact number"
+                placeholder="Número de contato alternativo"
                 value={profileForm.emergency_phone}
                 onChange={(e) => setProfileForm((prev) => ({ ...prev, emergency_phone: e.target.value }))}
               />
@@ -545,7 +545,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
           <div className="space-y-2">
             <Label htmlFor="profile_linkedin" className="flex items-center gap-1">
               <Linkedin className="h-3 w-3" />
-              LinkedIn URL *
+              URL do LinkedIn *
             </Label>
             <Input
               id="profile_linkedin"
@@ -564,33 +564,33 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
             />
             <p className="text-xs text-muted-foreground">
               {linkedinFromResume
-                ? 'Auto-filled from your resume — review and edit if needed.'
-                : 'Required. Auto-filled from resume if parsed during upload.'}
+                ? 'Preenchido automaticamente a partir do currículo — revise e edite se necessário.'
+                : 'Obrigatório. Preenchido automaticamente se analisado durante o envio.'}
             </p>
           </div>
 
           <div className="space-y-2">
             <Label className="flex items-center gap-1">
               <FileText className="h-3 w-3" />
-              Resume / CV
+              Currículo / CV
             </Label>
             <p className="text-xs text-muted-foreground">
-              Import from resume or LinkedIn PDF — upload your file and we&apos;ll auto-fill your details.
+              Importe do currículo ou PDF do LinkedIn — envie seu arquivo e preencheremos seus dados automaticamente.
             </p>
             {profileForm.resume_url ? (
               <div className="space-y-2">
                 <div className="flex items-center justify-between border rounded-md p-3 bg-muted/50">
                   <div className="flex items-center gap-2 text-sm">
                     <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span>Resume uploaded</span>
+                    <span>Currículo enviado</span>
                   </div>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => openResumeUrl(profileForm.resume_url)}>
-                      View
+                      Visualizar
                     </Button>
                     <Button variant="outline" size="sm" asChild>
                       <label className="cursor-pointer">
-                        Replace
+                        Substituir
                         <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={handleResumeUpload} />
                       </label>
                     </Button>
@@ -599,20 +599,20 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                 {isParsing && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground p-2 border rounded-md bg-blue-50">
                     <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
-                    <span>Parsing {parsingFileName || 'resume'}…</span>
+                    <span>Analisando {parsingFileName || 'currículo'}…</span>
                   </div>
                 )}
               </div>
             ) : (
               <div className="border-2 border-dashed rounded-md p-4 text-center">
                 <Upload className="h-6 w-6 mx-auto text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground mb-2">PDF or Word, max 10MB</p>
+                <p className="text-sm text-muted-foreground mb-2">PDF ou Word, máx. 10MB</p>
                 <Button variant="outline" size="sm" asChild disabled={isUploading}>
                   <label className="cursor-pointer">
                     {isUploading ? (
-                      <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Uploading...</>
+                      <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Enviando...</>
                     ) : (
-                      <><Upload className="h-4 w-4 mr-2" /> Upload Resume</>
+                      <><Upload className="h-4 w-4 mr-2" /> Enviar Currículo</>
                     )}
                     <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={handleResumeUpload} />
                   </label>
@@ -623,10 +623,10 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
 
           {/* Skills */}
           <div className="space-y-2 pt-2 border-t">
-            <Label>Skills</Label>
+            <Label>Habilidades</Label>
             <div className="flex gap-2">
               <Input
-                placeholder="Add a skill"
+                placeholder="Adicionar habilidade"
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
@@ -652,16 +652,16 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
           {/* Additional Documents */}
           <div className="space-y-2 pt-2 border-t">
             <div className="flex items-center justify-between">
-              <Label>Additional Documents</Label>
+              <Label>Documentos Adicionais</Label>
               <Button variant="outline" size="sm" asChild disabled={isDocUploading}>
                 <label className="cursor-pointer">
-                  {isDocUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Upload className="h-3 w-3 mr-1" /> Add</>}
+                  {isDocUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Upload className="h-3 w-3 mr-1" /> Adicionar</>}
                   <input type="file" className="hidden" accept=".pdf,.doc,.docx" onChange={handleDocumentUpload} />
                 </label>
               </Button>
             </div>
             {documents.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Upload certificates, cover letters, or other supporting documents.</p>
+              <p className="text-sm text-muted-foreground">Envie certificados, cartas de apresentação ou outros comprovantes.</p>
             ) : (
               <ul className="space-y-2">
                 {documents.map((doc) => (
@@ -688,7 +688,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
             <div className="flex items-center justify-between">
               <Label className="flex items-center gap-1 text-base font-semibold">
                 <Building2 className="h-4 w-4" />
-                Work Experience
+                Experiência Profissional
               </Label>
               <Button
                 type="button"
@@ -701,27 +701,27 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
               </Button>
             </div>
             {workExperience.length === 0 && (
-              <p className="text-sm text-muted-foreground">No experience added yet. Upload a resume to auto-fill or add manually.</p>
+              <p className="text-sm text-muted-foreground">Nenhuma experiência adicionada. Envie um currículo para preenchimento automático ou adicione manualmente.</p>
             )}
             {workExperience.map((exp, idx) => (
               <div key={idx} className="border rounded-lg p-3 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-muted-foreground">Experience {idx + 1}</span>
+                  <span className="text-sm font-medium text-muted-foreground">Experiência {idx + 1}</span>
                   <Button type="button" variant="ghost" size="sm" onClick={() => setWorkExperience((prev) => prev.filter((_, i) => i !== idx))}>
                     <Trash2 className="h-3 w-3 text-destructive" />
                   </Button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <Input placeholder="Company" value={exp.company} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, company: e.target.value } : item))} />
-                  <Input placeholder="Job Title" value={exp.title} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, title: e.target.value } : item))} />
+                  <Input placeholder="Empresa" value={exp.company} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, company: e.target.value } : item))} />
+                  <Input placeholder="Cargo" value={exp.title} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, title: e.target.value } : item))} />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <Input placeholder="Start (e.g. 2020-01)" value={exp.start_date} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, start_date: e.target.value } : item))} />
-                  <Input placeholder="End (e.g. Present)" value={exp.end_date} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, end_date: e.target.value } : item))} />
+                  <Input placeholder="Início (ex: 2020-01)" value={exp.start_date} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, start_date: e.target.value } : item))} />
+                  <Input placeholder="Fim (ex: Atual)" value={exp.end_date} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, end_date: e.target.value } : item))} />
                 </div>
-                <Textarea placeholder="Brief description of role" value={exp.description} rows={2} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, description: e.target.value } : item))} />
+                <Textarea placeholder="Breve descrição das responsabilidades e realizações" value={exp.description} rows={2} onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, description: e.target.value } : item))} />
                 <Input
-                  placeholder="Reason for leaving (optional)"
+                  placeholder="Motivo da saída (opcional)"
                   value={exp.reason_for_leaving ?? ''}
                   onChange={(e) => setWorkExperience((prev) => prev.map((item, i) => i === idx ? { ...item, reason_for_leaving: e.target.value } : item))}
                 />
@@ -734,7 +734,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
             <div className="flex items-center justify-between">
               <Label className="flex items-center gap-1 text-base font-semibold">
                 <GraduationCap className="h-4 w-4" />
-                Education
+                Formação Acadêmica
               </Label>
               <Button
                 type="button"
@@ -747,33 +747,33 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
               </Button>
             </div>
             {education.length === 0 && (
-              <p className="text-sm text-muted-foreground">No education added yet. Upload a resume to auto-fill or add manually.</p>
+              <p className="text-sm text-muted-foreground">Nenhuma formação adicionada. Envie um currículo para preenchimento automático ou adicione manualmente.</p>
             )}
             {education.map((edu, idx) => (
               <div key={idx} className="border rounded-lg p-3 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-muted-foreground">Education {idx + 1}</span>
+                  <span className="text-sm font-medium text-muted-foreground">Formação {idx + 1}</span>
                   <Button type="button" variant="ghost" size="sm" onClick={() => setEducation((prev) => prev.filter((_, i) => i !== idx))}>
                     <Trash2 className="h-3 w-3 text-destructive" />
                   </Button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <Input placeholder="Degree / Class (e.g. B.Tech, 12th)" value={edu.degree_name} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, degree_name: e.target.value } : item))} />
-                  <Input placeholder="Year of completion" value={edu.year_of_completion} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, year_of_completion: e.target.value } : item))} />
+                  <Input placeholder="Grau / Curso (ex: Bacharelado, Ensino Médio)" value={edu.degree_name} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, degree_name: e.target.value } : item))} />
+                  <Input placeholder="Ano de conclusão" value={edu.year_of_completion} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, year_of_completion: e.target.value } : item))} />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  <Input placeholder="Board / University" value={edu.board_university} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, board_university: e.target.value } : item))} />
-                  <Input placeholder="Grade (% or CGPA)" value={edu.grade} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, grade: e.target.value } : item))} />
+                  <Input placeholder="Instituição / Universidade" value={edu.board_university} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, board_university: e.target.value } : item))} />
+                  <Input placeholder="Nota ou Coeficiente (opcional)" value={edu.grade} onChange={(e) => setEducation((prev) => prev.map((item, i) => i === idx ? { ...item, grade: e.target.value } : item))} />
                 </div>
               </div>
             ))}
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
           <Button onClick={handleUpdateProfile} disabled={updateProfile.isPending || isUploading || isParsing}>
             {updateProfile.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Save Changes
+            Salvar Alterações
           </Button>
         </DialogFooter>
       </DialogContent>

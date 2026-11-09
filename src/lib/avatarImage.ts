@@ -13,7 +13,7 @@ export function isAllowedAvatarInput(file: File): boolean {
 
 export async function prepareAvatarImage(file: File): Promise<Blob> {
   if (!isAllowedAvatarInput(file)) {
-    throw new Error('Please upload a JPEG, PNG, or WebP image');
+    throw new Error('Por favor, envie uma imagem JPEG, PNG ou WebP');
   }
 
   const bitmap = await createImageBitmap(file);
@@ -27,7 +27,7 @@ export async function prepareAvatarImage(file: File): Promise<Blob> {
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Could not process image');
+    if (!ctx) throw new Error('Não foi possível processar a imagem');
 
     ctx.drawImage(bitmap, 0, 0, width, height);
 
@@ -41,7 +41,7 @@ export async function prepareAvatarImage(file: File): Promise<Blob> {
       quality -= 0.1;
     }
 
-    throw new Error('Image is too large even after compression. Try a smaller photo.');
+    throw new Error('A imagem é muito grande mesmo após compressão. Tente uma foto menor.');
   } finally {
     bitmap.close();
   }
@@ -57,19 +57,19 @@ export function avatarUploadErrorMessage(err: Error & { statusCode?: string | nu
     msg.includes('entity too large') ||
     msg.includes('payload too large')
   ) {
-    return 'Photo exceeds the server upload limit. Try a smaller image, or ask an admin to raise client_max_body_size on the Supabase nginx gateway.';
+    return 'A foto excede o limite de upload do servidor. Tente uma imagem menor ou solicite aumento do client_max_body_size.';
   }
   if (msg.includes('cors') || msg.includes('failed to fetch') || msg.includes('networkerror')) {
-    return 'Upload blocked by CORS on the Supabase storage host. An admin must allow ' + window.location.origin + ' in Kong/nginx CORS headers for /storage/v1/.';
+    return 'Envio bloqueado por CORS no host de armazenamento do Supabase. Um administrador deve liberar ' + window.location.origin + ' nas configurações de CORS.';
   }
   if (msg.includes('row-level security') || status === '403' || msg.includes('unauthorized')) {
-    return 'Permission denied. Ensure the avatars bucket migration ran and you are signed in.';
+    return 'Permissão negada. Certifique-se de que a migração do bucket de avatares foi executada e que você está autenticado.';
   }
   if (msg.includes('mime') || msg.includes('not allowed') || msg.includes('invalid')) {
-    return 'Image format not allowed. Use JPEG, PNG, or WebP.';
+    return 'Formato de imagem não permitido. Use JPEG, PNG ou WebP.';
   }
   if (/bucket not found/i.test(err.message)) {
-    return 'Avatar storage is not set up yet. Ask an admin to run the avatars migration on the database.';
+    return 'O armazenamento de avatares ainda não está configurado no banco de dados.';
   }
-  return err.message || 'Upload failed';
+  return err.message || 'Falha no envio';
 }

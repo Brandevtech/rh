@@ -215,10 +215,10 @@ export function useJobApplicationForm(applicationId: string | undefined) {
       queryClient.invalidateQueries({ queryKey: ['job-application-form-statuses'] });
       queryClient.invalidateQueries({ queryKey: ['candidate-application-form'] });
       queryClient.invalidateQueries({ queryKey: ['applicant-application', applicationId] });
-      toast({ title: 'Job application form submitted' });
+      toast({ title: 'Formulário de candidatura enviado' });
     },
     onError: (err: Error) => {
-      toast({ title: 'Failed to submit form', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao enviar formulário', description: err.message, variant: 'destructive' });
     },
   });
 
@@ -259,10 +259,10 @@ export function useJobApplicationForm(applicationId: string | undefined) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['job-application-form', applicationId] });
-      toast({ title: 'Draft saved' });
+      toast({ title: 'Rascunho salvo' });
     },
     onError: (err: Error) => {
-      toast({ title: 'Failed to save draft', description: err.message, variant: 'destructive' });
+      toast({ title: 'Falha ao salvar rascunho', description: err.message, variant: 'destructive' });
     },
   });
 

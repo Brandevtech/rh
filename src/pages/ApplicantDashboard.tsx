@@ -62,24 +62,24 @@ const statusColors: Record<string, string> = {
 };
 
 const statusLabels: Record<string, string> = {
-  new: 'Submitted',
-  reviewing: 'Under Review',
-  shortlisted: 'Shortlisted',
-  rejected: 'Not Selected',
-  converted: 'Moved to Interview',
-  invited: 'Pending',
-  in_progress: 'In Progress',
-  completed: 'Completed',
-  evaluated: 'Evaluated',
-  expired: 'Expired',
+  new: 'Enviada',
+  reviewing: 'Em Análise',
+  shortlisted: 'Pré-selecionado',
+  rejected: 'Não Selecionado',
+  converted: 'Etapa de Entrevistas',
+  invited: 'Pendente',
+  in_progress: 'Em Andamento',
+  completed: 'Concluída',
+  evaluated: 'Avaliada',
+  expired: 'Expirada',
 };
 
 const assessmentStatusLabels: Record<string, string> = {
-  invited: 'Pending',
-  in_progress: 'In Progress',
-  completed: 'Completed',
-  evaluated: 'Submitted',
-  expired: 'Expired',
+  invited: 'Pendente',
+  in_progress: 'Em Andamento',
+  completed: 'Concluída',
+  evaluated: 'Enviada',
+  expired: 'Expirada',
 };
 
 function filterJobsByQuery<T extends { job: { title: string; department?: string; location?: string } }>(
@@ -177,13 +177,13 @@ function BrowseJobsSection({
       <CardHeader>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <CardTitle>Open Positions</CardTitle>
-            <CardDescription>Browse and apply to jobs with one click</CardDescription>
+            <CardTitle>Vagas Abertas</CardTitle>
+            <CardDescription>Consulte e candidate-se às vagas com um clique</CardDescription>
           </div>
           <div className="relative w-full sm:w-64 shrink-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search jobs..."
+              placeholder="Buscar vagas..."
               className="pl-9"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -199,8 +199,8 @@ function BrowseJobsSection({
           >
             <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
             <p className="text-sm text-amber-800 min-w-0">
-              <span className="font-medium">Complete your profile to enable one-click apply.</span>{' '}
-              Add your name, phone, LinkedIn, and resume first.
+              <span className="font-medium">Complete seu perfil para ativar a candidatura com um clique.</span>{' '}
+              Adicione seu nome, telefone, LinkedIn e currículo primeiro.
             </p>
           </div>
         )}
@@ -219,27 +219,27 @@ function BrowseJobsSection({
         ) : jobs.length === 0 ? (
           <div className="text-center py-12">
             <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium">No open positions found</h3>
-            <p className="text-muted-foreground">Check back later for new opportunities.</p>
+            <h3 className="text-lg font-medium">Nenhuma vaga aberta encontrada</h3>
+            <p className="text-muted-foreground">Volte em breve para conferir novas oportunidades.</p>
           </div>
         ) : searchQuery && !hasFilteredResults ? (
           <div className="text-center py-12">
             <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium">No matching positions</h3>
-            <p className="text-muted-foreground">Try a different search term.</p>
+            <h3 className="text-lg font-medium">Nenhuma vaga correspondente</h3>
+            <p className="text-muted-foreground">Tente outro termo de busca.</p>
           </div>
         ) : (
           <div className="space-y-8">
             <section className="space-y-4">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <h3 className="font-semibold">Relevant for you</h3>
+                <h3 className="font-semibold">Relevante para você</h3>
                 <Badge variant="secondary" className="text-xs">
                   {filteredRelevantJobs.length}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground -mt-2">
-                Roles that match your profile at 60% or higher.
+                Vagas que combinam com seu perfil em 60% ou mais.
               </p>
               {filteredRelevantJobs.length > 0 ? (
                 filteredRelevantJobs.map(({ job, matchScore }) => (
@@ -261,15 +261,15 @@ function BrowseJobsSection({
               ) : (
                 <div className="rounded-lg border border-dashed p-6 text-center">
                   <Sparkles className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm font-medium">No strong matches yet</p>
+                  <p className="text-sm font-medium">Nenhuma recomendação forte ainda</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     {hasProfileMatchData
-                      ? 'None of the open roles meet the 60% match threshold. Browse other positions below.'
-                      : 'Complete your profile and upload your resume to see personalized job matches.'}
+                      ? 'Nenhuma das vagas abertas atinge 60% de compatibilidade no momento. Explore outras vagas abaixo.'
+                      : 'Complete seu perfil e envie seu currículo para visualizar recomendações personalizadas.'}
                   </p>
                   {!hasProfileMatchData && (
                     <Button variant="outline" size="sm" className="mt-3" onClick={onOpenProfile}>
-                      Complete profile
+                      Completar perfil
                     </Button>
                   )}
                 </div>
@@ -280,7 +280,7 @@ function BrowseJobsSection({
               <section className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Briefcase className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="font-semibold">Other positions</h3>
+                  <h3 className="font-semibold">Outras vagas</h3>
                   <Badge variant="outline" className="text-xs">
                     {filteredOtherJobs.length}
                   </Badge>
@@ -321,7 +321,7 @@ const APPLICANT_TABS = ['profile', 'jobs', 'applications', 'assessments'] as con
 
 export default function ApplicantDashboard() {
   const companyName = useCompanyDisplayName();
-  usePageTitle(companyName ? `${companyName} | Applicant Portal` : 'Applicant Portal');
+  usePageTitle(companyName ? `${companyName} | Portal do Candidato` : 'Portal do Candidato');
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
@@ -412,8 +412,8 @@ export default function ApplicantDashboard() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start sm:items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5 sm:mt-0" />
             <p className="text-sm text-amber-800 min-w-0">
-              <span className="font-medium">Your profile is incomplete.</span>{' '}
-              Click here to add your name, phone, LinkedIn, and resume — these will be auto-filled when you apply for jobs.
+              <span className="font-medium">Seu perfil está incompleto.</span>{' '}
+              Clique aqui para preencher nome, telefone, LinkedIn e currículo — eles serão aproveitados automaticamente nas candidaturas.
             </p>
           </div>
         </div>
@@ -441,7 +441,7 @@ export default function ApplicantDashboard() {
             />
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">Sign Out</span>
+              <span className="hidden sm:inline">Sair</span>
             </Button>
           </>
         }
@@ -451,17 +451,17 @@ export default function ApplicantDashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
         {/* Welcome Section */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold">Welcome back, {profile ? (getApplicantFirstName(profile) || 'Applicant') : 'Applicant'}!</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Bem-vindo(a) de volta, {profile ? (getApplicantFirstName(profile) || 'Candidato') : 'Candidato'}!</h1>
           <p className="text-muted-foreground mt-1">
-            Track your applications and complete assessments from one place.
+            Acompanhe suas candidaturas e realize avaliações em um só lugar.
           </p>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <DashboardStatCard
-            title="Profile Completion"
+            title="Preenchimento do Perfil"
             value={`${profileCompleteness.percent}%`}
-            description={profileCompleteness.isComplete ? 'Profile complete' : 'Complete to enable quick apply'}
+            description={profileCompleteness.isComplete ? 'Perfil completo' : 'Complete para ativar candidatura rápida'}
             icon={Percent}
             valueClassName={
               profileCompleteness.percent === 100
@@ -473,23 +473,23 @@ export default function ApplicantDashboard() {
             onClick={() => setActiveTab('profile')}
           />
           <DashboardStatCard
-            title="Referred Jobs"
+            title="Vagas Indicadas"
             value={referralCount}
-            description={referralCount > 0 ? 'Jobs shared with friends' : 'Share jobs with friends'}
+            description={referralCount > 0 ? 'Vagas compartilhadas com amigos' : 'Indique vagas para amigos'}
             icon={UserPlus}
             onClick={() => setActiveTab('jobs')}
           />
           <DashboardStatCard
-            title="Jobs Applied"
+            title="Candidaturas"
             value={appsLoading ? '—' : applications.length}
-            description={applications.length === 1 ? '1 application submitted' : `${applications.length} applications submitted`}
+            description={applications.length === 1 ? '1 candidatura enviada' : `${applications.length} candidaturas enviadas`}
             icon={Briefcase}
             onClick={() => setActiveTab('applications')}
           />
           <DashboardStatCard
-            title="Open Assessments"
+            title="Avaliações Pendentes"
             value={assessmentsLoading ? '—' : openAssessments}
-            description={openAssessments > 0 ? 'Pending or in progress' : 'No pending assessments'}
+            description={openAssessments > 0 ? 'Pendentes ou em andamento' : 'Nenhuma avaliação pendente'}
             icon={ClipboardCheck}
             onClick={() => setActiveTab('assessments')}
           />
@@ -504,19 +504,19 @@ export default function ApplicantDashboard() {
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto gap-1">
             <TabsTrigger value="profile" className="flex items-center justify-center gap-1.5 px-2 py-2 text-xs sm:text-sm">
               <User className="h-4 w-4 shrink-0" />
-              <span className="truncate">Profile</span>
+              <span className="truncate">Perfil</span>
             </TabsTrigger>
             <TabsTrigger value="jobs" className="flex items-center justify-center gap-1.5 px-2 py-2 text-xs sm:text-sm">
               <ExternalLink className="h-4 w-4 shrink-0" />
-              <span className="truncate">Browse Jobs</span>
+              <span className="truncate">Vagas Abertas</span>
             </TabsTrigger>
             <TabsTrigger value="applications" className="flex items-center justify-center gap-1.5 px-2 py-2 text-xs sm:text-sm">
               <Briefcase className="h-4 w-4 shrink-0" />
-              <span className="truncate">Applications</span>
+              <span className="truncate">Minhas Candidaturas</span>
             </TabsTrigger>
             <TabsTrigger value="assessments" className="flex items-center justify-center gap-1.5 px-2 py-2 text-xs sm:text-sm">
               <ClipboardCheck className="h-4 w-4 shrink-0" />
-              <span className="truncate">Assessments</span>
+              <span className="truncate">Avaliações</span>
             </TabsTrigger>
           </TabsList>
 
@@ -534,8 +534,8 @@ export default function ApplicantDashboard() {
           <TabsContent value="applications">
             <Card>
               <CardHeader>
-                <CardTitle>Your Applications</CardTitle>
-                <CardDescription>Track the status of all your job applications</CardDescription>
+                <CardTitle>Suas Candidaturas</CardTitle>
+                <CardDescription>Acompanhe o status de todas as suas candidaturas</CardDescription>
               </CardHeader>
               <CardContent>
                 {appsLoading ? (
@@ -547,12 +547,12 @@ export default function ApplicantDashboard() {
                 ) : applications.length === 0 ? (
                   <div className="text-center py-12">
                     <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium">No applications yet</h3>
+                    <h3 className="text-lg font-medium">Nenhuma candidatura ainda</h3>
                     <p className="text-muted-foreground mb-4">
-                      Start exploring open positions and apply for your dream job.
+                      Explore as vagas abertas e candidate-se para a vaga desejada.
                     </p>
                     <Link to="/applicant?tab=jobs">
-                      <Button>Browse Jobs</Button>
+                      <Button>Explorar Vagas</Button>
                     </Link>
                   </div>
                 ) : (
@@ -578,19 +578,19 @@ export default function ApplicantDashboard() {
                               )}
                               <span className="flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />
-                                Applied {format(new Date(app.created_at), 'MMM d, yyyy')}
+                                Candidatou-se em {format(new Date(app.created_at), 'dd/MM/yyyy')}
                               </span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2 self-start shrink-0 flex-wrap justify-end">
                             {app.application_form_status === 'pending' && (
                               <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">
-                                Form pending
+                                Formulário pendente
                               </Badge>
                             )}
                             {app.application_form_status === 'submitted' && (
                               <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">
-                                Form complete
+                                Formulário preenchido
                               </Badge>
                             )}
                             <Badge className={cn(statusColors[app.status] || 'bg-gray-100')}>
@@ -611,8 +611,8 @@ export default function ApplicantDashboard() {
           <TabsContent value="assessments">
             <Card>
               <CardHeader>
-                <CardTitle>Your Assessments</CardTitle>
-                <CardDescription>Complete assigned assessments to proceed with your application</CardDescription>
+                <CardTitle>Suas Avaliações</CardTitle>
+                <CardDescription>Realize as avaliações atribuídas para prosseguir no processo seletivo</CardDescription>
               </CardHeader>
               <CardContent>
                 {assessmentsLoading ? (
@@ -624,9 +624,9 @@ export default function ApplicantDashboard() {
                 ) : assessments.length === 0 ? (
                   <div className="text-center py-12">
                     <ClipboardCheck className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-medium">No assessments assigned</h3>
+                    <h3 className="text-lg font-medium">Nenhuma avaliação atribuída</h3>
                     <p className="text-muted-foreground">
-                      When you're shortlisted, assessments will appear here.
+                      Quando você for selecionado para uma prova ou teste técnico, ela aparecerá aqui.
                     </p>
                   </div>
                 ) : (
@@ -642,13 +642,13 @@ export default function ApplicantDashboard() {
                             <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                               <span className="flex items-center gap-1">
                                 <Clock className="h-3 w-3" />
-                                {assessment.assessment?.duration_minutes} minutes
+                                {assessment.assessment?.duration_minutes} minutos
                               </span>
                               {assessment.deadline &&
                                 (assessment.status === 'invited' || assessment.status === 'in_progress') && (
                                 <span className="flex items-center gap-1 text-orange-600">
                                   <AlertCircle className="h-3 w-3" />
-                                  Due: {format(new Date(assessment.deadline), 'MMM d, yyyy')}
+                                  Prazo: {format(new Date(assessment.deadline), 'dd/MM/yyyy')}
                                 </span>
                               )}
                             </div>
@@ -664,7 +664,7 @@ export default function ApplicantDashboard() {
                                 disabled={startAssessment.isPending}
                               >
                                 <Play className="h-4 w-4 mr-1" />
-                                Start
+                                Iniciar
                               </Button>
                             )}
                             {assessment.status === 'in_progress' && (
@@ -673,7 +673,7 @@ export default function ApplicantDashboard() {
                                 onClick={() => navigate(`/exam/${assessment.id}`)}
                               >
                                 <Play className="h-4 w-4 mr-1" />
-                                Continue
+                                Continuar
                               </Button>
                             )}
                           </div>

@@ -18,7 +18,7 @@ import { ApplicantPortalHeader, useCompanyDisplayName } from '@/components/Compa
 
 export default function ApplicantLogin() {
   const companyName = useCompanyDisplayName();
-  usePageTitle(companyName ? `${companyName} | Applicant Login` : 'Applicant Login');
+  usePageTitle(companyName ? `${companyName} | Login do Candidato` : 'Login do Candidato');
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,7 +41,7 @@ export default function ApplicantLogin() {
 
   const handleForgotPassword = async () => {
     if (!email.trim()) {
-      toast({ title: 'Enter your email first', description: 'Type your email address above, then click "Forgot your password?"', variant: 'destructive' });
+      toast({ title: 'Informe seu e-mail primeiro', description: 'Digite seu endereço de e-mail acima e clique em "Esqueceu sua senha?"', variant: 'destructive' });
       return;
     }
     setIsLoading(true);
@@ -53,7 +53,7 @@ export default function ApplicantLogin() {
     if (error) {
       toast({ title: 'Error', description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: 'Reset link sent', description: 'Check your email for a password reset link.' });
+      toast({ title: 'Link de recuperação enviado', description: 'Verifique seu e-mail para acessar o link de redefinição de senha.' });
     }
   };
 
@@ -61,8 +61,8 @@ export default function ApplicantLogin() {
     if (searchParams.get('verified') !== '1' || !user) return;
     void ensureProfile();
     toast({
-      title: 'Email verified',
-      description: 'Your account is confirmed. Welcome to the applicant portal.',
+      title: 'E-mail verificado',
+      description: 'Sua conta foi confirmada. Bem-vindo ao portal do candidato.',
     });
   }, [searchParams, user, ensureProfile, toast]);
 
@@ -70,8 +70,8 @@ export default function ApplicantLogin() {
     if (!authLoading && user && identityResolved && applicantPortalSynced) {
       if (isStaff) {
         toast({
-          title: 'Staff account detected',
-          description: 'Redirecting you to the internal dashboard.',
+          title: 'Conta de colaborador detectada',
+          description: 'Redirecionando para o painel interno.',
         });
         navigate('/', { replace: true });
       } else {
@@ -83,17 +83,17 @@ export default function ApplicantLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !password.trim()) {
-      toast({ title: 'Please fill in all fields', variant: 'destructive' });
+      toast({ title: 'Por favor, preencha todos os campos', variant: 'destructive' });
       return;
     }
 
     if (mode === 'signup' && !fullName.trim()) {
-      toast({ title: 'Please enter your full name', variant: 'destructive' });
+      toast({ title: 'Por favor, informe seu nome completo', variant: 'destructive' });
       return;
     }
 
     if (password.length < 6) {
-      toast({ title: 'Password must be at least 6 characters', variant: 'destructive' });
+      toast({ title: 'A senha deve ter pelo menos 6 caracteres', variant: 'destructive' });
       return;
     }
 
@@ -109,13 +109,13 @@ export default function ApplicantLogin() {
       setIsLoading(false);
 
       if (error) {
-        toast({ title: 'Signup failed', description: error.message, variant: 'destructive' });
+        toast({ title: 'Falha no cadastro', description: error.message, variant: 'destructive' });
         return;
       }
 
       toast({ 
-        title: 'Account created!', 
-        description: 'Please check your email to verify your account before signing in.' 
+        title: 'Conta criada!', 
+        description: 'Verifique seu e-mail para confirmar sua conta antes de entrar.' 
       });
       setMode('login');
     } else {
@@ -123,7 +123,7 @@ export default function ApplicantLogin() {
       setIsLoading(false);
 
       if (error) {
-        toast({ title: 'Login failed', description: error.message, variant: 'destructive' });
+        toast({ title: 'Falha no login', description: error.message, variant: 'destructive' });
         return;
       }
     }
@@ -145,8 +145,8 @@ export default function ApplicantLogin() {
           <Link to="/careers">
             <Button variant="outline" size="sm" className="w-full sm:w-auto">
               <Briefcase className="h-4 w-4 sm:mr-2" />
-              <span className="hidden sm:inline">View Jobs</span>
-              <span className="sm:hidden">Jobs</span>
+              <span className="hidden sm:inline">Ver Vagas</span>
+              <span className="sm:hidden">Vagas</span>
             </Button>
           </Link>
         }
@@ -164,12 +164,12 @@ export default function ApplicantLogin() {
               )}
             </div>
             <CardTitle className="text-2xl">
-              {mode === 'login' ? 'Sign In' : 'Create Account'}
+              {mode === 'login' ? 'Entrar' : 'Criar Conta'}
             </CardTitle>
             <CardDescription>
               {mode === 'login' 
-                ? 'Sign in to your applicant portal to view jobs and track applications'
-                : 'Create an account to apply for jobs and track your applications'
+                ? 'Acesse seu portal do candidato para ver vagas e acompanhar suas candidaturas'
+                : 'Crie uma conta para se candidatar às vagas e acompanhar seus processos'
               }
             </CardDescription>
           </CardHeader>
@@ -178,7 +178,7 @@ export default function ApplicantLogin() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {mode === 'signup' && (
                 <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name</Label>
+                  <Label htmlFor="fullName">Nome Completo</Label>
                   <Input
                     id="fullName"
                     type="text"
@@ -190,7 +190,7 @@ export default function ApplicantLogin() {
                 </div>
               )}
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">Endereço de E-mail</Label>
                 <Input
                   id="email"
                   type="email"
@@ -202,7 +202,7 @@ export default function ApplicantLogin() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Senha</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -230,8 +230,8 @@ export default function ApplicantLogin() {
                   <ArrowRight className="h-4 w-4 mr-2" />
                 )}
                 {isLoading 
-                  ? (mode === 'login' ? 'Signing in...' : 'Creating account...') 
-                  : (mode === 'login' ? 'Sign In' : 'Create Account')
+                  ? (mode === 'login' ? 'Entrando...' : 'Criando conta...') 
+                  : (mode === 'login' ? 'Entrar' : 'Criar Conta')
                 }
               </Button>
               {mode === 'login' && (
@@ -242,7 +242,7 @@ export default function ApplicantLogin() {
                     className="text-sm text-muted-foreground hover:text-primary hover:underline"
                     disabled={isLoading}
                   >
-                    Forgot your password?
+                    Esqueceu sua senha?
                   </button>
                 </div>
               )}
@@ -252,22 +252,22 @@ export default function ApplicantLogin() {
           <CardFooter className="flex flex-col gap-4 text-center text-sm text-muted-foreground">
             {mode === 'login' ? (
               <p>
-                Don't have an account?{' '}
+                Não possui uma conta?{' '}
                 <button 
                   onClick={() => setMode('signup')} 
                   className="text-primary font-medium hover:underline"
                 >
-                  Create one
+                  Cadastre-se
                 </button>
               </p>
             ) : (
               <p>
-                Already have an account?{' '}
+                Já possui uma conta?{' '}
                 <button 
                   onClick={() => setMode('login')} 
                   className="text-primary font-medium hover:underline"
                 >
-                  Sign in
+                  Entrar
                 </button>
               </p>
             )}

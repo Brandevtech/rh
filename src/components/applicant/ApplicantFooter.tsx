@@ -8,7 +8,7 @@ export function ApplicantFooter() {
     <footer className="hidden md:block border-t bg-background mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col items-center justify-center gap-1 text-xs text-muted-foreground">
         <span className="text-center">
-          © {new Date().getFullYear()} The Talent App. Built with love by{' '}
+          © {new Date().getFullYear()} The Talent App. Desenvolvido com carinho por{' '}
           <a
             href="https://www.sparxitsolutions.com"
             target="_blank"
@@ -26,14 +26,14 @@ export function ApplicantFooter() {
                 rel="noopener noreferrer"
                 className="underline underline-offset-2 hover:text-foreground transition-colors"
               >
-                Privacy
+                Privacidade
               </a>
             </>
           )}
         </span>
         {compliance.grievance_officer_name && compliance.grievance_officer_email && (
           <span className="text-center">
-            Grievance officer: {compliance.grievance_officer_name} (
+            Encarregado de DPO / Reclamações: {compliance.grievance_officer_name} (
             <a
               href={`mailto:${compliance.grievance_officer_email}`}
               className="underline underline-offset-2 hover:text-foreground transition-colors"

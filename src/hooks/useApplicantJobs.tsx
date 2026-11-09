@@ -180,18 +180,18 @@ export function useQuickApply() {
 
       if (result.status === 'already_applied') {
         toast({
-          title: 'You already have an application for this position',
+          title: 'Você já possui uma candidatura para esta vaga',
           description: result.applicationId
-            ? 'Opening your existing application…'
-            : 'View your existing application in the applicant portal.',
+            ? 'Abrindo sua candidatura existente…'
+            : 'Veja sua candidatura existente no portal do candidato.',
           action: result.applicationId ? (
             <ToastAction
-              altText="View application"
+              altText="Ver candidatura"
               onClick={() => {
                 window.location.assign(`/applicant/applications/${result.applicationId}`);
               }}
             >
-              View application
+              Ver candidatura
             </ToastAction>
           ) : undefined,
         });
@@ -202,15 +202,15 @@ export function useQuickApply() {
       }
 
       toast({
-        title: result.status === 'updated' ? 'Application linked!' : 'Application submitted!',
+        title: result.status === 'updated' ? 'Candidatura vinculada!' : 'Candidatura enviada!',
         description:
           result.status === 'updated'
-            ? 'Your profile details were added to your existing application.'
-            : 'Check your email for confirmation.',
+            ? 'Os dados do seu perfil foram adicionados à sua candidatura existente.'
+            : 'Verifique seu e-mail para confirmação.'
       });
     },
     onError: (error: Error) => {
-      toast({ title: 'Failed to apply', description: formatPortalApplyError(error), variant: 'destructive' });
+      toast({ title: 'Falha ao candidatar-se', description: formatPortalApplyError(error), variant: 'destructive' });
     },
   });
 }

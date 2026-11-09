@@ -4,19 +4,19 @@ export type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed' | 'sep
 export type BloodGroup = 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-' | 'unknown';
 
 export const GENDER_OPTIONS: { value: Gender; label: string }[] = [
-  { value: 'male', label: 'Male' },
-  { value: 'female', label: 'Female' },
-  { value: 'non_binary', label: 'Non-binary' },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+  { value: 'male', label: 'Masculino' },
+  { value: 'female', label: 'Feminino' },
+  { value: 'non_binary', label: 'Não-binário' },
+  { value: 'prefer_not_to_say', label: 'Prefiro não informar' },
 ];
 
 export const MARITAL_STATUS_OPTIONS: { value: MaritalStatus; label: string }[] = [
-  { value: 'single', label: 'Single' },
-  { value: 'married', label: 'Married' },
-  { value: 'divorced', label: 'Divorced' },
-  { value: 'widowed', label: 'Widowed' },
-  { value: 'separated', label: 'Separated' },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+  { value: 'single', label: 'Solteiro(a)' },
+  { value: 'married', label: 'Casado(a)' },
+  { value: 'divorced', label: 'Divorciado(a)' },
+  { value: 'widowed', label: 'Viúvo(a)' },
+  { value: 'separated', label: 'Separado(a)' },
+  { value: 'prefer_not_to_say', label: 'Prefiro não informar' },
 ];
 
 export const BLOOD_GROUP_OPTIONS: { value: BloodGroup; label: string }[] = [
@@ -28,7 +28,7 @@ export const BLOOD_GROUP_OPTIONS: { value: BloodGroup; label: string }[] = [
   { value: 'AB-', label: 'AB-' },
   { value: 'O+', label: 'O+' },
   { value: 'O-', label: 'O-' },
-  { value: 'unknown', label: 'Unknown' },
+  { value: 'unknown', label: 'Desconhecido' },
 ];
 
 export interface EducationEntry {
@@ -141,39 +141,39 @@ export function validateApplicantProfileSave(
   input: ApplicantProfileSaveInput,
 ): { valid: true } | { valid: false; title: string; description?: string } {
   if (!input.first_name.trim()) {
-    return { valid: false, title: 'First name is required' };
+    return { valid: false, title: 'Nome é obrigatório' };
   }
   if (!input.last_name.trim()) {
-    return { valid: false, title: 'Last name is required' };
+    return { valid: false, title: 'Sobrenome é obrigatório' };
   }
   if (!input.dob_documented.trim()) {
     return {
       valid: false,
-      title: 'Date of birth required',
-      description: 'Please enter your date of birth as shown on official documents.',
+      title: 'Data de nascimento obrigatória',
+      description: 'Por favor, informe sua data de nascimento conforme documentos oficiais.',
     };
   }
   if (!input.gender) {
-    return { valid: false, title: 'Gender is required' };
+    return { valid: false, title: 'Gênero é obrigatório' };
   }
   if (!input.marital_status) {
-    return { valid: false, title: 'Marital status is required' };
+    return { valid: false, title: 'Estado civil é obrigatório' };
   }
   if (!input.blood_group) {
-    return { valid: false, title: 'Blood group is required' };
+    return { valid: false, title: 'Tipo sanguíneo é obrigatório' };
   }
   if (!input.linkedin_url.trim()) {
     return {
       valid: false,
-      title: 'LinkedIn URL is required',
-      description: 'Please provide your LinkedIn profile URL.',
+      title: 'URL do LinkedIn é obrigatória',
+      description: 'Por favor, informe a URL do seu perfil no LinkedIn.',
     };
   }
   if (!validateLinkedInUrl(input.linkedin_url)) {
     return {
       valid: false,
-      title: 'Invalid LinkedIn URL',
-      description: 'Please provide a valid LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)',
+      title: 'URL do LinkedIn inválida',
+      description: 'Informe uma URL válida do perfil no LinkedIn (ex: https://linkedin.com/in/seunome)',
     };
   }
   return { valid: true };
@@ -354,55 +354,55 @@ export function getProfileCompleteness(profile: ApplicantProfileData | null): Pr
   const items: ProfileCompletenessItem[] = [
     {
       key: 'name',
-      label: 'First & last name',
+      label: 'Nome e sobrenome',
       weight: 10,
       complete: !!profile && hasValidName(profile),
     },
     {
       key: 'phone',
-      label: 'Phone number',
+      label: 'Número de telefone',
       weight: 10,
       complete: !!profile?.phone?.trim(),
     },
     {
       key: 'dob_documented',
-      label: 'Date of birth (on documents)',
+      label: 'Data de nascimento (documentos)',
       weight: 15,
       complete: !!profile && hasDocumentedDob(profile.dob_documented),
     },
     {
       key: 'gender',
-      label: 'Gender',
+      label: 'Gênero',
       weight: 8,
       complete: hasRequiredSelect(profile?.gender),
     },
     {
       key: 'marital_status',
-      label: 'Marital status',
+      label: 'Estado civil',
       weight: 8,
       complete: hasRequiredSelect(profile?.marital_status),
     },
     {
       key: 'blood_group',
-      label: 'Blood group',
+      label: 'Tipo sanguíneo',
       weight: 8,
       complete: hasRequiredSelect(profile?.blood_group),
     },
     {
       key: 'linkedin',
-      label: 'LinkedIn URL',
+      label: 'URL do LinkedIn',
       weight: 11,
       complete: !!profile?.linkedin_url?.trim() && validateLinkedInUrl(profile.linkedin_url),
     },
     {
       key: 'resume',
-      label: 'Resume',
+      label: 'Currículo',
       weight: 15,
       complete: !!profile?.resume_url,
     },
     {
       key: 'experience',
-      label: 'Work experience',
+      label: 'Experiência profissional',
       weight: 15,
       complete: !!profile && hasWorkExperience(profile.work_experience),
     },

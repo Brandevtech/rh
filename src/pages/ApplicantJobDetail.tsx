@@ -45,10 +45,10 @@ export default function ApplicantJobDetail() {
 
   usePageTitle(
     job?.title
-      ? `${job.title} | ${companyName || 'Applicant Portal'}`
+      ? `${job.title} | ${companyName || 'Portal do Candidato'}`
       : companyName
-        ? `${companyName} | Job Details`
-        : 'Job Details',
+        ? `${companyName} | Detalhes da Vaga`
+        : 'Detalhes da Vaga',
   );
 
   useEffect(() => {
@@ -98,14 +98,14 @@ export default function ApplicantJobDetail() {
           <Button variant="ghost" asChild className="mb-6 gap-2">
             <Link to="/applicant?tab=jobs">
               <ArrowLeft className="h-4 w-4" />
-              Back to Browse Jobs
+              Voltar para Vagas Abertas
             </Link>
           </Button>
           <Card className="text-center py-12">
             <CardContent>
               <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h2 className="text-lg font-semibold mb-2">Job not found</h2>
-              <p className="text-muted-foreground">This position may have been closed or removed.</p>
+              <h2 className="text-lg font-semibold mb-2">Vaga não encontrada</h2>
+              <p className="text-muted-foreground">Esta oportunidade pode ter sido encerrada ou removida.</p>
             </CardContent>
           </Card>
         </main>
@@ -140,19 +140,19 @@ export default function ApplicantJobDetail() {
                   {isRelevant && (
                     <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-primary/20">
                       <Sparkles className="h-3 w-3" />
-                      Relevant for you
+                      Relevante para você
                     </Badge>
                   )}
                   {alreadyApplied && (
                     <Badge className="bg-green-100 text-green-800 gap-1">
                       <CheckCircle className="h-3 w-3" />
-                      Applied
+                      Candidatou-se
                     </Badge>
                   )}
                   {deadlinePassed && (
                     <Badge variant="destructive" className="gap-1">
                       <AlertTriangle className="h-3 w-3" />
-                      Deadline Passed
+                      Prazo Encerrado
                     </Badge>
                   )}
                 </div>
@@ -163,11 +163,11 @@ export default function ApplicantJobDetail() {
                 {alreadyApplied ? (
                   <Button variant="outline" disabled className="gap-2">
                     <CheckCircle className="h-4 w-4" />
-                    Applied
+                    Candidatou-se
                   </Button>
                 ) : !canApply ? (
                   <Button variant="outline" disabled className="gap-2" title={blockMessage}>
-                    Quick Apply
+                    Candidatura Rápida
                   </Button>
                 ) : (
                   <Button onClick={handleQuickApply} disabled={!!deadlinePassed || quickApply.isPending} className="gap-2">
@@ -176,7 +176,7 @@ export default function ApplicantJobDetail() {
                     ) : (
                       <Send className="h-4 w-4" />
                     )}
-                    {deadlinePassed ? 'Closed' : profileIncomplete ? 'Complete Profile to Apply' : 'Quick Apply'}
+                    {deadlinePassed ? 'Encerrada' : profileIncomplete ? 'Complete o Perfil para Candidatar-se' : 'Candidatura Rápida'}
                   </Button>
                 )}
               </div>
@@ -194,14 +194,14 @@ export default function ApplicantJobDetail() {
               <div className="rounded-lg border bg-muted/30 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium">Profile Match</span>
+                  <span className="text-sm font-medium">Compatibilidade</span>
                   <span className={cn('text-sm font-bold ml-auto', getMatchScoreColorClass(matchScore))}>
                     {matchScore}%
                   </span>
                 </div>
                 <Progress value={matchScore} className="h-2" />
                 <p className="text-xs text-muted-foreground mt-2">
-                  Based on your skills, experience, and education compared to this role&apos;s requirements.
+                  Baseado em suas habilidades, experiência e formação comparadas aos requisitos da vaga.
                 </p>
               </div>
             )}
@@ -211,7 +211,7 @@ export default function ApplicantJobDetail() {
                 <div className="flex items-center gap-2">
                   <Building2 className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-muted-foreground">Team</p>
+                    <p className="text-muted-foreground">Equipe</p>
                     <p className="font-medium">{job.department}</p>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export default function ApplicantJobDetail() {
                 <div className="flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-muted-foreground">Location</p>
+                    <p className="text-muted-foreground">Localização</p>
                     <p className="font-medium">{job.location}</p>
                   </div>
                 </div>
@@ -229,7 +229,7 @@ export default function ApplicantJobDetail() {
                 <div className="flex items-center gap-2">
                   <GraduationCap className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-muted-foreground">Experience</p>
+                    <p className="text-muted-foreground">Experiência</p>
                     <p className="font-medium">{experienceLevelLabels[job.experience_level]}</p>
                   </div>
                 </div>
@@ -238,14 +238,14 @@ export default function ApplicantJobDetail() {
 
             {job.description && (
               <div>
-                <h3 className="font-semibold mb-2">About this role</h3>
+                <h3 className="font-semibold mb-2">Sobre esta vaga</h3>
                 <p className="text-muted-foreground whitespace-pre-wrap">{job.description}</p>
               </div>
             )}
 
             {job.required_skills.length > 0 && (
               <div>
-                <h3 className="font-semibold mb-2">Required Skills</h3>
+                <h3 className="font-semibold mb-2">Habilidades Necessárias</h3>
                 <div className="flex flex-wrap gap-2">
                   {job.required_skills.map((skill) => (
                     <Badge key={skill} variant="secondary">
@@ -264,8 +264,8 @@ export default function ApplicantJobDetail() {
                 )}
               >
                 <Clock className="h-4 w-4" />
-                Application deadline: {format(new Date(job.application_deadline), 'PPP')}
-                {deadlinePassed && ' (passed)'}
+                Prazo de candidatura: {format(new Date(job.application_deadline), 'dd/MM/yyyy')}
+                {deadlinePassed && ' (encerrado)'}
               </p>
             )}
           </CardContent>

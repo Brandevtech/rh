@@ -15,7 +15,7 @@ export function ProfileCompletenessMeter({ profile, className, showItems = true 
   return (
     <div className={cn('space-y-3', className)}>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium">Profile completeness</span>
+        <span className="text-sm font-medium">Preenchimento do perfil</span>
         <span className={cn(
           'text-sm font-bold',
           percent === 100 ? 'text-green-600' : percent >= 60 ? 'text-amber-600' : 'text-muted-foreground',

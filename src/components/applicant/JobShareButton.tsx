@@ -41,9 +41,9 @@ export function JobShareButton({
     const copied = await copyJobLink(job.id);
     if (copied) {
       trackReferral();
-      toast({ title: 'Link copied', description: 'Job link copied to clipboard.' });
+      toast({ title: 'Link copiado', description: 'Link da vaga copiado para a área de transferência.' });
     } else {
-      toast({ title: 'Copy failed', description: 'Could not copy the link.', variant: 'destructive' });
+      toast({ title: 'Falha ao copiar', description: 'Não foi possível copiar o link.', variant: 'destructive' });
     }
   };
 
@@ -53,9 +53,9 @@ export function JobShareButton({
       trackReferral();
     }
     if (result === 'copied') {
-      toast({ title: 'Link copied', description: 'Sharing is unavailable — link copied instead.' });
+      toast({ title: 'Link copiado', description: 'Compartilhamento indisponível — o link foi copiado.' });
     } else if (result === 'unsupported') {
-      toast({ title: 'Share unavailable', description: 'Try copy link or email instead.', variant: 'destructive' });
+      toast({ title: 'Compartilhamento indisponível', description: 'Tente copiar o link ou enviar por e-mail.', variant: 'destructive' });
     }
   };
 
@@ -64,24 +64,24 @@ export function JobShareButton({
       <DropdownMenuTrigger asChild>
         <Button variant={variant} size={size} className={className} type="button">
           <UserPlus className="h-4 w-4 sm:mr-1.5" />
-          <span className="hidden sm:inline">Refer a Friend</span>
+          <span className="hidden sm:inline">Indicar Amigo</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {canNativeShare && (
           <DropdownMenuItem onClick={handleShare}>
             <Share2 className="h-4 w-4 mr-2" />
-            Share
+            Compartilhar
           </DropdownMenuItem>
         )}
         <DropdownMenuItem onClick={handleCopy}>
           <Copy className="h-4 w-4 mr-2" />
-          Copy link
+          Copiar link
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a href={buildMailtoReferralLink(job)} onClick={trackReferral}>
             <Mail className="h-4 w-4 mr-2" />
-            Email friend
+            Enviar por e-mail
           </a>
         </DropdownMenuItem>
       </DropdownMenuContent>

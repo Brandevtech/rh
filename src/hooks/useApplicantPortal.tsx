@@ -266,8 +266,8 @@ function buildApplicationTimeline(
 ): TimelineEvent[] {
   const events: TimelineEvent[] = [
     {
-      title: 'Application Submitted',
-      description: 'Your application has been received.',
+      title: 'Candidatura Enviada',
+      description: 'Sua candidatura foi recebida.',
       date: application.created_at,
       complete: true,
     },
@@ -276,15 +276,15 @@ function buildApplicationTimeline(
   if (jobRequiresForm) {
     if (applicationForm?.status === 'submitted') {
       events.push({
-        title: 'Job Application Form — Submitted',
-        description: 'Your pre-screen responses are on file.',
+        title: 'Formulário de Candidatura — Enviado',
+        description: 'Suas respostas da triagem estão registradas.',
         date: applicationForm.submitted_at || undefined,
         complete: true,
       });
     } else {
       events.push({
-        title: 'Job Application Form — Pending',
-        description: 'Complete your digital application form before interview rounds.',
+        title: 'Formulário de Candidatura — Pendente',
+        description: 'Preencha o formulário de candidatura antes das etapas de entrevista.',
         complete: false,
       });
     }
@@ -295,8 +295,8 @@ function buildApplicationTimeline(
 
   if (currentIdx >= 1 || application.status === 'reviewing') {
     events.push({
-      title: 'Under Review',
-      description: 'Our team is reviewing your application.',
+      title: 'Em Análise',
+      description: 'Nossa equipe está analisando sua candidatura.',
       date: application.updated_at,
       complete: currentIdx >= 1,
     });
@@ -304,8 +304,8 @@ function buildApplicationTimeline(
 
   if (application.status === 'shortlisted' || application.status === 'converted') {
     events.push({
-      title: 'Shortlisted',
-      description: 'You have been shortlisted for this role.',
+      title: 'Pré-selecionado',
+      description: 'Você foi pré-selecionado para esta vaga.',
       date: application.updated_at,
       complete: true,
     });
@@ -313,8 +313,8 @@ function buildApplicationTimeline(
 
   if (application.status === 'converted') {
     events.push({
-      title: 'Interview Stage',
-      description: 'You have progressed to the interview stage.',
+      title: 'Etapa de Entrevistas',
+      description: 'Você avançou para a etapa de entrevistas.',
       date: application.updated_at,
       complete: true,
     });
@@ -322,8 +322,8 @@ function buildApplicationTimeline(
 
   if (application.status === 'rejected') {
     events.push({
-      title: 'Not Selected',
-      description: 'Thank you for your interest. We encourage you to apply for other openings.',
+      title: 'Não Selecionado',
+      description: 'Agradecemos seu interesse. Encorajamos você a se candidatar a outras oportunidades.',
       date: application.updated_at,
       complete: true,
     });
@@ -333,27 +333,27 @@ function buildApplicationTimeline(
     const label = a.assessment?.title || 'Assessment';
     if (a.status === 'invited') {
       events.push({
-        title: `${label} — Assigned`,
-        description: a.deadline ? `Complete by ${new Date(a.deadline).toLocaleDateString()}` : undefined,
+        title: `${label} — Atribuída`,
+        description: a.deadline ? `Realizar até ${new Date(a.deadline).toLocaleDateString('pt-BR')}` : undefined,
         date: a.invited_at,
         complete: false,
       });
     } else if (a.status === 'in_progress') {
       events.push({
-        title: `${label} — In Progress`,
+        title: `${label} — Em Andamento`,
         date: a.started_at || undefined,
         complete: false,
       });
     } else if (a.status === 'completed' || a.status === 'evaluated') {
       events.push({
-        title: `${label} — Submitted`,
-        description: 'Your assessment is under review.',
+        title: `${label} — Enviada`,
+        description: 'Sua avaliação está em análise.',
         date: a.completed_at || undefined,
         complete: true,
       });
     } else if (a.status === 'expired') {
       events.push({
-        title: `${label} — Expired`,
+        title: `${label} — Expirada`,
         date: a.deadline || undefined,
         complete: true,
       });
@@ -430,17 +430,17 @@ export function useApplicantUpdateProfile() {
       queryClient.invalidateQueries({ queryKey: ['applicant-candidate'] });
       if (result.skippedFields?.length) {
         toast({
-          title: 'Profile saved',
+          title: 'Perfil salvo',
           description:
-            'Your core profile was updated. Some fields will save after the next platform update.',
+            'Seu perfil principal foi atualizado. Alguns campos serão salvos após a próxima atualização da plataforma.'
         });
       } else {
-        toast({ title: 'Profile updated successfully' });
+        toast({ title: 'Perfil atualizado com sucesso' });
       }
     },
     onError: (error: Error) => {
       toast({ 
-        title: 'Failed to update profile', 
+        title: 'Falha ao atualizar perfil', 
         description: error.message, 
         variant: 'destructive' 
       });

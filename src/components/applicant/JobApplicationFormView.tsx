@@ -129,7 +129,7 @@ function JobApplicationFormView({
     if (answerError) {
       for (const key of assignedKeys) {
         if (!answers[key]?.trim()) {
-          nextQuestionErrors[key] = 'This answer is required.';
+          nextQuestionErrors[key] = 'Esta resposta é obrigatória.';
         }
       }
     }
@@ -161,10 +161,10 @@ function JobApplicationFormView({
       {isSubmitted && (
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-            Submitted
+            Enviado
           </Badge>
           {filledByRecruiter && (
-            <Badge variant="outline">Filled by recruiter</Badge>
+            <Badge variant="outline">Preenchido pelo recrutador</Badge>
           )}
         </div>
       )}
@@ -173,10 +173,10 @@ function JobApplicationFormView({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <Users className="h-5 w-5" />
-            Employment References
+            Referências Profissionais
           </CardTitle>
           <CardDescription>
-            Provide at least two references from current or previous employers (for background verification).
+            Forneça pelo menos duas referências de empregadores atuais ou anteriores (para verificação de antecedentes).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -188,7 +188,7 @@ function JobApplicationFormView({
           {references.map((ref, index) => (
             <div key={index} className="space-y-3 rounded-lg border p-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium">Reference {index + 1}</p>
+                <p className="text-sm font-medium">Referência {index + 1}</p>
                 {!disabled && references.length > 2 && (
                   <Button
                     type="button"
@@ -203,7 +203,7 @@ function JobApplicationFormView({
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <Label>Name</Label>
+                  <Label>Nome Completo</Label>
                   <Input
                     value={ref.name}
                     onChange={(e) => updateReference(index, 'name', e.target.value)}
@@ -211,7 +211,7 @@ function JobApplicationFormView({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Company</Label>
+                  <Label>Empresa</Label>
                   <Input
                     value={ref.company}
                     onChange={(e) => updateReference(index, 'company', e.target.value)}
@@ -219,7 +219,7 @@ function JobApplicationFormView({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Designation</Label>
+                  <Label>Cargo</Label>
                   <Input
                     value={ref.designation}
                     onChange={(e) => updateReference(index, 'designation', e.target.value)}
@@ -227,16 +227,16 @@ function JobApplicationFormView({
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Relationship</Label>
+                  <Label>Relação de Trabalho</Label>
                   <Input
                     value={ref.relationship}
                     onChange={(e) => updateReference(index, 'relationship', e.target.value)}
-                    placeholder="e.g. Direct Manager"
+                    placeholder="ex: Gestor Direto"
                     disabled={disabled}
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Phone</Label>
+                  <Label>Telefone</Label>
                   <Input
                     value={ref.phone}
                     onChange={(e) => updateReference(index, 'phone', e.target.value)}
@@ -251,7 +251,7 @@ function JobApplicationFormView({
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Email</Label>
+                  <Label>E-mail</Label>
                   <Input
                     type="email"
                     value={ref.email}
@@ -272,7 +272,7 @@ function JobApplicationFormView({
           {!disabled && (
             <Button type="button" variant="outline" size="sm" onClick={addReference} className="gap-1">
               <Plus className="h-4 w-4" />
-              Add Reference
+              Adicionar Referência
             </Button>
           )}
         </CardContent>
@@ -282,10 +282,10 @@ function JobApplicationFormView({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <FileText className="h-5 w-5" />
-            Application Questions
+            Perguntas da Candidatura
           </CardTitle>
           <CardDescription>
-            You will answer 10 personalized questions selected for your application. Answer each thoughtfully — they help us understand your fit before interviews.
+            Responda com atenção às 10 perguntas selecionadas para sua candidatura — elas nos ajudam a entender sua afinidade antes das entrevistas.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -308,7 +308,7 @@ function JobApplicationFormView({
                 }}
                 rows={4}
                 disabled={disabled}
-                placeholder="Your answer..."
+                placeholder="Sua resposta..."
                 aria-invalid={Boolean(questionErrors[question.question_key])}
               />
               {questionErrors[question.question_key] && (
@@ -333,12 +333,12 @@ function JobApplicationFormView({
                 disabled={isSubmitting || isSavingDraft}
               >
                 {isSavingDraft ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                Save Draft
+                Salvar Rascunho
               </Button>
             )}
             <Button type="button" onClick={handleSubmit} disabled={isSubmitting || isSavingDraft}>
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-              Submit Application Form
+              Enviar Formulário de Candidatura
             </Button>
           </div>
         </>

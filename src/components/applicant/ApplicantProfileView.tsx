@@ -68,12 +68,12 @@ export function ApplicantProfileView({
               className="gap-1"
             >
               <FileText className="h-4 w-4" />
-              View CV
+              Visualizar CV
             </Button>
           )}
           <Button onClick={onEdit} className="gap-1">
             <Pencil className="h-4 w-4" />
-            Update Profile
+            Editar Perfil
           </Button>
         </div>
       </div>
@@ -82,10 +82,9 @@ export function ApplicantProfileView({
         <div className="p-4 border border-amber-200 bg-amber-50 rounded-lg flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="min-w-0">
-            <p className="text-sm font-medium text-amber-900">Your resume may be out of date</p>
+            <p className="text-sm font-medium text-amber-900">Seu currículo pode estar desatualizado</p>
             <p className="text-sm text-amber-800 mt-1">
-              It&apos;s been over 3 months since your last resume update. Refresh your certifications,
-              skills, and experience so recruiters see your latest details.
+              Já se passaram mais de 3 meses desde a última atualização do currículo. Mantenha suas certificações, habilidades e experiências atualizadas para os recrutadores.
             </p>
             <Button
               variant="outline"
@@ -93,7 +92,7 @@ export function ApplicantProfileView({
               className="mt-3 border-amber-300 bg-white hover:bg-amber-100"
               onClick={onEdit}
             >
-              Update Resume
+              Atualizar Currículo
             </Button>
           </div>
         </div>
@@ -101,7 +100,7 @@ export function ApplicantProfileView({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Profile Completeness</CardTitle>
+          <CardTitle className="text-lg">Preenchimento do Perfil</CardTitle>
         </CardHeader>
         <CardContent>
           <ProfileCompletenessMeter profile={profile} />
@@ -110,7 +109,7 @@ export function ApplicantProfileView({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Contact & Links</CardTitle>
+          <CardTitle className="text-lg">Contato & Links</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center gap-2 text-sm">
@@ -128,7 +127,7 @@ export function ApplicantProfileView({
           {profile.emergency_phone && (
             <div className="flex items-center gap-2 text-sm">
               <Phone className="h-4 w-4 text-muted-foreground" />
-              <span>Emergency: {profile.emergency_phone}</span>
+              <span>Emergência: {profile.emergency_phone}</span>
             </div>
           )}
           <div className="flex items-center gap-2 text-sm">
@@ -159,7 +158,7 @@ export function ApplicantProfileView({
                     className="text-primary hover:underline"
                     onClick={() => openResumeUrl(profile.resume_url!)}
                   >
-                    View Resume
+                    Visualizar Currículo
                   </button>
                   {resumeLastUpdated && (
                     <p className={cn(
@@ -167,7 +166,7 @@ export function ApplicantProfileView({
                       resumeStale ? 'text-amber-700 font-medium' : 'text-muted-foreground',
                     )}>
                       <Clock className="h-3 w-3" />
-                      Last updated {format(resumeLastUpdated, 'MMM d, yyyy')}
+                      Última atualização em {format(resumeLastUpdated, 'dd/MM/yyyy')}
                     </p>
                   )}
                 </>
@@ -183,30 +182,30 @@ export function ApplicantProfileView({
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Calendar className="h-5 w-5" />
-            Personal Details
+            Dados Pessoais
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
           <div>
-            <p className="text-muted-foreground">DOB (on documents)</p>
+            <p className="text-muted-foreground">Data Nasc. (documentos)</p>
             <p className="font-medium">{formatProfileDate(profile.dob_documented)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">DOB (actual)</p>
+            <p className="text-muted-foreground">Data Nasc. (real)</p>
             <p className="font-medium">{formatProfileDate(profile.dob_actual)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Gender</p>
+            <p className="text-muted-foreground">Gênero</p>
             <p className="font-medium">{getGenderLabel(profile.gender)}</p>
           </div>
           <div>
-            <p className="text-muted-foreground">Marital status</p>
+            <p className="text-muted-foreground">Estado civil</p>
             <p className="font-medium">{getMaritalStatusLabel(profile.marital_status)}</p>
           </div>
           <div>
             <p className="text-muted-foreground flex items-center gap-1">
               <Heart className="h-3 w-3" />
-              Blood group
+              Tipo sanguíneo
             </p>
             <p className="font-medium">{getBloodGroupLabel(profile.blood_group)}</p>
           </div>
@@ -216,7 +215,7 @@ export function ApplicantProfileView({
       {skills.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Skills</CardTitle>
+            <CardTitle className="text-lg">Habilidades</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-1.5">
@@ -233,23 +232,23 @@ export function ApplicantProfileView({
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Work Experience
+              Experiência Profissional
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {workExperience.map((exp, idx) => (
               <div key={idx} className="border-b last:border-0 pb-3 last:pb-0">
-                <p className="font-medium">{exp.title || 'Role'}</p>
+                <p className="font-medium">{exp.title || 'Cargo'}</p>
                 <p className="text-sm text-muted-foreground">{exp.company}</p>
                 {(exp.start_date || exp.end_date) && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    {exp.start_date} — {exp.end_date || 'Present'}
+                    {exp.start_date} — {exp.end_date || 'Atual'}
                   </p>
                 )}
                 {exp.description && <p className="text-sm mt-2">{exp.description}</p>}
                 {exp.reason_for_leaving && (
                   <p className="text-sm mt-2 text-muted-foreground">
-                    Reason for leaving: {exp.reason_for_leaving}
+                    Motivo da saída: {exp.reason_for_leaving}
                   </p>
                 )}
               </div>
@@ -263,17 +262,17 @@ export function ApplicantProfileView({
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <GraduationCap className="h-5 w-5" />
-              Education
+              Formação Acadêmica
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {education.map((edu, idx) => (
               <div key={idx} className="border-b last:border-0 pb-3 last:pb-0">
-                <p className="font-medium">{edu.degree_name || 'Degree'}</p>
+                <p className="font-medium">{edu.degree_name || 'Formação'}</p>
                 <p className="text-sm text-muted-foreground">{edu.board_university}</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground mt-1">
-                  {edu.year_of_completion && <span>Completed {edu.year_of_completion}</span>}
-                  {edu.grade && <span>Grade: {edu.grade}</span>}
+                  {edu.year_of_completion && <span>Conclusão em {edu.year_of_completion}</span>}
+                  {edu.grade && <span>Nota: {edu.grade}</span>}
                 </div>
               </div>
             ))}
@@ -284,7 +283,7 @@ export function ApplicantProfileView({
       {documents.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Additional Documents</CardTitle>
+            <CardTitle className="text-lg">Documentos Adicionais</CardTitle>
           </CardHeader>
           <CardContent>
             <ul className="space-y-2">

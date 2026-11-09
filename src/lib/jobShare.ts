@@ -7,16 +7,16 @@ export function getCareersJobUrl(jobId: string): string {
 
 export function buildJobReferralEmail(job: Pick<Job, 'title' | 'id'>): { subject: string; body: string } {
   const url = getCareersJobUrl(job.id);
-  const subject = `Job opportunity: ${job.title}`;
+  const subject = `Oportunidade de trabalho: ${job.title}`;
   const body = [
-    `Hi,`,
+    `Olá,`,
     ``,
-    `I thought you might be interested in this open role:`,
+    `Achei que você poderia se interessar por esta vaga aberta:`,
     ``,
     `${job.title}`,
     url,
     ``,
-    `Best,`,
+    `Atenciosamente,`,
   ].join('\n');
 
   return { subject, body };
@@ -66,7 +66,7 @@ export async function shareJob(
     try {
       await navigator.share({
         title: job.title,
-        text: `Check out this job opening: ${job.title}`,
+        text: `Confira esta vaga aberta: ${job.title}`,
         url,
       });
       return 'shared';

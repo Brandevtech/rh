@@ -71,13 +71,13 @@ export function ApplicantJobCard({
             {isRelevant && (
               <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-primary/20">
                 <Sparkles className="h-3 w-3" />
-                Relevant for you
+                Relevante para você
               </Badge>
             )}
             {alreadyApplied && (
               <Badge className="bg-green-100 text-green-800">
                 <CheckCircle className="h-3 w-3 mr-1" />
-                Applied
+                Candidatou-se
               </Badge>
             )}
           </div>
@@ -111,7 +111,7 @@ export function ApplicantJobCard({
             {job.application_deadline && (
               <span className="flex items-center gap-1">
                 <Clock className="h-3.5 w-3.5" />
-                Deadline: {format(new Date(job.application_deadline), 'PP')}
+                Prazo: {format(new Date(job.application_deadline), 'PP')}
               </span>
             )}
           </div>
@@ -124,7 +124,7 @@ export function ApplicantJobCard({
                 </Badge>
               ))}
               {hiddenSkillCount > 0 && (
-                <span className="text-xs text-muted-foreground">+{hiddenSkillCount} more in full description</span>
+                <span className="text-xs text-muted-foreground">+{hiddenSkillCount} na descrição completa</span>
               )}
             </div>
           )}
@@ -135,7 +135,7 @@ export function ApplicantJobCard({
             <div className="text-center w-full">
               <div className="flex items-center gap-1.5 justify-end mb-1">
                 <Target className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">Profile Match</span>
+                <span className="text-xs font-medium text-muted-foreground">Compatibilidade</span>
               </div>
               <div className="flex items-center gap-2">
                 <Progress value={matchScore} className="h-2 flex-1 min-w-0" />
@@ -157,18 +157,18 @@ export function ApplicantJobCard({
           <Button variant="outline" size="sm" asChild className="w-full px-2 text-xs sm:text-sm">
             <Link to={`/applicant/jobs/${job.id}`}>
               <Eye className="h-4 w-4 mr-1 shrink-0" />
-              View Details
+              Ver Detalhes
             </Link>
           </Button>
 
           {alreadyApplied ? (
             <Button variant="outline" size="sm" disabled className="w-full px-2 text-xs sm:text-sm">
               <CheckCircle className="h-4 w-4 mr-1 shrink-0" />
-              Applied
+              Candidatou-se
             </Button>
           ) : applyBlocked ? (
             <Button variant="outline" size="sm" disabled className="w-full px-2 text-xs sm:text-sm" title={applyBlockMessage}>
-              Quick Apply
+              Candidatura Rápida
             </Button>
           ) : (
             <Button
@@ -182,7 +182,7 @@ export function ApplicantJobCard({
               ) : (
                 <Send className="h-4 w-4 shrink-0" />
               )}
-              {profileIncomplete ? 'Complete Profile' : 'Quick Apply'}
+              {profileIncomplete ? 'Completar Perfil' : 'Candidatura Rápida'}
             </Button>
           )}
           {applyBlocked && applyBlockMessage && !alreadyApplied && (
