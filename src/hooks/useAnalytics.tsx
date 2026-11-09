@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { startOfMonth, subMonths, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export interface AnalyticsData {
   totalCandidates: number;
@@ -85,7 +86,8 @@ export function useAnalytics() {
       for (let i = 5; i >= 0; i--) {
         const monthStart = startOfMonth(subMonths(new Date(), i));
         const monthEnd = startOfMonth(subMonths(new Date(), i - 1));
-        const monthLabel = format(monthStart, 'MMM yyyy');
+        const rawMonth = format(monthStart, 'MMM yyyy', { locale: ptBR });
+        const monthLabel = rawMonth.charAt(0).toUpperCase() + rawMonth.slice(1);
         
         const monthData = completedOrEvaluated.filter(ca => {
           if (!ca.completed_at) return false;
@@ -154,11 +156,19 @@ export function useAnalytics() {
         evaluated: 'hsl(var(--chart-4))',
         expired: 'hsl(var(--chart-5))',
       };
+
+      const statusLabels: Record<string, string> = {
+        invited: 'Convidado',
+        in_progress: 'Em andamento',
+        completed: 'Concluído',
+        evaluated: 'Avaliado',
+        expired: 'Expirado',
+      };
       
       const statusDistribution: StatusDistribution[] = Object.entries(statusCounts)
         .filter(([_, count]) => count > 0)
         .map(([status, count]) => ({
-          status: status.replace('_', ' '),
+          status: statusLabels[status] || status.replace('_', ' '),
           count,
           fill: statusColors[status] || 'hsl(var(--muted))',
         }));

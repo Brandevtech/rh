@@ -96,15 +96,15 @@ function LoadingSkeleton() {
 }
 
 export default function Analytics() {
-  usePageTitle('Analytics');
+  usePageTitle('Métricas & Análises');
   const { data: analytics, isLoading } = useAnalytics();
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Analytics</h1>
-          <p className="text-muted-foreground">Track assessment performance and candidate metrics</p>
+          <h1 className="text-3xl font-bold mb-2">Métricas & Análises</h1>
+          <p className="text-muted-foreground">Acompanhe o desempenho das avaliações e as métricas dos candidatos</p>
         </div>
 
         {isLoading || !analytics ? (
@@ -114,27 +114,27 @@ export default function Analytics() {
             {/* Summary Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
-                title="Total Candidates"
+                title="Total de Candidatos"
                 value={analytics.totalCandidates}
-                description="Registered candidates"
+                description="Candidatos cadastrados"
                 icon={Users}
               />
               <StatCard
-                title="Assessments Created"
+                title="Avaliações Criadas"
                 value={analytics.totalAssessments}
-                description="Active assessments"
+                description="Avaliações ativas"
                 icon={ClipboardList}
               />
               <StatCard
-                title="Completed Tests"
+                title="Testes Concluídos"
                 value={analytics.completedAssessments}
-                description="Submitted assessments"
+                description="Avaliações enviadas"
                 icon={CheckCircle2}
               />
               <StatCard
-                title="Pass Rate"
+                title="Taxa de Aprovação"
                 value={`${analytics.passRate}%`}
-                description="Overall success rate"
+                description="Taxa geral de sucesso"
                 icon={Target}
               />
             </div>
@@ -146,9 +146,9 @@ export default function Analytics() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <TrendingUp className="h-5 w-5" />
-                    Monthly Trends
+                    Tendências Mensais
                   </CardTitle>
-                  <CardDescription>Assessment completions over the last 6 months</CardDescription>
+                  <CardDescription>Conclusões de avaliações nos últimos 6 meses</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -175,7 +175,7 @@ export default function Analytics() {
                         stroke="hsl(var(--primary))" 
                         strokeWidth={2}
                         dot={{ fill: 'hsl(var(--primary))' }}
-                        name="Completed"
+                        name="Concluídas"
                       />
                       <Line 
                         type="monotone" 
@@ -183,7 +183,7 @@ export default function Analytics() {
                         stroke="hsl(var(--chart-4))" 
                         strokeWidth={2}
                         dot={{ fill: 'hsl(var(--chart-4))' }}
-                        name="Passed"
+                        name="Aprovadas"
                       />
                       <Line 
                         type="monotone" 
@@ -191,7 +191,7 @@ export default function Analytics() {
                         stroke="hsl(var(--destructive))" 
                         strokeWidth={2}
                         dot={{ fill: 'hsl(var(--destructive))' }}
-                        name="Failed"
+                        name="Reprovadas"
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -203,9 +203,9 @@ export default function Analytics() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5" />
-                    Assessment Status
+                    Status das Avaliações
                   </CardTitle>
-                  <CardDescription>Distribution of candidate assessment statuses</CardDescription>
+                  <CardDescription>Distribuição dos status das avaliações dos candidatos</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -245,8 +245,8 @@ export default function Analytics() {
               {/* Score Distribution */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Score Distribution</CardTitle>
-                  <CardDescription>How candidates scored across all assessments</CardDescription>
+                  <CardTitle>Distribuição de Notas</CardTitle>
+                  <CardDescription>Como os candidatos pontuaram em todas as avaliações</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
@@ -270,7 +270,7 @@ export default function Analytics() {
                         dataKey="count" 
                         fill="hsl(var(--primary))" 
                         radius={[4, 4, 0, 0]}
-                        name="Candidates"
+                        name="Candidatos"
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -280,13 +280,13 @@ export default function Analytics() {
               {/* Assessment Performance */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Assessment Performance</CardTitle>
-                  <CardDescription>Pass rate and average score by assessment</CardDescription>
+                  <CardTitle>Desempenho por Avaliação</CardTitle>
+                  <CardDescription>Taxa de aprovação e nota média por avaliação</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {analytics.assessmentPerformance.length === 0 ? (
                     <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                      No assessment data yet
+                      Nenhum dado de avaliação ainda
                     </div>
                   ) : (
                     <ResponsiveContainer width="100%" height={300}>
@@ -315,13 +315,13 @@ export default function Analytics() {
                           dataKey="passRate" 
                           fill="hsl(var(--chart-4))" 
                           radius={[0, 4, 4, 0]}
-                          name="Pass Rate %"
+                          name="Taxa de Aprovação (%)"
                         />
                         <Bar 
                           dataKey="avgScore" 
                           fill="hsl(var(--primary))" 
                           radius={[0, 4, 4, 0]}
-                          name="Avg Score %"
+                          name="Nota Média (%)"
                         />
                       </BarChart>
                     </ResponsiveContainer>
@@ -333,23 +333,23 @@ export default function Analytics() {
             {/* Average Score Card */}
             <Card>
               <CardHeader>
-                <CardTitle>Performance Summary</CardTitle>
+                <CardTitle>Resumo de Desempenho</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-around py-4">
                   <div className="text-center">
                     <div className="text-4xl font-bold text-primary">{analytics.averageScore}%</div>
-                    <p className="text-sm text-muted-foreground mt-1">Average Score</p>
+                    <p className="text-sm text-muted-foreground mt-1">Nota Média</p>
                   </div>
                   <div className="h-16 w-px bg-border" />
                   <div className="text-center">
                     <div className="text-4xl font-bold text-green-600">{analytics.passRate}%</div>
-                    <p className="text-sm text-muted-foreground mt-1">Pass Rate</p>
+                    <p className="text-sm text-muted-foreground mt-1">Taxa de Aprovação</p>
                   </div>
                   <div className="h-16 w-px bg-border" />
                   <div className="text-center">
                     <div className="text-4xl font-bold">{analytics.completedAssessments}</div>
-                    <p className="text-sm text-muted-foreground mt-1">Total Completions</p>
+                    <p className="text-sm text-muted-foreground mt-1">Total de Conclusões</p>
                   </div>
                 </div>
               </CardContent>
