@@ -69,7 +69,7 @@ function MobilePrepSwitcher({
         type="button"
         onClick={onClose}
         className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground shrink-0"
-        aria-label="Close interview prep"
+        aria-label="Fechar preparação da entrevista"
       >
         <X className="h-4 w-4" />
       </button>
@@ -105,7 +105,7 @@ function MobilePrepSwitcher({
           disabled={pane === 'kit'}
           onClick={() => onPaneChange('kit')}
           className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:pointer-events-none"
-          aria-label="Show question kit"
+          aria-label="Mostrar kit de perguntas"
         >
           <ChevronUp className="h-4 w-4" />
         </button>
@@ -114,7 +114,7 @@ function MobilePrepSwitcher({
           disabled={pane === 'candidate'}
           onClick={() => onPaneChange('candidate')}
           className="rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-30 disabled:pointer-events-none"
-          aria-label="Show candidate profile"
+          aria-label="Mostrar perfil do candidato"
         >
           <ChevronDown className="h-4 w-4" />
         </button>
@@ -124,10 +124,10 @@ function MobilePrepSwitcher({
 }
 
 const VERDICT_CONFIG: Record<InterviewVerdict, { label: string; icon: typeof ThumbsUp; className: string }> = {
-  proceeded: { label: 'Proceeded', icon: ThumbsUp, className: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' },
-  rejected: { label: 'Rejected', icon: ThumbsDown, className: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800' },
-  hold: { label: 'On Hold', icon: Pause, className: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800' },
-  no_show: { label: 'No Show', icon: UserX, className: 'bg-muted text-muted-foreground border-border' },
+  proceeded: { label: 'Aprovado', icon: ThumbsUp, className: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' },
+  rejected: { label: 'Reprovado', icon: ThumbsDown, className: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800' },
+  hold: { label: 'Em Espera', icon: Pause, className: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800' },
+  no_show: { label: 'Não Compareceu', icon: UserX, className: 'bg-muted text-muted-foreground border-border' },
 };
 
 /** Subtle card surface tint when a verdict is set (Past cards with feedback). */
@@ -160,7 +160,7 @@ function formatInterviewCountdown(scheduledAt: string, nowMs = Date.now()): stri
     const mins = totalMins % 60;
 
     if (days > 0) {
-      return hours > 0 ? `${days}d ${hours}h left` : `${days} day${days === 1 ? '' : 's'} left`;
+      return hours > 0 ? `${days}d ${hours}h restantes` : `${days} dia${days === 1 ? '' : 's'} restante${days === 1 ? '' : 's'}`;
     }
     if (hours > 0) {
       return mins > 0 && hours < 6
@@ -173,12 +173,12 @@ function formatInterviewCountdown(scheduledAt: string, nowMs = Date.now()): stri
 
   const msSinceStart = nowMs - start;
   // First ~3 minutes of the slot
-  if (msSinceStart < 3 * 60_000) return 'Starting now';
+  if (msSinceStart < 3 * 60_000) return 'Começando agora';
   if (msSinceStart < windowMs) {
     const minsAgo = Math.max(1, Math.floor(msSinceStart / 60_000));
-    return minsAgo <= 1 ? 'In progress' : `Started ${minsAgo} min ago`;
+    return minsAgo <= 1 ? 'Em andamento' : `Iniciada há ${minsAgo} min`;
   }
-  return 'Ended';
+  return 'Encerrada';
 }
 
 function InterviewCardSkeleton() {
@@ -192,7 +192,7 @@ function EmptyState({ variant }: { variant: 'upcoming' | 'past' }) {
         <CalendarDays className="h-8 w-8 text-muted-foreground" />
       </div>
       <p className="text-sm font-medium text-foreground">
-        {variant === 'upcoming' ? 'No upcoming interviews' : 'No past interviews yet'}
+        {variant === 'upcoming' ? 'Nenhuma entrevista agendada' : 'Nenhuma entrevista anterior ainda'}
       </p>
       <p className="text-xs text-muted-foreground text-center max-w-sm">
         {variant === 'upcoming'
@@ -201,7 +201,7 @@ function EmptyState({ variant }: { variant: 'upcoming' | 'past' }) {
       </p>
       {variant === 'upcoming' && (
         <Button variant="outline" size="sm" asChild className="mt-2">
-          <Link to="/calendar">View Calendar</Link>
+          <Link to="/calendar">Ver Calendário</Link>
         </Button>
       )}
     </div>
@@ -273,7 +273,7 @@ function InterviewMeta({
       <div className="flex items-center gap-2 flex-wrap mb-2">
         <span className={cn('flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border', style.bg, style.border, style.text)}>
           <Icon className="h-3 w-3" />
-          {mode === 'in_person' ? 'In Person' : mode === 'video' ? 'Video' : 'Phone'}
+          {mode === 'in_person' ? 'Presencial' : mode === 'video' ? 'Vídeo' : 'Telefone'}
         </span>
         {interview.scheduled_at && (
           timeOnly ? (
@@ -302,7 +302,7 @@ function InterviewMeta({
       </div>
 
       <p className="text-base font-semibold text-foreground truncate">
-        {interview.candidate?.name ?? 'Unknown Candidate'}
+        {interview.candidate?.name ?? 'Candidato não identificado'}
       </p>
 
       <div className="flex items-center gap-1.5 mt-1 flex-wrap text-xs text-muted-foreground">
@@ -325,7 +325,7 @@ function InterviewMeta({
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:underline"
           >
-            <ExternalLink className="h-3 w-3" /> Join meeting
+            <ExternalLink className="h-3 w-3" /> Entrar na reunião
           </a>
         )}
         {jobId && (
@@ -333,7 +333,7 @@ function InterviewMeta({
             to={`/hiring?view=board&job=${jobId}&candidate=${interview.candidate_id}`}
             className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
           >
-            View in Pipeline <ArrowRight className="h-3 w-3" />
+            Ver no Pipeline <ArrowRight className="h-3 w-3" />
           </Link>
         )}
         <button
@@ -352,7 +352,7 @@ function interviewToCandidate(interview: MyInterview): Candidate {
   const c = interview.candidate;
   return {
     id: interview.candidate_id,
-    name: c?.name ?? 'Unknown Candidate',
+    name: c?.name ?? 'Candidato não identificado',
     email: c?.email ?? null,
     role_applied: c?.role_applied,
     job_id: c?.job_id ?? interview.job_interview_stage?.job_id,
@@ -395,7 +395,7 @@ function UpcomingCard({
         <div className="mb-3 flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-xs text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100">
           <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
           <span>
-            Schedule conflict — another interview overlaps this slot. Ask HR/recruiter to reschedule one of them.
+            Conflito de agendamento — outra entrevista coincide com este horário. Solicite ao RH/recrutador para reagendar uma delas.
           </span>
         </div>
       )}
@@ -728,10 +728,10 @@ function InterviewList({
             {isFetchingMore ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Loading…
+                Carregando…
               </>
             ) : (
-              'Load more'
+              'Carregar mais'
             )}
           </Button>
         </div>
@@ -741,7 +741,7 @@ function InterviewList({
 }
 
 export default function MyInterviews() {
-  usePageTitle('My Interviews');
+  usePageTitle('Minhas Entrevistas');
   const userTimezone = useUserTimezone();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -893,7 +893,7 @@ export default function MyInterviews() {
 
       if (error) throw error;
       setFeedbackInterview(null);
-      toast({ title: 'Feedback submitted' });
+      toast({ title: 'Feedback enviado com sucesso' });
       notifyStaffEmail('verdict_submitted', feedbackInterview.id);
       await Promise.all([
         refetch(),
@@ -901,8 +901,8 @@ export default function MyInterviews() {
         queryClient.invalidateQueries({ queryKey: ['candidate-interviews'] }),
       ]);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to submit feedback';
-      toast({ title: 'Error', description: message, variant: 'destructive' });
+      const message = err instanceof Error ? err.message : 'Falha ao enviar feedback';
+      toast({ title: 'Erro', description: message, variant: 'destructive' });
     } finally {
       setIsSubmitting(false);
     }
@@ -920,13 +920,13 @@ export default function MyInterviews() {
       <main className="container mx-auto px-4 sm:px-6 py-4 sm:py-8 flex-1 space-y-5 sm:space-y-6">
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">My Interviews</h1>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Minhas Entrevistas</h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Submit scorecard feedback after each interview — question kits are optional prep
+              Envie seu parecer e notas após cada entrevista — kits de perguntas servem como apoio prévio
             </p>
             {pendingPastCount > 0 && (
               <p className="text-xs text-orange-600 dark:text-orange-400 mt-1 font-medium">
-                {pendingPastCount} interview{pendingPastCount > 1 ? 's' : ''} awaiting your feedback
+                {pendingPastCount} {pendingPastCount > 1 ? 'entrevistas aguardando seu feedback' : 'entrevista aguardando seu feedback'}
               </p>
             )}
           </div>
@@ -1045,7 +1045,7 @@ export default function MyInterviews() {
       {drawerBackdropOpen && (
         <button
           type="button"
-          aria-label="Close drawer"
+          aria-label="Fechar painel"
           className="fixed inset-0 z-39 bg-black/80 animate-in fade-in-0"
           onClick={() => {
             if (mobilePrepActive) closeMobilePrep();

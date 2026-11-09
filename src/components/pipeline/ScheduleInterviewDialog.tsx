@@ -63,15 +63,15 @@ function isValidMeetingLink(value: string): boolean {
 
 function meetingLinkValidationMessage(value: string): string | null {
   const trimmed = value.trim();
-  if (!trimmed) return 'O link da reuni„o È obrigatÛrio para entrevistas em vÌdeo';
+  if (!trimmed) return 'O link da reuni√£o √© obrigat√≥rio para entrevistas em v√≠deo';
   if (!isValidMeetingLink(trimmed)) {
-    return 'Enter a valid meeting URL (https://‚Ä¶)';
+    return 'Insira uma URL de reuni√£o v√°lida (https://‚Ä¶)';
   }
   return null;
 }
 
 const modeConfig: { value: InterviewMode; label: string; icon: React.ElementType }[] = [
-  { value: 'video', label: 'VÌdeo Chamada', icon: Video },
+  { value: 'video', label: 'V√≠deo Chamada', icon: Video },
   { value: 'in_person', label: 'Presencial', icon: MapPin },
   { value: 'phone', label: 'Telefone', icon: Phone },
 ];
@@ -215,7 +215,7 @@ export function ScheduleInterviewDialog({
       const linkError = meetingLinkValidationMessage(meetingLink);
       if (linkError) {
         setMeetingLinkError(linkError);
-        toast({ title: 'Meeting link required', description: linkError, variant: 'destructive' });
+        toast({ title: 'Link da reuni√£o obrigat√≥rio', description: linkError, variant: 'destructive' });
         return;
       }
       setMeetingLinkError(null);
@@ -242,8 +242,8 @@ export function ScheduleInterviewDialog({
       }
       onSubmit(data);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Could not check for Conflito de agendamentos';
-      toast({ title: 'Conflict check failed', description: message, variant: 'destructive' });
+      const message = err instanceof Error ? err.message : 'N√£o foi poss√≠vel verificar conflitos de agendamento';
+      toast({ title: 'Falha na verifica√ß√£o de conflitos', description: message, variant: 'destructive' });
     } finally {
       setCheckingConflicts(false);
     }
@@ -256,8 +256,8 @@ export function ScheduleInterviewDialog({
     setPendingSubmitData(null);
   };
 
-  const candidateName = interview?.candidate?.name || 'Candidate';
-  const stageName = interview?.job_interview_stage?.stage_name || 'Interview';
+  const candidateName = interview?.candidate?.name || 'Candidato';
+  const stageName = interview?.job_interview_stage?.stage_name || 'Entrevista';
   const isRescheduling = !!interview?.scheduled_at;
   const videoLinkOk = selectedMode !== 'video' || isValidMeetingLink(meetingLink);
   const canSubmit = selectedPanelists.length >= 1 && videoLinkOk;
@@ -293,7 +293,7 @@ export function ScheduleInterviewDialog({
 
       {prescreenFormIncomplete && (
         <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
-          Este candidato ainda n„o preencheu o formul·rio digital de inscriÁ„o.
+          Este candidato ainda n√£o preencheu o formul√°rio digital de inscri√ß√£o.
         </div>
       )}
 
@@ -323,7 +323,7 @@ export function ScheduleInterviewDialog({
           </div>
 
           {selectedDate && <div className="space-y-2">
-            <Label>Hor·rio</Label>
+            <Label>Hor√°rio</Label>
             <div className="flex gap-2">
               <Select value={selectedHour} onValueChange={setSelectedHour}>
                 <SelectTrigger className="flex-1">
@@ -360,7 +360,7 @@ export function ScheduleInterviewDialog({
                 <Loader2 className="h-4 w-4 animate-spin" /> Carregando entrevistadores...
               </div>
             ) : interviewers.length === 0 ? (
-              <p className="text-sm text-muted-foreground py-2">Nenhum entrevistador encontrado. Habilite a permiss„o de entrevistador nas ConfiguraÁıes.</p>
+              <p className="text-sm text-muted-foreground py-2">Nenhum entrevistador encontrado. Habilite a permiss√£o de entrevistador nas Configura√ß√µes.</p>
             ) : (
               <div className="rounded-lg border divide-y max-h-48 overflow-y-auto">
                 {interviewers.map(iv => {
@@ -390,7 +390,7 @@ export function ScheduleInterviewDialog({
             )}
             {selectedPanelists.length > 0 && (
               <p className="text-xs text-muted-foreground">
-                {selectedPanelists.length} panelist{selectedPanelists.length !== 1 ? 's' : ''} selected
+                {selectedPanelists.length} {selectedPanelists.length === 1 ? 'entrevistador selecionado' : 'entrevistadores selecionados'}
               </p>
             )}
           </div>
@@ -421,11 +421,11 @@ export function ScheduleInterviewDialog({
             <div className="space-y-2">
               <Label className="flex items-center gap-1.5" htmlFor="schedule-meeting-link">
                 <Link className="h-3.5 w-3.5 text-muted-foreground" />
-                Link da Reuni„o <span className="text-destructive">*</span>
+                Link da Reuni√£o <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="schedule-meeting-link"
-                placeholder="https://meet.google.com/... or https://teams.microsoft.com/..."
+                placeholder="https://meet.google.com/... ou https://teams.microsoft.com/..."
                 value={meetingLink}
                 onChange={(e) => handleMeetingLinkChange(e.target.value)}
                 aria-invalid={!!meetingLinkError}
@@ -438,7 +438,7 @@ export function ScheduleInterviewDialog({
                 </p>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  ObrigatÛrio para entrevistas por vÌdeo
+                  Obrigat√≥rio para entrevistas por v√≠deo
                 </p>
               )}
             </div>
@@ -453,7 +453,7 @@ export function ScheduleInterviewDialog({
             className="btn-gradient text-primary-foreground"
           >
             {isSubmitting || checkingConflicts ? (
-              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {checkingConflicts ? 'Checking‚Ä¶' : 'Saving...'}</>
+              <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {checkingConflicts ? 'Verificando‚Ä¶' : 'Salvando...'}</>
             ) : (
               <><CalendarDays className="h-4 w-4 mr-2" />{isRescheduling ? 'Reagendar' : 'Agendar'}</>
             )}
@@ -481,12 +481,12 @@ export function ScheduleInterviewDialog({
           <AlertDialogDescription asChild>
             <div className="space-y-3 text-sm text-muted-foreground">
               <p>
-                Um ou mais entrevistadores j· possuem entrevista agendada neste mesmo hor·rio.
+                Um ou mais entrevistadores j√° possuem entrevista agendada neste mesmo hor√°rio.
               </p>
               <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100 whitespace-pre-line">
                 {summarizeScheduleConflicts(pendingConflicts ?? [])}
               </div>
-              <p>Agende mesmo assim apenas se este conflito de hor·rio for intencional.</p>
+              <p>Agende mesmo assim apenas se este conflito de hor√°rio for intencional.</p>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>

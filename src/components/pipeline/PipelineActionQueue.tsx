@@ -35,7 +35,7 @@ export function PipelineActionQueue({
     <div
       className={cn('flex min-w-0 items-center gap-3', className)}
       role="region"
-      aria-label="Fila de ações da vaga"
+      aria-label="Fila de aÃ§Ãµes da vaga"
     >
       <span className="shrink-0 text-caption font-medium uppercase tracking-[0.04em] text-muted-foreground">
         Do

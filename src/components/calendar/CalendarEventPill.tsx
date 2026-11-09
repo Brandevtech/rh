@@ -61,7 +61,7 @@ export function EventPill({ interview, showTime = false, compact = false, onClic
           </div>
         )}
         <span className={cn('font-semibold truncate', compact ? 'text-[11px]' : 'text-xs')}>
-          {candidate?.name ?? 'Candidate'}
+          {candidate?.name ?? 'Candidato'}
         </span>
       </div>
 

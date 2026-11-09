@@ -187,14 +187,14 @@ function CardOverflowMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild onClick={e => e.stopPropagation()}>
-        <button type="button" aria-label="Ações do cartão" className="p-0.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-fast ease-out">
+        <button type="button" aria-label="AÃ§Ãµes do cartÃ£o" className="p-0.5 rounded-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors duration-fast ease-out">
           <MoreHorizontal className="w-3.5 h-3.5" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="text-sm" onClick={e => e.stopPropagation()}>
         {assessmentEnabled && onAssignAssessment && (
           <DropdownMenuItem onClick={onAssignAssessment} className="gap-2">
-            <ClipboardCheck className="w-3.5 h-3.5 text-muted-foreground" /> Atribuir Avaliação
+            <ClipboardCheck className="w-3.5 h-3.5 text-muted-foreground" /> Atribuir AvaliaÃ§Ã£o
           </DropdownMenuItem>
         )}
         {isRejected && onReopen && (
@@ -442,7 +442,7 @@ export function DraggablePipelineCard({
                   {interview.verdict && (
                     <span className={cn(CHIP_BASE, verdictColors[interview.verdict])}>
                       {VerdictIcon && <VerdictIcon className={CHIP_ICON} />}
-                      {interview.verdict === 'proceeded' ? 'Aprovado' : interview.verdict === 'rejected' ? 'Recusado' : interview.verdict === 'hold' ? 'Em Espera' : 'Não Compareceu'}
+                      {interview.verdict === 'proceeded' ? 'Aprovado' : interview.verdict === 'rejected' ? 'Recusado' : interview.verdict === 'hold' ? 'Em Espera' : 'NÃ£o Compareceu'}
                     </span>
                   )}
                   {!interview.verdict && isFeedbackOverdue && (
@@ -638,7 +638,7 @@ export function PendingApprovalColumn({
     <div className="w-[300px] shrink-0">
       <div className="flex items-center gap-2 mb-3 px-1">
         <span className="h-2 w-2 rounded-full shrink-0 bg-violet-500" aria-hidden />
-        <h3 className="text-label text-foreground">Aprovação Pendente</h3>
+        <h3 className="text-label text-foreground">AprovaÃ§Ã£o Pendente</h3>
         <span className={COLUMN_COUNT_PILL}>{candidates.length}</span>
       </div>
       <div className="space-y-2 min-h-[200px] rounded-xl p-1 bg-surface-subtle">

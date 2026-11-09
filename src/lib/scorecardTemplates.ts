@@ -52,10 +52,10 @@ export function slugifyCriterionKey(label: string): string {
 }
 
 export const LEGACY_RATING_LABELS: { key: string; label: string }[] = [
-  { key: 'technical', label: 'Technical Skills' },
-  { key: 'communication', label: 'Communication' },
-  { key: 'problem_solving', label: 'Problem Solving' },
-  { key: 'culture_fit', label: 'Culture Fit' },
+  { key: 'technical', label: 'Conhecimento Técnico' },
+  { key: 'communication', label: 'Comunicação' },
+  { key: 'problem_solving', label: 'Resolução de Problemas' },
+  { key: 'culture_fit', label: 'Alinhamento Cultural' },
 ];
 
 const DRAFT_META_KEYS = new Set(['verdict_suggestion', 'feedback']);

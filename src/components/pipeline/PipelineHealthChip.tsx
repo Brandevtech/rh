@@ -60,7 +60,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
     if (scoring || trackerLoading) return;
 
     if (!job) {
-      toast({ title: 'Vaga não encontrada', variant: 'destructive' });
+      toast({ title: 'Vaga nÃ£o encontrada', variant: 'destructive' });
       return;
     }
     if (rows.length === 0) {
@@ -111,7 +111,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
         <SheetHeader className="space-y-1.5 border-b border-border px-6 py-6 text-left">
           <SheetTitle className="flex items-center gap-2.5 text-lg font-semibold">
             <Activity className="h-5 w-5 text-primary shrink-0" aria-hidden />
-            Saúde do Pipeline
+            SaÃºde do Pipeline
           </SheetTitle>
           <SheetDescription className="text-sm truncate">
             {job?.title ?? 'Hiring pipeline analysis'}
@@ -148,7 +148,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
                 ) : (
                   <Sparkles className="h-3.5 w-3.5" aria-hidden />
                 )}
-                {scoring ? 'Analysingâ€¦' : 'Generate Saúde do Pipeline'}
+                {scoring ? 'Analysingâ€¦' : 'Generate SaÃºde do Pipeline'}
               </Button>
             </div>
           )}
@@ -162,7 +162,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
       <>
         <Button variant="outline" size="sm" disabled className="h-9 gap-1.5">
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
-          Saúde do Pipeline
+          SaÃºde do Pipeline
         </Button>
         {drawer}
       </>
@@ -179,14 +179,14 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
           className="h-9 gap-1.5"
           onClick={() => void handleAnalyse({ openDrawer: true })}
           disabled={scoring || trackerLoading}
-          aria-label="Generate Saúde do Pipeline"
+          aria-label="Generate SaÃºde do Pipeline"
         >
           {scoring ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
           ) : (
             <Sparkles className="size-4 text-primary" strokeWidth={1.5} aria-hidden />
           )}
-          {scoring ? 'Analysingâ€¦' : 'Generate Saúde do Pipeline'}
+          {scoring ? 'Analysingâ€¦' : 'Generate SaÃºde do Pipeline'}
         </Button>
         {drawer}
       </>
@@ -199,7 +199,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
         <TooltipTrigger asChild>
           <button
             type="button"
-            aria-label={`Saúde do Pipeline grade ${data.grade}, ${data.grade_label}${isStale ? ', stale' : ''}. Open health report.`}
+            aria-label={`SaÃºde do Pipeline grade ${data.grade}, ${data.grade_label}${isStale ? ', stale' : ''}. Open health report.`}
             onClick={openDrawer}
             className={cn(
               'inline-flex h-9 items-center gap-2 rounded-full bg-card px-3 text-label whitespace-nowrap shadow-border',
@@ -212,7 +212,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
               aria-hidden
             />
             <span className="text-foreground">
-              Saúde <span className="tabular-nums">{data.grade}</span>
+              SaÃºde <span className="tabular-nums">{data.grade}</span>
             </span>
             <span className="hidden text-muted-foreground lg:inline">
               {isStale ? 'Stale' : data.grade_label}

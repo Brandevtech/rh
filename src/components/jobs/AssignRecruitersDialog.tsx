@@ -150,7 +150,7 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
         <DialogHeader>
           <DialogTitle>Atribuir Recrutadores</DialogTitle>
           <DialogDescription>
-            Gerencie os recrutadores respons·veis por <strong>{jobTitle}</strong>. O primeiro atribuÌdo È o principal. Clique na coroa para alternar o recrutador principal.
+            Gerencie os recrutadores respons√°veis por <strong>{jobTitle}</strong>. O primeiro atribu√≠do √© o principal. Clique na coroa para alternar o recrutador principal.
           </DialogDescription>
         </DialogHeader>
 
@@ -183,7 +183,7 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
 
             {availableRecruiters.length === 0 && assignments.length === 0 && (
               <p className="text-sm text-muted-foreground text-center py-4">
-                Nenhum recrutador disponÌvel. Atribua a funÁ„o de Recrutador aos usu·rios nas ConfiguraÁıes primeiro.
+                Nenhum recrutador dispon√≠vel. Atribua a fun√ß√£o de Recrutador aos usu√°rios nas Configura√ß√µes primeiro.
               </p>
             )}
 
@@ -239,7 +239,7 @@ export function AssignRecruitersDialog({ open, onOpenChange, jobId, jobTitle }: 
             )}
 
             {assignments.length === 0 && availableRecruiters.length > 0 && (
-              <p className="text-sm text-muted-foreground text-center py-2">Nenhum recrutador atribuÌdo ainda.</p>
+              <p className="text-sm text-muted-foreground text-center py-2">Nenhum recrutador atribu√≠do ainda.</p>
             )}
           </div>
         )}

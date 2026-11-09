@@ -54,10 +54,10 @@ function formatBytes(bytes: number): string {
 }
 
 const verdictConfig: { value: InterviewVerdict; label: string; icon: React.ComponentType<{ className?: string }>; className: string }[] = [
-  { value: 'proceeded', label: 'Aprovar / Avan�ar', icon: ThumbsUp, className: 'border-green-500 bg-green-500/10 text-green-700 hover:bg-green-500/20' },
+  { value: 'proceeded', label: 'Aprovar / Avançar', icon: ThumbsUp, className: 'border-green-500 bg-green-500/10 text-green-700 hover:bg-green-500/20' },
   { value: 'rejected', label: 'Reprovar', icon: ThumbsDown, className: 'border-red-500 bg-red-500/10 text-red-700 hover:bg-red-500/20' },
   { value: 'hold', label: 'Em Espera', icon: Pause, className: 'border-yellow-500 bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20' },
-  { value: 'no_show', label: 'Falta / N�o Compareceu', icon: UserX, className: 'border-muted bg-muted/50 text-muted-foreground hover:bg-muted' },
+  { value: 'no_show', label: 'Falta / Não Compareceu', icon: UserX, className: 'border-muted bg-muted/50 text-muted-foreground hover:bg-muted' },
 ];
 
 // Legacy fallback — replaced by scorecard template criteria when available
@@ -328,7 +328,7 @@ export function InterviewFeedbackDialog({
   const handleAddLink = () => {
     const url = safeExternalUrl(linkUrl);
     if (!url) {
-      setLinkUrlError('Enter a valid http(s) URL');
+      setLinkUrlError('Insira uma URL http(s) válida');
       return;
     }
     setArtifacts(prev => [...prev, {
@@ -344,7 +344,7 @@ export function InterviewFeedbackDialog({
     setShowLinkForm(false);
   };
 
-  const candidateName = interview?.candidate?.name || interview?.candidate?.email || 'Candidate';
+  const candidateName = interview?.candidate?.name || interview?.candidate?.email || 'Candidato';
 
   const handleGenerateKit = (forceGemini?: boolean) => {
     if (!interview?.id) return;
@@ -374,10 +374,10 @@ export function InterviewFeedbackDialog({
       <Header>
         <Title className="flex items-center gap-2">
           <Star className="w-5 h-5 text-primary" />
-          {forced ? 'Feedback Required' : 'Submit Feedback'}
+          {forced ? 'Feedback Obrigatório' : 'Enviar Parecer / Feedback'}
           {forced && pendingCount && pendingCount > 1 && (
             <Badge variant="destructive" className="ml-auto text-[10px] px-2 py-0.5">
-              {pendingCount} pending
+              {pendingCount} {pendingCount > 1 ? 'pendentes' : 'pendente'}
             </Badge>
           )}
         </Title>
@@ -385,7 +385,7 @@ export function InterviewFeedbackDialog({
           <div className="flex items-start gap-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-3 py-2 mt-1">
             <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <p className="text-xs text-amber-700 dark:text-amber-300">
-              You have a past interview awaiting feedback. Please submit feedback or mark what happened before continuing.
+              Você possui uma entrevista anterior aguardando feedback. Por favor, envie seu parecer ou registre o que ocorreu antes de prosseguir.
             </p>
           </div>
         )}
@@ -421,15 +421,15 @@ export function InterviewFeedbackDialog({
           <div className="flex items-center justify-between">
             <Label className="text-sm font-medium flex items-center gap-1.5">
               <NotebookPen className="w-3.5 h-3.5 text-muted-foreground" />
-              Anota��es da Entrevista
+              Anotações da Entrevista
               <span className={cn(
                 'text-xs font-normal',
                 notesSaveStatus === 'error' ? 'text-destructive' : 'text-muted-foreground',
               )}>
-                {notesSaveStatus === 'saving' && '(saving…)'}
-                {notesSaveStatus === 'saved' && '(saved)'}
-                {notesSaveStatus === 'error' && '(save failed)'}
-                {notesSaveStatus === 'idle' && '(auto-saves)'}
+                {notesSaveStatus === 'saving' && '(salvando…)'}
+                {notesSaveStatus === 'saved' && '(salvo)'}
+                {notesSaveStatus === 'error' && '(falha ao salvar)'}
+                {notesSaveStatus === 'idle' && '(salvamento automático)'}
               </span>
             </Label>
             {notes.trim() && (
@@ -442,12 +442,12 @@ export function InterviewFeedbackDialog({
                 {isDrafting
                   ? <Loader2 className="w-3 h-3 animate-spin" />
                   : <Sparkles className="w-3 h-3" />}
-                {isDrafting ? 'Drafting…' : 'Draft with AI'}
+                {isDrafting ? 'Gerando rascunho…' : 'Gerar rascunho com IA'}
               </button>
             )}
           </div>
           <Textarea
-            placeholder="Jot raw notes during the interview — observations, strengths, concerns…"
+            placeholder="Anote suas observações durante a entrevista — pontos fortes, dúvidas, comportamentos…"
             rows={3}
             value={notes}
             onChange={e => {
@@ -460,7 +460,7 @@ export function InterviewFeedbackDialog({
 
         {/* Verdict */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Decis�o / Parecer</Label>
+          <Label className="text-sm font-medium">Decisão / Parecer</Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {verdictConfig.map(v => {
               const Icon = v.icon;
@@ -483,17 +483,17 @@ export function InterviewFeedbackDialog({
         {/* Rejection Reason — shown only when verdict is 'rejected' */}
         {verdict === 'rejected' && (
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Motivo da Reprova��o</Label>
+            <Label className="text-sm font-medium">Motivo da Reprovação</Label>
             <Select value={rejectionReason} onValueChange={setRejectionReason}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o motivo (opcional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="skill_gap">Lacuna T�cnica / Compet�ncias</SelectItem>
+                <SelectItem value="skill_gap">Lacuna Técnica / Competências</SelectItem>
                 <SelectItem value="culture_fit">Incompatibilidade Cultural</SelectItem>
-                <SelectItem value="salary_mismatch">Pretens�o Salarial Incompat�vel</SelectItem>
-                <SelectItem value="communication">Comunica��o</SelectItem>
-                <SelectItem value="overqualified">Qualifica��o Acima do Perfil</SelectItem>
+                <SelectItem value="salary_mismatch">Pretensão Salarial Incompatível</SelectItem>
+                <SelectItem value="communication">Comunicação</SelectItem>
+                <SelectItem value="overqualified">Qualificação Acima do Perfil</SelectItem>
                 <SelectItem value="no_show_final">Falta Definitiva (No-Show)</SelectItem>
                 <SelectItem value="other">Outro Motivo</SelectItem>
               </SelectContent>
@@ -512,7 +512,7 @@ export function InterviewFeedbackDialog({
                 </span>
               )}
             </Label>
-            {isNoShow && <p className="text-xs text-muted-foreground mt-1">Pontua��es n�o se aplicam para n�o comparecimento</p>}
+            {isNoShow && <p className="text-xs text-muted-foreground mt-1">Pontuações não se aplicam para não comparecimento</p>}
           </div>
           {criteria.map(({ key, label, scale_hint }) => (
             <div key={key} className="flex items-start gap-3">
@@ -545,15 +545,15 @@ export function InterviewFeedbackDialog({
 
         {/* Interview Mode */}
         <div className="space-y-2">
-          <Label className="text-sm font-medium">Interview Mode</Label>
+          <Label className="text-sm font-medium">Formato da Entrevista</Label>
           <Select value={mode} onValueChange={(v) => setMode(v as InterviewMode)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select mode" />
+              <SelectValue placeholder="Selecione o formato" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="video">Video Call</SelectItem>
-              <SelectItem value="in_person">In Person</SelectItem>
-              <SelectItem value="phone">Phone</SelectItem>
+              <SelectItem value="video">Vídeo Chamada</SelectItem>
+              <SelectItem value="in_person">Presencial</SelectItem>
+              <SelectItem value="phone">Telefone</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -564,7 +564,7 @@ export function InterviewFeedbackDialog({
           <Textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Compartilhe suas observa��es detalhadas, pontos fortes e �reas de melhoria..."
+            placeholder="Compartilhe suas observações detalhadas, pontos fortes e áreas de melhoria..."
             rows={4}
           />
         </div>
@@ -612,7 +612,7 @@ export function InterviewFeedbackDialog({
           {uploadingCount > 0 && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Uploading {uploadingCount} file{uploadingCount > 1 ? 's' : ''}…
+              Enviando {uploadingCount} {uploadingCount > 1 ? 'arquivos' : 'arquivo'}…
             </div>
           )}
 
@@ -629,7 +629,7 @@ export function InterviewFeedbackDialog({
                 <p className="text-[11px] text-destructive">{linkUrlError}</p>
               )}
               <Input
-                placeholder="Label (optional)"
+                placeholder="Título / Rótulo (opcional)"
                 value={linkLabel}
                 onChange={e => setLinkLabel(e.target.value)}
                 className="h-8 text-xs"
@@ -671,7 +671,7 @@ export function InterviewFeedbackDialog({
                   'flex items-center gap-1.5 text-xs text-muted-foreground border rounded-md px-2.5 py-1.5 transition-colors select-none',
                   uploadingCount > 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-muted/60 cursor-pointer'
                 )}>
-                  <Upload className="w-3.5 h-3.5" /> Upload file
+                  <Upload className="w-3.5 h-3.5" /> Enviar arquivo
                 </div>
               </label>
               <Button
@@ -681,7 +681,7 @@ export function InterviewFeedbackDialog({
                 className="h-7 text-xs gap-1.5 text-muted-foreground"
                 onClick={() => setShowLinkForm(true)}
               >
-                <Link2 className="w-3.5 h-3.5" /> Add link
+                <Link2 className="w-3.5 h-3.5" /> Adicionar link
               </Button>
             </div>
           )}
@@ -696,7 +696,7 @@ export function InterviewFeedbackDialog({
                 className="w-full text-muted-foreground text-sm"
                 onClick={() => setDidntHappenOpen(true)}
               >
-                A entrevista n�o aconteceu?
+                A entrevista não aconteceu?
               </Button>
             ) : (
               <div className="rounded-lg bg-muted/50 border p-3 space-y-2">
@@ -708,7 +708,7 @@ export function InterviewFeedbackDialog({
                   disabled={isSubmitting}
                 >
                   <UserX className="w-4 h-4 mr-2 text-red-500" />
-                  Candidato n�o compareceu (Falta)
+                  Candidato não compareceu (Falta)
                 </Button>
                 <Button
                   variant="outline"
@@ -717,7 +717,7 @@ export function InterviewFeedbackDialog({
                   disabled={isSubmitting}
                 >
                   <CalendarDays className="w-4 h-4 mr-2 text-blue-500" />
-                  Interview was rescheduled — pick a new time
+                  A entrevista foi reagendada — definir novo horário
                 </Button>
                 <Button
                   variant="outline"

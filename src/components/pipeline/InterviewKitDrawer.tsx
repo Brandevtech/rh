@@ -58,7 +58,7 @@ export function InterviewKitDrawer({
               onClick={onOpenCandidate}
               className="text-primary hover:underline"
             >
-              {interview?.candidate?.name ?? 'Unknown Candidate'}
+              {interview?.candidate?.name ?? 'Candidato não identificado'}
             </button>
             {interview?.job_interview_stage?.stage_name && (
               <>

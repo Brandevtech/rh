@@ -147,7 +147,7 @@ function ClosedJobTooltipWrap({
       <TooltipTrigger asChild>
         <span className={cn('inline-flex', className)}>{children}</span>
       </TooltipTrigger>
-      <TooltipContent>Esta vaga n„o est· mais ativa</TooltipContent>
+      <TooltipContent>Esta vaga n√£o est√° mais ativa</TooltipContent>
     </Tooltip>
   );
 }
@@ -287,7 +287,7 @@ function ClosedDropdownItem({
             </DropdownMenuItem>
           </span>
         </TooltipTrigger>
-        <TooltipContent side="left">Esta vaga n„o est· mais ativa</TooltipContent>
+        <TooltipContent side="left">Esta vaga n√£o est√° mais ativa</TooltipContent>
       </Tooltip>
     );
   }
@@ -306,7 +306,7 @@ function HiredNamesCell({
   if (hired.length === 0) {
     return (
       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-        <span className="text-xs text-muted-foreground italic">Nenhuma contrataÁ„o registrada</span>
+        <span className="text-xs text-muted-foreground italic">Nenhuma contrata√ß√£o registrada</span>
         {canManage && onAssignHired && (
           <Button
             type="button"
@@ -794,10 +794,10 @@ export default function Jobs() {
       {uniqueDomains.length > 0 && (
         <Select value={filterDomain} onValueChange={setFilterDomain}>
           <SelectTrigger className={cn('h-9', stacked ? 'w-full' : 'w-[150px]')}>
-            <SelectValue placeholder="¡rea" />
+            <SelectValue placeholder="√Årea" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Todas as ¡reas</SelectItem>
+            <SelectItem value="all">Todas as √Åreas</SelectItem>
             {uniqueDomains.map(d => (
               <SelectItem key={d} value={d}>{d}</SelectItem>
             ))}
@@ -833,10 +833,10 @@ export default function Jobs() {
 
       <Select value={filterExperience} onValueChange={setFilterExperience}>
         <SelectTrigger className={cn('h-9', stacked ? 'w-full' : 'w-[160px]')}>
-          <SelectValue placeholder="ExperiÍncia" />
+          <SelectValue placeholder="Experi√™ncia" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Todas as ExperiÍncias</SelectItem>
+          <SelectItem value="all">Todas as Experi√™ncias</SelectItem>
           {Object.entries(experienceYearsLabels).map(([val, label]) => (
             <SelectItem key={val} value={val}>{label}</SelectItem>
           ))}
@@ -884,7 +884,7 @@ export default function Jobs() {
               <Button variant="outline" asChild className="gap-2">
                 <Link to="/careers">
                   <ExternalLink className="h-4 w-4" />
-                  P·gina P˙blica de Vagas
+                  P√°gina P√∫blica de Vagas
                 </Link>
               </Button>
               {canManageJobs && (
@@ -1009,12 +1009,12 @@ export default function Jobs() {
               </h3>
               <p className="text-muted-foreground mb-4">
                 {jobListTab === 'closed'
-                  ? 'Vagas encerradas apÛs contrataÁıes aparecem aqui.'
+                  ? 'Vagas encerradas ap√≥s contrata√ß√µes aparecem aqui.'
                   : jobListTab === 'cancelled'
-                    ? 'Vagas canceladas (sem contrataÁ„o) aparecem aqui.'
+                    ? 'Vagas canceladas (sem contrata√ß√£o) aparecem aqui.'
                     : activeFilterCount > 0 || searchQuery
                       ? 'Nenhuma vaga corresponde aos filtros selecionados.'
-                      : 'Crie sua primeira vaga para comeÁar a receber candidaturas.'}
+                      : 'Crie sua primeira vaga para come√ßar a receber candidaturas.'}
               </p>
               {jobListTab === 'active' && canManageJobs && activeFilterCount === 0 && !searchQuery && (
                 <Button onClick={openCreate} className="gap-2">
@@ -1034,17 +1034,17 @@ export default function Jobs() {
                   {canReorder && <TableHead className={cn('w-8 px-2', tableHeadSticky)}><span className="sr-only">Reorder</span></TableHead>}
                   <TableHead className={cn('min-w-[160px]', tableHeadSticky)}>Vaga</TableHead>
                   <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Status</TableHead>
-                  <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>¡rea</TableHead>
+                  <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>√Årea</TableHead>
                   <TableHead className={cn('min-w-[100px]', tableHeadSticky)}>Equipe</TableHead>
                   <TableHead className={cn('min-w-[120px]', tableHeadSticky)}>Tipo de Cargo</TableHead>
-                  <TableHead className={cn('min-w-[110px]', tableHeadSticky)}>ExperiÍncia</TableHead>
-                  <TableHead className={cn('text-center min-w-[80px]', tableHeadSticky)}>PosiÁıes</TableHead>
+                  <TableHead className={cn('min-w-[110px]', tableHeadSticky)}>Experi√™ncia</TableHead>
+                  <TableHead className={cn('text-center min-w-[80px]', tableHeadSticky)}>Posi√ß√µes</TableHead>
                   <TableHead className={cn('min-w-[150px]', tableHeadSticky)}>
                     {showHiredColumn ? 'Contratados' : 'Candidatos & Pipeline'}
                   </TableHead>
                   <TableHead className={cn('min-w-[130px]', tableHeadSticky)}>Salary (Min‚ÄìMax)</TableHead>
                   <TableHead className={cn('min-w-[120px]', tableHeadSticky)}>Recrutadores</TableHead>
-                  <TableHead className={cn('min-w-[140px]', tableHeadSticky)}>Prazo de InscriÁ„o</TableHead>
+                  <TableHead className={cn('min-w-[140px]', tableHeadSticky)}>Prazo de Inscri√ß√£o</TableHead>
                   <TableHead className={cn('w-10', tableHeadSticky)}></TableHead>
                 </TableRow>
               </TableHeader>
@@ -1194,7 +1194,7 @@ export default function Jobs() {
                                 onClick={() => copyPublicLink(job.id)}
                               >
                                 <Copy className="h-4 w-4 mr-2" />
-                                Copiar Link P˙blico
+                                Copiar Link P√∫blico
                               </ClosedDropdownItem>
                               {canManageJobs && (
                                 <ClosedDropdownItem
@@ -1308,7 +1308,7 @@ export default function Jobs() {
                           onClick={() => copyPublicLink(job.id)}
                         >
                           <Copy className="h-4 w-4 mr-2" />
-                          Copiar Link P˙blico
+                          Copiar Link P√∫blico
                         </ClosedDropdownItem>
                         {canManageJobs && (
                           <ClosedDropdownItem
@@ -1366,7 +1366,7 @@ export default function Jobs() {
                             ))}
                           </span>
                         ) : (
-                          <span className="text-xs italic">Nenhuma contrataÁ„o registrada</span>
+                          <span className="text-xs italic">Nenhuma contrata√ß√£o registrada</span>
                         )
                       ) : (
                         <>
@@ -1634,7 +1634,7 @@ export default function Jobs() {
                           )}
                         </div>
                         {detailHired.length === 0 ? (
-                          <p className="text-sm text-muted-foreground italic">Nenhuma contrataÁ„o registrada</p>
+                          <p className="text-sm text-muted-foreground italic">Nenhuma contrata√ß√£o registrada</p>
                         ) : (
                           <div className="space-y-2">
                             {detailHired.map((c) => (
@@ -1778,25 +1778,25 @@ export default function Jobs() {
             <DialogHeader>
               <DialogTitle>{selectedJob ? 'Editar Vaga' : 'Criar Vaga'}</DialogTitle>
               <DialogDescription>
-                {selectedJob ? 'Atualize as informaÁıes da vaga.' : 'Preencha os dados da vaga. VocÍ poder· public·-la a qualquer momento.'}
+                {selectedJob ? 'Atualize as informa√ß√µes da vaga.' : 'Preencha os dados da vaga. Voc√™ poder√° public√°-la a qualquer momento.'}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="title">TÌtulo da Vaga *</Label>
+                <Label htmlFor="title">T√≠tulo da Vaga *</Label>
                 <Input
                   id="title"
-                  placeholder="Ex: Desenvolvedor Frontend SÍnior"
+                  placeholder="Ex: Desenvolvedor Frontend S√™nior"
                   value={form.title}
                   onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="description">DescriÁ„o da Vaga</Label>
+                <Label htmlFor="description">Descri√ß√£o da Vaga</Label>
                 <Textarea
                   id="description"
-                  placeholder="Descreva a funÁ„o, responsabilidades e requisitos..."
+                  placeholder="Descreva a fun√ß√£o, responsabilidades e requisitos..."
                   className="min-h-[120px]"
                   value={form.description}
                   onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
@@ -1811,7 +1811,7 @@ export default function Jobs() {
                     onValueChange={(value) => setForm(prev => ({ ...prev, domain: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a ·rea" />
+                      <SelectValue placeholder="Selecione a √Årea" />
                     </SelectTrigger>
                     <SelectContent>
                       {domainList.map(d => (
@@ -1840,10 +1840,10 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="location">LocalizaÁ„o / Modalidade</Label>
+                  <Label htmlFor="location">Localiza√ß√£o / Modalidade</Label>
                   <Input
                     id="location"
-                    placeholder="Ex: Remoto, S„o Paulo, HÌbrido"
+                    placeholder="Ex: Remoto, S√£o Paulo, H√≠brido"
                     value={form.location}
                     onChange={(e) => setForm(prev => ({ ...prev, location: e.target.value }))}
                   />
@@ -1868,13 +1868,13 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>NÌvel de Senioridade</Label>
+                  <Label>N√≠vel de Senioridade</Label>
                   <Select
                     value={form.experience_level}
                     onValueChange={(value: ExperienceLevel) => setForm(prev => ({ ...prev, experience_level: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o nÌvel" />
+                      <SelectValue placeholder="Selecione o n√≠vel" />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(experienceLevelLabels).map(([value, label]) => (
@@ -1884,7 +1884,7 @@ export default function Jobs() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Tempo de ExperiÍncia</Label>
+                  <Label>Tempo de Experi√™ncia</Label>
                   <Select
                     value={form.experience_years_range}
                     onValueChange={(value: ExperienceYearsRange) => setForm(prev => ({ ...prev, experience_years_range: value }))}
@@ -1903,7 +1903,7 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>¡rea de AtuaÁ„o</Label>
+                  <Label>√Årea de Atua√ß√£o</Label>
                   <Select
                     value={form.position_type}
                     onValueChange={(value: PositionType) => setForm(prev => ({ ...prev, position_type: value }))}
@@ -1919,7 +1919,7 @@ export default function Jobs() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="total_openings">Total de PosiÁıes / Vagas</Label>
+                  <Label htmlFor="total_openings">Total de Posi√ß√µes / Vagas</Label>
                   <Input
                     id="total_openings"
                     type="number"
@@ -1955,7 +1955,7 @@ export default function Jobs() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="required_skills">Habilidades Necess·rias (separadas por vÌrgula)</Label>
+                <Label htmlFor="required_skills">Habilidades Necess√°rias (separadas por v√≠rgula)</Label>
                 <Input
                   id="required_skills"
                   placeholder="React, TypeScript, Node.js"
@@ -1965,17 +1965,17 @@ export default function Jobs() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="benefits">BenefÌcios (separados por vÌrgula)</Label>
+                <Label htmlFor="benefits">Benef√≠cios (separados por v√≠rgula)</Label>
                 <Input
                   id="benefits"
-                  placeholder="Plano de sa˙de, Vale refeiÁ„o, Trabalho remoto"
+                  placeholder="Plano de sa√∫de, Vale refei√ß√£o, Trabalho remoto"
                   value={form.benefits}
                   onChange={(e) => setForm(prev => ({ ...prev, benefits: e.target.value }))}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="deadline">Prazo de InscriÁ„o (opcional)</Label>
+                <Label htmlFor="deadline">Prazo de Inscri√ß√£o (opcional)</Label>
                 <Input
                   id="deadline"
                   type="date"
@@ -1989,9 +1989,9 @@ export default function Jobs() {
 
               <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="require-application-form">Formul·rio digital de inscriÁ„o</Label>
+                  <Label htmlFor="require-application-form">Formul√°rio digital de inscri√ß√£o</Label>
                   <p className="text-xs text-muted-foreground">
-                    Exigir que os candidatos preencham o formul·rio de triagem antes das entrevistas.
+                    Exigir que os candidatos preencham o formul√°rio de triagem antes das entrevistas.
                   </p>
                 </div>
                 <Switch
@@ -2008,10 +2008,10 @@ export default function Jobs() {
                   <div className="space-y-0.5">
                     <Label htmlFor="assessment-enabled" className="flex items-center gap-2">
                       <ClipboardCheck className="h-4 w-4" />
-                      Teste tÈcnico / AvaliaÁ„o da vaga
+                      Teste t√©cnico / Avalia√ß√£o da vaga
                     </Label>
                     <p className="text-xs text-muted-foreground">
-                      Vincule um teste tÈcnico a esta vaga para acompanhamento no pipeline.
+                      Vincule um teste t√©cnico a esta vaga para acompanhamento no pipeline.
                     </p>
                   </div>
                   <Switch
@@ -2024,7 +2024,7 @@ export default function Jobs() {
                 {form.assessment_enabled && (
                   <div className="space-y-4 pt-2">
                     <div className="space-y-2">
-                      <Label>Teste padr„o</Label>
+                      <Label>Teste padr√£o</Label>
                       <Select
                         value={form.default_assessment_id || 'none'}
                         onValueChange={(value) =>
@@ -2035,7 +2035,7 @@ export default function Jobs() {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione a avaliaÁ„o" />
+                          <SelectValue placeholder="Selecione a avalia√ß√£o" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">Nenhuma selecionada</SelectItem>
@@ -2050,7 +2050,7 @@ export default function Jobs() {
 
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="deadline-days">Prazo padr„o (dias)</Label>
+                        <Label htmlFor="deadline-days">Prazo padr√£o (dias)</Label>
                         <Input
                           id="deadline-days"
                           type="number"
@@ -2069,13 +2069,13 @@ export default function Jobs() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="pass-override">Nota mÌnima de aprovaÁ„o (%)</Label>
+                        <Label htmlFor="pass-override">Nota m√≠nima de aprova√ß√£o (%)</Label>
                         <Input
                           id="pass-override"
                           type="number"
                           min={0}
                           max={100}
-                          placeholder="Usar padr„o do teste"
+                          placeholder="Usar padr√£o do teste"
                           value={form.assessment_config.pass_threshold_override ?? ''}
                           onChange={(e) =>
                             setForm(prev => ({
@@ -2093,7 +2093,7 @@ export default function Jobs() {
                     <div className="flex items-center justify-between rounded-md border p-3">
                       <div className="space-y-0.5">
                         <Label htmlFor="notify-on-complete">Notificar recrutador ao concluir</Label>
-                        <p className="text-xs text-muted-foreground">NotificaÁ„o no sistema e por e-mail quando o candidato enviar.</p>
+                        <p className="text-xs text-muted-foreground">Notifica√ß√£o no sistema e por e-mail quando o candidato enviar.</p>
                       </div>
                       <Switch
                         id="notify-on-complete"
@@ -2112,8 +2112,8 @@ export default function Jobs() {
 
                     <div className="flex items-center justify-between rounded-md border p-3">
                       <div className="space-y-0.5">
-                        <Label htmlFor="require-pass">Exigir aprovaÁ„o para avanÁar no pipeline</Label>
-                        <p className="text-xs text-muted-foreground">Impede o avanÁo do candidato atÈ que o teste seja aprovado (Admin/RH podem liberar manualmente).</p>
+                        <Label htmlFor="require-pass">Exigir aprova√ß√£o para avan√ßar no pipeline</Label>
+                        <p className="text-xs text-muted-foreground">Impede o avan√ßo do candidato at√© que o teste seja aprovado (Admin/RH podem liberar manualmente).</p>
                       </div>
                       <Switch
                         id="require-pass"
@@ -2136,7 +2136,7 @@ export default function Jobs() {
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsFormOpen(false)}>Cancel</Button>
               <Button onClick={handleSubmit} disabled={isPending || !form.title.trim()}>
-                {isPending ? 'Salvando...' : selectedJob ? 'Salvar AlteraÁıes' : 'Criar Vaga'}
+                {isPending ? 'Salvando...' : selectedJob ? 'Salvar Altera√ß√µes' : 'Criar Vaga'}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -2162,7 +2162,7 @@ export default function Jobs() {
             <DialogHeader>
               <DialogTitle>Cancel Job ‚Äî {cancelJobDialog?.title}</DialogTitle>
               <DialogDescription>
-                A vaga n„o ser· mais trabalhada. N„o houve contrataÁ„o. Diferente de 'Fechada', que indica que a vaga foi preenchida.
+                A vaga n√£o ser√° mais trabalhada. N√£o houve contrata√ß√£o. Diferente de 'Fechada', que indica que a vaga foi preenchida.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3 py-2">
@@ -2185,7 +2185,7 @@ export default function Jobs() {
                   <Input
                     id="cancel-other"
                     maxLength={120}
-                    placeholder="Breve observaÁ„o"
+                    placeholder="Breve observa√ß√£o"
                     value={cancelOtherNote}
                     onChange={(e) => setCancelOtherNote(e.target.value)}
                   />

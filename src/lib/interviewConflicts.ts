@@ -163,7 +163,7 @@ export async function findPanelistScheduleConflicts(params: {
     .in('user_id', uniqueIds);
 
   const nameByUser = new Map(
-    (profiles ?? []).map(p => [p.user_id, (p.full_name || p.email || 'Panelist').trim()]),
+    (profiles ?? []).map(p => [p.user_id, (p.full_name || p.email || 'Avaliador').trim()]),
   );
 
   const conflicts: PanelistScheduleConflict[] = [];
@@ -184,9 +184,9 @@ export async function findPanelistScheduleConflicts(params: {
       seen.add(key);
       conflicts.push({
         panelistUserId,
-        panelistName: nameByUser.get(panelistUserId) || 'Panelist',
+        panelistName: nameByUser.get(panelistUserId) || 'Avaliador',
         conflictingInterviewId: row.id,
-        candidateName: row.candidate?.name?.trim() || 'Unknown candidate',
+        candidateName: row.candidate?.name?.trim() || 'Candidato não identificado',
         scheduledAt: row.scheduled_at,
         stageName: row.job_interview_stage?.stage_name ?? undefined,
       });
@@ -200,10 +200,10 @@ export function summarizeScheduleConflicts(conflicts: PanelistScheduleConflict[]
   if (conflicts.length === 0) return '';
   const lines = conflicts.slice(0, 4).map(c => {
     const stage = c.stageName ? ` (${c.stageName})` : '';
-    return `${c.panelistName} already has an interview with ${c.candidateName}${stage}`;
+    return `${c.panelistName} já possui uma entrevista com ${c.candidateName}${stage}`;
   });
   if (conflicts.length > 4) {
-    lines.push(`…and ${conflicts.length - 4} more`);
+    lines.push(`…e mais ${conflicts.length - 4}`);
   }
   return lines.join('\n');
 }

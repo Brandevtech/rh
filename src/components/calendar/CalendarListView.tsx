@@ -25,8 +25,8 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
         <div className="p-4 rounded-full bg-muted">
           <CalendarDays className="h-8 w-8 text-muted-foreground" />
         </div>
-        <p className="text-sm font-medium text-foreground">No interviews scheduled</p>
-        <p className="text-xs text-muted-foreground">Schedule interviews from the Pipeline page</p>
+        <p className="text-sm font-medium text-foreground">Nenhuma entrevista agendada</p>
+        <p className="text-xs text-muted-foreground">Agende entrevistas diretamente na página do Pipeline</p>
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                     isToday(date) ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'
                   )}>
                     <span className="text-[9px] md:text-[10px] font-semibold uppercase leading-none opacity-70">
-                      {format(date, 'MMM')}
+                      {date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '')}
                     </span>
                     <span className="text-sm md:text-base font-bold leading-none mt-0.5">
                       {format(date, 'd')}
@@ -71,7 +71,7 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                       {dayLabel(date)}
                     </p>
                     <p className="text-[11px] md:text-xs text-muted-foreground">
-                      {dayInterviews.length} interview{dayInterviews.length !== 1 ? 's' : ''}
+                      {dayInterviews.length} {dayInterviews.length === 1 ? 'entrevista' : 'entrevistas'}
                     </p>
                   </div>
                 </div>
@@ -113,14 +113,14 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                           {/* Time + mode row */}
                           <div className="flex items-center gap-2 flex-wrap mb-2">
                             <span className={cn('text-sm md:text-xs font-bold tabular-nums', style.text)}>
-                              {format(new Date(iv.scheduled_at), 'h:mm a')}
+                              {format(new Date(iv.scheduled_at), 'HH:mm')}
                             </span>
                             <span className={cn(
                               'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border',
                               style.bg, style.border, style.text
                             )}>
                               <Icon className="h-3 w-3 shrink-0" />
-                              {mode === 'in_person' ? 'In Person' : mode === 'video' ? 'Video' : 'Phone'}
+                              {mode === 'in_person' ? 'Presencial' : mode === 'video' ? 'Vídeo' : 'Telefone'}
                             </span>
                             {hasVerdict && (
                               <Badge variant="outline" className="text-[10px] md:text-[10px] px-1.5 py-0 h-5 bg-emerald-50 border-emerald-200 text-emerald-700">
@@ -144,7 +144,7 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                                   'hover:underline md:ml-auto md:min-h-0 md:border-0 md:bg-transparent md:px-0 md:py-0 md:text-[10px]'
                                 )}
                               >
-                                <ExternalLink className="h-3 w-3 shrink-0" /> Join
+                                <ExternalLink className="h-3 w-3 shrink-0" /> Entrar
                               </a>
                             )}
                           </div>
@@ -152,7 +152,7 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                           <div className="flex items-start justify-between gap-2 md:gap-3">
                             <div className="flex-1 min-w-0">
                               <p className="text-base md:text-sm font-semibold text-foreground truncate">
-                                {candidate?.name ?? 'Unknown Candidate'}
+                                {candidate?.name ?? 'Candidato não identificado'}
                               </p>
 
                               {metaParts.length > 0 && (
@@ -165,7 +165,7 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                             {panelLabel && (
                               <div className="hidden md:flex items-center gap-1.5 shrink-0 text-right">
                                 <div className="flex flex-col items-end">
-                                  <span className="text-[10px] text-muted-foreground">Panel</span>
+                                  <span className="text-[10px] text-muted-foreground">Banca Avaliadora</span>
                                   <span className="text-xs font-medium text-foreground max-w-[120px] truncate">
                                     {panelLabel}
                                   </span>
@@ -183,7 +183,7 @@ export function CalendarListView({ interviews, onEventClick }: Props) {
                                 <User className="h-3.5 w-3.5 text-muted-foreground" />
                               </div>
                               <div className="min-w-0">
-                                <span className="text-[10px] text-muted-foreground">Panel</span>
+                                <span className="text-[10px] text-muted-foreground">Banca Avaliadora</span>
                                 <p className="text-xs font-medium text-foreground truncate">{panelLabel}</p>
                               </div>
                             </div>

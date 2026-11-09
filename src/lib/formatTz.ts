@@ -7,6 +7,7 @@ export function detectBrowserTimezone(): string {
 export const BROWSER_TIMEZONE = detectBrowserTimezone();
 
 export const TIMEZONE_OPTIONS: { value: string; label: string }[] = [
+  { value: 'America/Sao_Paulo',  label: 'BRT — Horário de Brasília (UTC-3)' },
   { value: 'Asia/Kolkata',       label: 'IST — India Standard Time (UTC+5:30)' },
   { value: 'UTC',                label: 'UTC — Coordinated Universal Time' },
   { value: 'America/New_York',   label: 'ET — Eastern Time, US (UTC−5/4)' },
@@ -57,8 +58,8 @@ export function buildTimezoneOptions(
 export function formatDateTimeInTz(date: Date | string, tz: string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return '';
-  const datePart = d.toLocaleString('en-GB', { timeZone: tz, day: '2-digit', month: 'short' });
-  const timePart = d.toLocaleString('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true });
+  const datePart = d.toLocaleString('pt-BR', { timeZone: tz, day: '2-digit', month: 'short' });
+  const timePart = d.toLocaleString('pt-BR', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false });
   return `${datePart}, ${timePart}`;
 }
 
@@ -66,7 +67,7 @@ export function formatDateTimeInTz(date: Date | string, tz: string): string {
 export function formatCalendarDayHeader(date: Date | string, tz: string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-GB', {
+  return d.toLocaleDateString('pt-BR', {
     timeZone: tz,
     weekday: 'long',
     day: 'numeric',
@@ -79,7 +80,7 @@ export function formatCalendarDayHeader(date: Date | string, tz: string): string
 export function formatCalendarDayHeaderShort(date: Date | string, tz: string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-GB', {
+  return d.toLocaleDateString('pt-BR', {
     timeZone: tz,
     weekday: 'long',
     day: 'numeric',
@@ -87,7 +88,7 @@ export function formatCalendarDayHeaderShort(date: Date | string, tz: string): s
   });
 }
 
-export type RelativeDayLabel = 'Today' | 'Tomorrow' | 'Yesterday';
+export type RelativeDayLabel = 'Hoje' | 'Amanhã' | 'Ontem';
 
 /**
  * Calendar-day proximity label in `tz`.
@@ -101,7 +102,7 @@ export function getRelativeDayLabel(
   const targetKey = calendarDayKey(date, tz);
   const todayKey = calendarDayKey(now, tz);
   if (!targetKey || !todayKey) return null;
-  if (targetKey === todayKey) return 'Today';
+  if (targetKey === todayKey) return 'Hoje';
 
   // Day keys are yyyy-MM-dd; compare as UTC noon to avoid DST edge cases.
   const dayMs = 24 * 60 * 60 * 1000;
@@ -110,8 +111,8 @@ export function getRelativeDayLabel(
   if (Number.isNaN(todayUtc) || Number.isNaN(targetUtc)) return null;
 
   const diffDays = Math.round((targetUtc - todayUtc) / dayMs);
-  if (diffDays === 1) return 'Tomorrow';
-  if (diffDays === -1) return 'Yesterday';
+  if (diffDays === 1) return 'Amanhã';
+  if (diffDays === -1) return 'Ontem';
   return null;
 }
 
@@ -145,5 +146,5 @@ export function calendarDayKey(date: Date | string, tz: string): string {
 export function formatTimeInTz(date: Date | string, tz: string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
   if (isNaN(d.getTime())) return '';
-  return d.toLocaleString('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true });
+  return d.toLocaleString('pt-BR', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: false });
 }

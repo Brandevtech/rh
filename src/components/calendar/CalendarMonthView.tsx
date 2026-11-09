@@ -7,7 +7,7 @@ import type { ScheduledInterview } from '@/hooks/useScheduledInterviews';
 import { calendarDayKey } from '@/lib/formatTz';
 import { cn } from '@/lib/utils';
 
-const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const DAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
 const MAX_VISIBLE = 3;
 
 interface Props {
@@ -91,7 +91,7 @@ export function CalendarMonthView({ currentDate, interviews, timezone, onEventCl
                 ))}
                 {overflow > 0 && (
                   <p className="text-[10px] text-muted-foreground font-medium px-1 mt-0.5">
-                    +{overflow} more
+                    +{overflow} mais
                   </p>
                 )}
               </div>

@@ -271,7 +271,7 @@ export function buildPipelineActionQueue(input: {
       ? `/hiring?view=list&job=${jobId}&action=add`
       : '/hiring?view=list&action=add';
     const label = nearDeadline && deadlineIso
-      ? `Adicionar ${sourceNeed} candidatos até ${formatDeadlineShort(deadlineIso)}`
+      ? `Adicionar ${sourceNeed} candidatos atÃ© ${formatDeadlineShort(deadlineIso)}`
       : `Adicionar ${sourceNeed} candidatos nesta semana`;
     items.push({
       id: 'source',

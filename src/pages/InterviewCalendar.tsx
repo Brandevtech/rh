@@ -22,6 +22,11 @@ import { useUserTimezone } from '@/hooks/useUserTimezone';
 import type { ScheduledInterview } from '@/hooks/useScheduledInterviews';
 import { cn } from '@/lib/utils';
 
+const VIEW_LABELS: Record<CalView, string> = {
+  month: 'Mês',
+  week: 'Semana',
+  list: 'Lista',
+};
 type CalView = 'month' | 'week' | 'list';
 
 const MODE_LEGEND = [
@@ -50,7 +55,7 @@ function navigateDate(view: CalView, date: Date, dir: 1 | -1): Date {
 }
 
 export default function InterviewCalendar() {
-  usePageTitle('Interview Calendar');
+  usePageTitle('Calendário de Entrevistas');
   const { isAdminOrHR, isRecruiter } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -108,9 +113,9 @@ export default function InterviewCalendar() {
       setSelectedInterview(null);
       refetch();
       queryClient.invalidateQueries({ queryKey: ['interview-kit', selectedInterview.id] });
-      toast({ title: 'Interview rescheduled' });
+      toast({ title: 'Entrevista reagendada com sucesso' });
     } catch (err: unknown) {
-      toast({ title: 'Error', description: formatInterviewScheduleError(err), variant: 'destructive' });
+      toast({ title: 'Erro ao reagendar', description: formatInterviewScheduleError(err), variant: 'destructive' });
     } finally {
       setIsRescheduling(false);
     }
@@ -140,8 +145,8 @@ export default function InterviewCalendar() {
         {/* Page header */}
         <div className="flex items-start justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Interview Calendar</h1>
-            <p className="text-sm text-muted-foreground mt-1">All scheduled interviews at a glance</p>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Calendário de Entrevistas</h1>
+            <p className="text-sm text-muted-foreground mt-1">Visão geral de todas as entrevistas agendadas</p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             {/* Legend */}
@@ -155,7 +160,7 @@ export default function InterviewCalendar() {
               ))}
             </div>
             <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
-              <RefreshCw className={cn('h-3.5 w-3.5 mr-1.5', isFetching && 'animate-spin')} /> Refresh
+              <RefreshCw className={cn('h-3.5 w-3.5 mr-1.5', isFetching && 'animate-spin')} /> Atualizar
             </Button>
           </div>
         </div>
@@ -167,21 +172,21 @@ export default function InterviewCalendar() {
             <div className="flex items-center gap-2 flex-nowrap md:flex-wrap px-2 sm:px-0 pb-0.5 md:pb-0">
               <Badge variant="secondary" className="gap-1.5 shrink-0">
                 <CalendarDays className="h-3.5 w-3.5" />
-                {visibleInterviews.length} total
+                {visibleInterviews.length} no total
               </Badge>
               {videoCount > 0 && (
                 <Badge variant="outline" className="gap-1 shrink-0 border-blue-200 text-blue-700 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-800 dark:text-blue-300">
-                  <Video className="h-3 w-3" />{videoCount} video
+                  <Video className="h-3 w-3" />{videoCount} vídeo
                 </Badge>
               )}
               {inPersonCount > 0 && (
                 <Badge variant="outline" className="gap-1 shrink-0 border-emerald-200 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-300">
-                  <MapPin className="h-3 w-3" />{inPersonCount} in-person
+                  <MapPin className="h-3 w-3" />{inPersonCount} presencial
                 </Badge>
               )}
               {phoneCount > 0 && (
                 <Badge variant="outline" className="gap-1 shrink-0 border-amber-200 text-amber-700 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-300">
-                  <Phone className="h-3 w-3" />{phoneCount} phone
+                  <Phone className="h-3 w-3" />{phoneCount} telefone
                 </Badge>
               )}
             </div>
@@ -191,7 +196,7 @@ export default function InterviewCalendar() {
           <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:flex-wrap md:items-center">
             {view !== 'list' && (
               <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>Today</Button>
+                <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>Hoje</Button>
                 <div className="flex items-center gap-1 min-w-0 flex-1 md:flex-initial">
                   <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => setCurrentDate(d => navigateDate(view, d, -1))}>
                     <ChevronLeft className="h-4 w-4" />
@@ -228,7 +233,7 @@ export default function InterviewCalendar() {
           <div className="flex items-center justify-between gap-3 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm">
             <div className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-4 w-4 shrink-0" />
-              <span>Could not load interviews{(error as Error)?.message ? `: ${(error as Error).message}` : ''}. Try again.</span>
+              <span>Não foi possível carregar as entrevistas{(error as Error)?.message ? `: ${(error as Error).message}` : ''}. Tente novamente.</span>
             </div>
             <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isFetching}>
               Retry

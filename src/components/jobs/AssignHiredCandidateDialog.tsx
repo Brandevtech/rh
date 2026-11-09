@@ -156,7 +156,7 @@ export function AssignHiredCandidateDialog({
     }
   };
 
-  const title = state?.mode === 'change' ? 'Alterar contrataÁ„o' : 'Definir candidatos contratados';
+  const title = state?.mode === 'change' ? 'Alterar contrata√ß√£o' : 'Definir candidatos contratados';
   const description =
     state?.mode === 'change' && state.replaceCandidate
       ? `Substituir ${state.replaceCandidate.name} por outro candidato do pipeline desta vaga.`
@@ -180,7 +180,7 @@ export function AssignHiredCandidateDialog({
           </div>
         ) : selectable.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            Nenhum candidato elegÌvel nesta vaga. Todos os candidatos do pipeline j· est„o marcados como contratados.
+            Nenhum candidato eleg√≠vel nesta vaga. Todos os candidatos do pipeline j√° est√£o marcados como contratados.
           </p>
         ) : (
           <div className="rounded-lg border max-h-[300px] overflow-y-auto">
@@ -232,12 +232,12 @@ export function AssignHiredCandidateDialog({
             {saving ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Saving‚Ä¶
+                Salvando‚Ä¶
               </>
             ) : state?.mode === 'change' ? (
-              'Salvar alteraÁ„o'
+              'Salvar altera√ß√£o'
             ) : (
-              'Confirmar contrataÁ„o'
+              'Confirmar contrata√ß√£o'
             )}
           </Button>
         </DialogFooter>

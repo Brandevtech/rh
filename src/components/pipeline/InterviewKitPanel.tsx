@@ -9,7 +9,7 @@ interface InterviewKitPanelProps {
   isLoading?: boolean;
   isGenerating?: boolean;
   onGenerate?: (forceGemini?: boolean) => void;
-  /** When false, hide Generate kit / Regenerate with AI (read-only questions only). */
+  /** When false, hide Generate kit / Regerar com IA (read-only questions only). */
   allowGenerate?: boolean;
   defaultOpen?: boolean;
   compact?: boolean;
@@ -20,13 +20,13 @@ function KitSourceBadge({ source }: { source: InterviewKit['source'] }) {
     return (
       <Badge variant="secondary" className="text-[10px] h-5 gap-1 font-normal">
         <Sparkles className="w-3 h-3" />
-        AI-generated
+        Gerado por IA
       </Badge>
     );
   }
   return (
     <Badge variant="outline" className="text-[10px] h-5 font-normal text-muted-foreground">
-      Template fallback
+      Modelo padrão
     </Badge>
   );
 }
@@ -49,8 +49,8 @@ export function InterviewKitPanel({
         <summary className="flex items-center justify-between cursor-pointer list-none [&::-webkit-details-marker]:hidden">
           <span className="text-sm font-medium flex items-center gap-1.5 flex-wrap">
             <HelpCircle className="w-3.5 h-3.5 text-muted-foreground" />
-            Interview Kit
-            <span className="text-xs text-muted-foreground font-normal">(read-only)</span>
+            Kit de Perguntas
+            <span className="text-xs text-muted-foreground font-normal">(somente leitura)</span>
             {kit && hasQuestions && <KitSourceBadge source={kit.source} />}
           </span>
           <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform group-open:rotate-180 shrink-0" />
@@ -60,7 +60,7 @@ export function InterviewKitPanel({
           {isLoading ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Loading questions…
+              Carregando perguntas…
             </div>
           ) : hasQuestions ? (
             <>
@@ -71,7 +71,7 @@ export function InterviewKitPanel({
               </ol>
               {kit!.generated_at && (
                 <p className="text-[11px] text-muted-foreground">
-                  Generated {new Date(kit!.generated_at).toLocaleDateString()}
+                  Gerado em {new Date(kit!.generated_at).toLocaleDateString('pt-BR')}
                 </p>
               )}
               {canGenerate && (
@@ -91,7 +91,7 @@ export function InterviewKitPanel({
           ) : (
             <div className="space-y-2">
               <p className="text-xs text-muted-foreground">
-                Suggested questions for this stage — use as a guide during the interview.
+                Perguntas sugeridas para esta etapa — utilize como guia durante a entrevista.
               </p>
               {canGenerate && (
                 <Button
@@ -103,7 +103,7 @@ export function InterviewKitPanel({
                   onClick={() => onGenerate!(true)}
                 >
                   {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                  {isGenerating ? 'Generating…' : 'Generate kit'}
+                  {isGenerating ? 'Gerando…' : 'Gerar kit de perguntas'}
                 </Button>
               )}
             </div>

@@ -10,7 +10,7 @@ export type JobListTab = 'active' | 'closed' | 'cancelled';
 export const JOB_CANCEL_REASONS = [
   { value: 'filled_internally', label: 'Preenchida internamente' },
   { value: 'role_dropped', label: 'Vaga cancelada / Descontinuada' },
-  { value: 'budget', label: 'Orçamento suspenso' },
+  { value: 'budget', label: 'OrÃ§amento suspenso' },
   { value: 'duplicate', label: 'Vaga duplicada' },
   { value: 'other', label: 'Outro motivo' },
 ] as const;
@@ -109,17 +109,17 @@ export interface JobApplication {
 
 export const jobTypeLabels: Record<JobType, string> = {
   full_time: 'Tempo Integral',
-  part_time: 'Meio Período',
+  part_time: 'Meio PerÃ­odo',
   contract: 'Contrato / PJ',
-  internship: 'Estágio',
+  internship: 'EstÃ¡gio',
   freelance: 'Freelance',
 };
 
 export const experienceLevelLabels: Record<ExperienceLevel, string> = {
-  entry: 'Júnior / Inicial',
+  entry: 'JÃºnior / Inicial',
   mid: 'Pleno',
-  senior: 'Sênior',
-  lead: 'Liderança / Especialista',
+  senior: 'SÃªnior',
+  lead: 'LideranÃ§a / Especialista',
   executive: 'Executivo / Diretoria',
 };
 
@@ -139,7 +139,7 @@ export const experienceYearsLabels: Record<ExperienceYearsRange, string> = {
 
 export const positionTypeLabels: Record<PositionType, string> = {
   tech: 'Tecnologia',
-  non_tech: 'Não-Tecnologia',
+  non_tech: 'NÃ£o-Tecnologia',
 };
 
 export const jobStatusLabels: Record<JobStatus, string> = {

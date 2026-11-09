@@ -63,7 +63,7 @@ export function CalendarWeekView({ currentDate, interviews, timezone, onEventCli
             )}
           >
             <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-              {format(day, 'EEE')}
+              {day.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '')}
             </span>
             <span className={cn(
               'mt-1 w-8 h-8 flex items-center justify-center rounded-full text-sm font-semibold',
@@ -89,7 +89,7 @@ export function CalendarWeekView({ currentDate, interviews, timezone, onEventCli
                 style={{ top: `${(h - START_HOUR) * HOUR_PX - 9}px`, height: `${HOUR_PX}px` }}
               >
                 <span className="text-[10px] text-muted-foreground/70 font-medium">
-                  {format(new Date(2000, 0, 1, h), 'h a')}
+                  {`${String(h).padStart(2, '0')}:00`}
                 </span>
               </div>
             ))}

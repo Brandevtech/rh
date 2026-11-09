@@ -73,7 +73,7 @@ type FitScoreFilter = 'all' | '70' | '80' | '90';
 const PIPELINE_STATUS_FILTERS: { value: InterviewVerdict; label: string }[] = [
   { value: 'proceeded', label: 'Aprovado' },
   { value: 'hold', label: 'Em Espera' },
-  { value: 'no_show', label: 'N„o Compareceu' },
+  { value: 'no_show', label: 'N√£o Compareceu' },
   { value: 'rejected', label: 'Recusado' },
 ];
 
@@ -157,7 +157,7 @@ interface PipelineProps {
 }
 
 export default function Pipeline({ embedded = false }: PipelineProps) {
-  usePageTitle(embedded ? 'Recrutamento' : 'Pipeline de ContrataÁ„o');
+  usePageTitle(embedded ? 'Recrutamento' : 'Pipeline de Contrata√ß√£o');
   const { user, isAdmin, isAdminOrHR, role } = useAuth();
   const { sortJobs } = usePinnedJobs(user?.id);
   const { jobs } = useJobs({ summary: true });
@@ -798,7 +798,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
     try {
       await cancelScheduledInterview(cancelTarget.id, reason, note);
       setCancelTarget(null);
-      toast({ title: 'Entrevista cancelada', description: 'O hor·rio ficou livre novamente na mesma etapa.' });
+      toast({ title: 'Entrevista cancelada', description: 'O hor√°rio ficou livre novamente na mesma etapa.' });
       await queryClient.invalidateQueries({ queryKey: ['candidate-interviews', activeJobId] });
       await queryClient.invalidateQueries({ queryKey: ['scheduled-interviews'] });
       await queryClient.invalidateQueries({ queryKey: ['my-interviews-upcoming'] });
@@ -1334,7 +1334,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                                 <button onClick={() => { setShowAddStage(false); setNewStageName(''); }} className="text-muted-foreground p-1"><XIcon className="w-4 h-4" /></button>
                               </div>
                               {isDuplicate && (
-                                <p className="text-xs text-destructive px-0.5">J· existe uma etapa com este nome.</p>
+                                <p className="text-xs text-destructive px-0.5">J√° existe uma etapa com este nome.</p>
                               )}
                             </>
                           );
@@ -1373,7 +1373,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium">Aplicar ‡ Vaga</label>
+              <label className="text-sm font-medium">Aplicar √† Vaga</label>
               <Select value={applyTemplateJobId} onValueChange={setApplyTemplateJobId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione uma vaga para aplicar as etapas..." />
@@ -1484,9 +1484,9 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       <Dialog open={!!advanceOverrideConfirm} onOpenChange={(open) => !open && setAdvanceOverrideConfirm(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>AvanÁar sem aprovaÁ„o no teste?</DialogTitle>
+            <DialogTitle>Avan√ßar sem aprova√ß√£o no teste?</DialogTitle>
             <DialogDescription>
-              <strong>{advanceOverrideConfirm?.candidate?.name}</strong> n„o foi aprovado no teste tÈcnico obrigatÛrio da vaga. Como administrador/RH, vocÍ pode avanÁar manualmente mesmo assim.
+              <strong>{advanceOverrideConfirm?.candidate?.name}</strong> n√£o foi aprovado no teste t√©cnico obrigat√≥rio da vaga. Como administrador/RH, voc√™ pode avan√ßar manualmente mesmo assim.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1495,7 +1495,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
               onClick={() => advanceOverrideConfirm && handleAdvance(advanceOverrideConfirm, true)}
               disabled={advanceCandidate.isPending}
             >
-              {advanceCandidate.isPending ? 'Advancing‚Ä¶' : 'AvanÁar Mesmo Assim'}
+              {advanceCandidate.isPending ? 'Advancing‚Ä¶' : 'Avan√ßar Mesmo Assim'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1535,7 +1535,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           <DialogHeader>
             <DialogTitle>Remover do Pipeline?</DialogTitle>
             <DialogDescription>
-              <strong>{removeConfirm?.candidate?.name}</strong> ser· removido do pipeline da vaga <strong>{removeConfirm?.job?.title}</strong>. O histÛrico de entrevistas do candidato ser· mantido.
+              <strong>{removeConfirm?.candidate?.name}</strong> ser√° removido do pipeline da vaga <strong>{removeConfirm?.job?.title}</strong>. O hist√≥rico de entrevistas do candidato ser√° mantido.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1565,7 +1565,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           <DialogHeader>
             <DialogTitle>Excluir Etapa?</DialogTitle>
             <DialogDescription>
-              Tem certeza de que deseja excluir permanentemente a etapa <strong>{deleteStageConfirm?.name}</strong>? Esta aÁ„o n„o pode ser desfeita.
+              Tem certeza de que deseja excluir permanentemente a etapa <strong>{deleteStageConfirm?.name}</strong>? Esta a√ß√£o n√£o pode ser desfeita.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -1592,7 +1592,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           <DialogHeader>
             <DialogTitle>Recusar Candidato?</DialogTitle>
             <DialogDescription>
-              <strong>{declineConfirm?.name}</strong> ser· marcado como recusado para esta vaga. Ele continuar· registrado no banco de talentos e poder· ser considerado para futuras oportunidades.
+              <strong>{declineConfirm?.name}</strong> ser√° marcado como recusado para esta vaga. Ele continuar√° registrado no banco de talentos e poder√° ser considerado para futuras oportunidades.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-1.5 py-1">
@@ -1616,7 +1616,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
               }}
             />
             {declineReasonError ? (
-              <p className="text-xs text-destructive">O motivo È obrigatÛrio para manter o histÛrico de triagem.</p>
+              <p className="text-xs text-destructive">O motivo √© obrigat√≥rio para manter o hist√≥rico de triagem.</p>
             ) : (
               <p className="text-xs text-muted-foreground">Required ‚Äî helps recruiters source more relevant profiles.</p>
             )}
@@ -1640,7 +1640,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
           <DialogHeader>
             <DialogTitle>Reabrir Candidato?</DialogTitle>
             <DialogDescription>
-              Iniciar uma nova rodada para <strong>{reopenConfirm?.candidate?.name}</strong> na vaga <strong>{reopenConfirm?.job?.title}</strong>. Os feedbacks da rodada anterior ser„o mantidos no histÛrico.
+              Iniciar uma nova rodada para <strong>{reopenConfirm?.candidate?.name}</strong> na vaga <strong>{reopenConfirm?.job?.title}</strong>. Os feedbacks da rodada anterior ser√£o mantidos no hist√≥rico.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
