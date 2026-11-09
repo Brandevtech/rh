@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
       // registerSW.js only registered the worker and never reloaded, so open
       // tabs and installed apps kept running a build whose files were gone.
       injectRegister: false,
-      includeAssets: ["favicon.ico", "apple-touch-icon.png", "android-chrome-192x192.png", "android-chrome-512x512.png", "the-talent-app-icon.png"],
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "android-chrome-192x192.png", "android-chrome-512x512.png", "the-talent-app-icon.png", "og-image.png"],
       // The only web manifest: index.html gets its <link> at build time.
       manifest: {
         id: "/",
