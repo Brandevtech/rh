@@ -127,9 +127,9 @@ export const EMAIL_NOTIFICATION_LABELS: Record<EmailNotificationKey, { label: st
 export const DEFAULT_BUSINESS_BRANDING: BusinessBranding = {
   logo_desktop_url: null,
   logo_mobile_url: null,
-  company_name: null,
-  primary_color: '#D64541',
-  primary_foreground_color: '#FFFFFF',
+  company_name: 'RIA',
+  primary_color: '#0C3233',
+  primary_foreground_color: '#DBD4C2',
 };
 
 export interface ComplianceSettings {

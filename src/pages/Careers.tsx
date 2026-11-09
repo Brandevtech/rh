@@ -647,7 +647,7 @@ export default function Careers() {
                   <CheckCircle className="h-8 w-8 text-primary" />
                 </div>
               </div>
-              <DialogTitle className="text-center">Application Submitted!</DialogTitle>
+              <DialogTitle className="text-center">Candidatura Enviada!</DialogTitle>
               <DialogDescription className="text-center">
                 Obrigado por se candidatar para {selectedJob?.title}. Analisaremos sua candidatura e retornaremos em breve.
               </DialogDescription>

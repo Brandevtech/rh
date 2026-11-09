@@ -1,6 +1,8 @@
 import { Link } from 'react-router';
 import { useBusinessBranding } from '@/hooks/useSystemConfig';
 import { cn } from '@/lib/utils';
+import riaLogo from '@/assets/logo.png';
+import riaBanner from '@/assets/6000.png';
 
 interface CompanyLogoProps {
   compact?: boolean;
@@ -11,35 +13,35 @@ export function CompanyLogo({ compact = false, className }: CompanyLogoProps) {
   const { branding } = useBusinessBranding();
   const desktop = branding.logo_desktop_url;
   const mobile = branding.logo_mobile_url ?? desktop;
-  const name = branding.company_name?.trim();
+  const name = branding.company_name?.trim() || 'RIA';
 
-  if (desktop || mobile) {
-    return (
-      <picture className={className}>
-        {mobile && mobile !== desktop && (
-          <source media="(max-width: 767px)" srcSet={mobile} />
-        )}
-        <img
-          src={desktop || mobile || undefined}
-          alt={name || 'Company logo'}
-          className={cn('w-auto object-contain', compact ? 'h-7 max-w-[140px]' : 'h-8 sm:h-9 md:h-10 max-w-[180px]')}
-        />
-      </picture>
-    );
-  }
+  const defaultDesktop = riaBanner;
+  const defaultMobile = riaLogo;
 
-  if (name) {
-    return (
-      <span className={cn('font-semibold text-foreground truncate max-w-[160px]', compact ? 'text-sm' : 'text-base sm:text-lg', className)}>
-        {name}
-      </span>
-    );
-  }
+  const currentDesktop = desktop || defaultDesktop;
+  const currentMobile = mobile || (compact ? defaultMobile : defaultDesktop);
 
   return (
-    <span className={cn('font-medium text-muted-foreground', compact ? 'text-sm' : 'text-base', className)}>
-      Your Company
-    </span>
+    <div className={cn('flex items-center gap-2', className)}>
+      <picture className="flex items-center shrink-0">
+        {currentMobile && currentMobile !== currentDesktop && (
+          <source media="(max-width: 767px)" srcSet={currentMobile} />
+        )}
+        <img
+          src={currentDesktop || currentMobile}
+          alt={name}
+          className={cn(
+            'w-auto object-contain rounded-md',
+            compact ? 'h-7 max-w-[120px]' : 'h-8 sm:h-9 max-w-[160px]'
+          )}
+        />
+      </picture>
+      {!compact && (
+        <span className="font-bold tracking-tight text-foreground truncate max-w-[140px] text-base sm:text-lg hidden sm:inline">
+          {name}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -57,7 +59,7 @@ interface ApplicantPortalHeaderProps {
 }
 
 export function ApplicantPortalHeader({
-  title = 'Applicant Portal',
+  title = 'Portal do Candidato',
   homeHref = '/applicant',
   showCompanyName = false,
   actions,
@@ -105,7 +107,7 @@ export function AssessmentPortalHeader({
   const { branding } = useBusinessBranding();
   const companyName = useCompanyDisplayName();
   const hasLogo = !!(branding.logo_desktop_url || branding.logo_mobile_url);
-  const resolvedSubtitle = subtitle ?? (companyName ? `${companyName} Talent Evaluation` : 'The Talent App');
+  const resolvedSubtitle = subtitle ?? (companyName ? `${companyName} Avaliação de Talentos` : 'RIA');
 
   const brandingLeft = (
     <div className="flex items-center gap-2 sm:gap-3 min-w-0">
@@ -139,7 +141,7 @@ export function AssessmentPortalHeader({
           <div className="min-w-0 shrink">{brandingLeft}</div>
         )}
         <div className="text-right min-w-0 shrink-0">
-          <h1 className="font-semibold text-base sm:text-lg">Assessment Portal</h1>
+          <h1 className="font-semibold text-base sm:text-lg">Portal de Avaliações</h1>
           {resolvedSubtitle && (
             <p className="text-xs sm:text-sm text-muted-foreground truncate">{resolvedSubtitle}</p>
           )}

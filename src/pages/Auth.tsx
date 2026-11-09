@@ -13,7 +13,8 @@ import { Loader2, MailCheck, KeyRound } from 'lucide-react';
 import { MfaChallengePanel } from '@/components/auth/MfaChallengePanel';
 import { useSystemConfig, parseSsoSettings, type SsoSettings } from '@/hooks/useSystemConfig';
 import { APPLICANT_DASHBOARD_PATH, APPLICANT_LOGIN_VERIFY_PATH, isApplicantPortalUserMetadata } from '@/lib/publicRoutes';
-import talentAppLogo from '@/assets/The-Talent-App-Logo.png';
+import riaLogo from '@/assets/logo.png';
+import brandevLogo from '@/assets/brandev.png';
 
 const emailSchema = z.string().email('Por favor, insira um e-mail válido');
 const passwordSchema = z.string().min(6, 'A senha deve ter pelo menos 6 caracteres');
@@ -230,7 +231,7 @@ export default function Auth() {
     } else {
       toast({
         title: 'Conta criada!',
-        description: 'Bem-vindo ao The Talent App.',
+        description: 'Bem-vindo ao RIA - Gestão de Talentos.',
       });
     }
     
@@ -243,11 +244,12 @@ export default function Auth() {
         {/* Logo */}
         <div className="flex flex-col items-center justify-center mb-8">
           <img
-            src={talentAppLogo}
-            alt="The Talent App"
-            className="h-14 w-auto mb-3"
+            src={riaLogo}
+            alt="RIA"
+            className="h-16 w-auto mb-3 object-contain rounded-lg shadow-xs"
           />
-          <p className="text-sm text-muted-foreground">Plataforma de Recrutamento & Seleção</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">RIA</h1>
+          <p className="text-sm text-muted-foreground">Plataforma de Recrutamento & Gestão de Talentos</p>
         </div>
 
         {signupPendingEmail ? (
@@ -458,19 +460,24 @@ export default function Auth() {
 
         )}
 
-        <div className="text-center text-sm text-muted-foreground mt-6 space-y-1">
-          <p>Ao continuar, você concorda com os termos de serviço do The Talent App.</p>
-          <p>
-            Desenvolvido por{' '}
+        <div className="text-center text-sm text-muted-foreground mt-6 space-y-2">
+          <p>Ao continuar, você concorda com os termos de serviço da RIA.</p>
+          <div className="flex items-center justify-center gap-1.5">
+            <span>Desenvolvido por</span>
             <a
-              href="https://www.sparxitsolutions.com"
+              href="https://github.com/Brandevtech"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-foreground transition-colors"
+              className="inline-flex items-center gap-1 font-medium text-foreground hover:text-primary transition-colors group"
             >
-              SparxIT
+              <img
+                src={brandevLogo}
+                alt="Brandev"
+                className="h-4 w-4 rounded-full object-contain inline-block group-hover:scale-110 transition-transform"
+              />
+              <span className="underline underline-offset-2">Brandev</span>
             </a>
-          </p>
+          </div>
         </div>
       </div>
     </div>

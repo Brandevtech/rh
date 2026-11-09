@@ -8,10 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Lock, CheckCircle } from 'lucide-react';
-import talentAppLogo from '@/assets/The-Talent-App-Logo.png';
+import riaLogo from '@/assets/logo.png';
 
 export default function ResetPassword() {
-  usePageTitle('Reset Password');
+  usePageTitle('Redefinir Senha');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -41,12 +41,12 @@ export default function ResetPassword() {
     e.preventDefault();
 
     if (password.length < 6) {
-      toast({ title: 'Password must be at least 6 characters', variant: 'destructive' });
+      toast({ title: 'A senha deve ter pelo menos 6 caracteres', variant: 'destructive' });
       return;
     }
 
     if (password !== confirmPassword) {
-      toast({ title: 'Passwords do not match', variant: 'destructive' });
+      toast({ title: 'As senhas não coincidem', variant: 'destructive' });
       return;
     }
 
@@ -55,12 +55,12 @@ export default function ResetPassword() {
     setIsLoading(false);
 
     if (error) {
-      toast({ title: 'Failed to reset password', description: error.message, variant: 'destructive' });
+      toast({ title: 'Falha ao redefinir a senha', description: error.message, variant: 'destructive' });
       return;
     }
 
     setDone(true);
-    toast({ title: 'Password updated successfully!' });
+    toast({ title: 'Senha atualizada com sucesso!' });
   };
 
   if (!isRecovery && !done) {
@@ -68,15 +68,15 @@ export default function ResetPassword() {
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md text-center">
           <CardHeader>
-            <img src={talentAppLogo} alt="The Talent App" className="h-12 mx-auto mb-4" />
-            <CardTitle>Invalid Reset Link</CardTitle>
+            <img src={riaLogo} alt="RIA" className="h-14 mx-auto mb-4 object-contain rounded-md" />
+            <CardTitle>Link de Redefinição Inválido</CardTitle>
             <CardDescription>
-              This link is invalid or has expired. Please request a new password reset.
+              Este link é inválido ou expirou. Por favor, solicite uma nova redefinição de senha.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => navigate('/auth')} className="w-full">
-              Back to Login
+              Voltar ao Login
             </Button>
           </CardContent>
         </Card>
@@ -92,14 +92,14 @@ export default function ResetPassword() {
             <div className="mx-auto mb-4 p-3 rounded-full bg-green-100">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
-            <CardTitle>Password Updated</CardTitle>
+            <CardTitle>Senha Atualizada</CardTitle>
             <CardDescription>
-              Your password has been reset successfully. You can now sign in with your new password.
+              Sua senha foi redefinida com sucesso. Agora você pode entrar com a nova senha.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => navigate('/auth')} className="w-full">
-              Go to Login
+              Ir para o Login
             </Button>
           </CardContent>
         </Card>
@@ -111,17 +111,17 @@ export default function ResetPassword() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <img src={talentAppLogo} alt="The Talent App" className="h-12 mx-auto mb-4" />
+          <img src={riaLogo} alt="RIA" className="h-14 mx-auto mb-4 object-contain rounded-md" />
           <div className="mx-auto mb-4 p-3 rounded-full bg-primary/10">
             <Lock className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle>Set New Password</CardTitle>
-          <CardDescription>Enter your new password below.</CardDescription>
+          <CardTitle>Criar Nova Senha</CardTitle>
+          <CardDescription>Digite sua nova senha abaixo.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password">Nova Senha</Label>
               <Input
                 id="password"
                 type="password"
@@ -133,7 +133,7 @@ export default function ResetPassword() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
               <Input
                 id="confirmPassword"
                 type="password"

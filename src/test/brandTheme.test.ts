@@ -26,8 +26,8 @@ describe('normalizeHexColor', () => {
     expect(normalizeHexColor('#12345')).toBeNull();
   });
 
-  it('defaults match normalized SparxIT red', () => {
-    expect(normalizeHexColor(DEFAULT_PRIMARY_COLOR)).toBe('#D64541');
+  it('defaults match normalized RIA primary teal', () => {
+    expect(normalizeHexColor(DEFAULT_PRIMARY_COLOR)).toBe('#0C3233');
   });
 });
 
@@ -36,8 +36,8 @@ describe('deriveAccessibleHsl', () => {
 
   it('darkens the default brand just enough for white labels', () => {
     const primary = hexToHslVar(DEFAULT_PRIMARY_COLOR);
-    expect(primary).toBe('2 65% 55%');
-    expect(deriveAccessibleHsl(primary, white)).toBe('2 65% 53%');
+    expect(primary).toBe('182 62% 12%');
+    expect(deriveAccessibleHsl(primary, white)).toBe('182 62% 12%');
   });
 
   it('keeps a very dark brand unchanged', () => {

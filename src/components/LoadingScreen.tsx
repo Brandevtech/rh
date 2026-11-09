@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 
-import talentAppLogo from '@/assets/The-Talent-App-Logo.png';
+import riaLogo from '@/assets/logo.png';
 
 const MESSAGES = [
-  'Loading your talent pipeline…',
-  'Fetching candidate profiles…',
-  'Checking interview schedules…',
-  'Syncing recruitment data…',
-  'Preparing your dashboard…',
-  'Warming up Chitragupta…',
-  'Crunching pipeline metrics…',
-  'Almost there…',
+  'Carregando seu pipeline de talentos…',
+  'Buscando perfis de candidatos…',
+  'Verificando agenda de entrevistas…',
+  'Sincronizando dados de recrutamento…',
+  'Preparando seu painel de controle…',
+  'Iniciando assistente inteligente…',
+  'Calculando métricas do processo…',
+  'Quase pronto…',
 ];
 
 export function LoadingScreen() {
@@ -31,8 +31,8 @@ export function LoadingScreen() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-8 px-4">
       <img
-        src={talentAppLogo}
-        alt="The Talent App"
+        src={riaLogo}
+        alt="RIA"
         className="h-14 sm:h-16 w-auto select-none"
       />
 
