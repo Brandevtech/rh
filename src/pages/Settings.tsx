@@ -117,11 +117,11 @@ function BusinessBrandingTab() {
 
   async function uploadLogo(file: File, variant: 'desktop' | 'mobile') {
     if (!file.type.startsWith('image/')) {
-      toast.error('Please upload an image file (PNG, JPG, SVG, WebP)');
+      toast.error('Envie um arquivo de imagem (PNG, JPG, SVG, WebP)');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Logo must be under 5 MB');
+      toast.error('O logotipo deve ter no máximo 5 MB');
       return;
     }
     setUploading(variant);
@@ -138,7 +138,7 @@ function BusinessBrandingTab() {
       setLocal(next);
       await persistBranding(next);
     } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Upload failed');
+      toast.error(err instanceof Error ? err.message : 'Falha no envio');
     } finally {
       setUploading(null);
     }
@@ -148,11 +148,11 @@ function BusinessBrandingTab() {
     const primary_color = normalizeHexColor(colorInput);
     const primary_foreground_color = normalizeHexColor(foregroundColorInput);
     if (!primary_color) {
-      toast.error('Enter a valid hex color (e.g. #D64541)');
+      toast.error('Informe uma cor hexadecimal válida (ex: #D64541)');
       return;
     }
     if (!primary_foreground_color) {
-      toast.error('Enter a valid button text color (e.g. #FFFFFF)');
+      toast.error('Informe uma cor válida para o texto do botão (ex: #FFFFFF)');
       return;
     }
     void persistBranding({ ...local, primary_color, primary_foreground_color });
@@ -161,13 +161,13 @@ function BusinessBrandingTab() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-muted-foreground">
-        Upload your company logo for the app header. Desktop and mobile can use different assets — if mobile is empty, desktop is used on all screen sizes.
+        Envie o logotipo da sua empresa para o cabeçalho. Desktop e mobile podem usar imagens distintas — se o mobile estiver vazio, o desktop será utilizado em todas as telas.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {(['desktop', 'mobile'] as const).map(variant => {
           const url = variant === 'desktop' ? local.logo_desktop_url : local.logo_mobile_url;
-          const label = variant === 'desktop' ? 'Desktop logo' : 'Mobile logo';
+          const label = variant === 'desktop' ? 'Logotipo Desktop' : 'Logotipo Mobile';
           return (
             <div key={variant} className="space-y-3 rounded-lg border border-border p-4">
               <Label>{label}</Label>
@@ -177,7 +177,7 @@ function BusinessBrandingTab() {
                 ) : (
                   <div className="flex flex-col items-center gap-1 text-muted-foreground py-4">
                     <ImageIcon className="h-8 w-8 opacity-40" />
-                    <span className="text-xs">No logo uploaded</span>
+                    <span className="text-xs">Nenhum logotipo enviado</span>
                   </div>
                 )}
               </div>
@@ -211,14 +211,14 @@ function BusinessBrandingTab() {
                   </Button>
                 )}
               </div>
-              <p className="text-[11px] text-muted-foreground">Recommended: PNG or SVG, max 5 MB. Wide logos work best for desktop; compact marks for mobile. Logos save automatically after upload.</p>
+              <p className="text-[11px] text-muted-foreground">Recomendado: PNG ou SVG, máx. 5 MB. Logotipos horizontais funcionam melhor no desktop; ícones compactos no mobile. Os arquivos são salvos automaticamente após o envio.</p>
             </div>
           );
         })}
       </div>
 
       <div className="space-y-2 max-w-md">
-        <Label htmlFor="company-name">Company name (fallback if no logo)</Label>
+        <Label htmlFor="company-name">Nome da empresa (exibido caso não haja logotipo)</Label>
         <Input
           id="company-name"
           value={local.company_name ?? ''}
@@ -230,10 +230,10 @@ function BusinessBrandingTab() {
       <div className="space-y-3 max-w-lg rounded-lg border border-border p-4">
         <div className="flex items-center gap-2">
           <Palette className="h-4 w-4 text-muted-foreground" />
-          <Label htmlFor="primary-color">Primary brand color</Label>
+          <Label htmlFor="primary-color">Cor primária da marca</Label>
         </div>
         <p className="text-xs text-muted-foreground">
-          Used for buttons, links, focus rings, and sidebar accents across the app and public careers pages.
+          Utilizada em botões, links, realces e menus laterais em toda a plataforma e página de vagas.
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <input
@@ -242,7 +242,7 @@ function BusinessBrandingTab() {
             value={previewColor}
             onChange={e => handlePrimaryColorChange(e.target.value)}
             className="h-10 w-14 cursor-pointer rounded border border-border bg-transparent p-0.5"
-            aria-label="Pick primary brand color"
+            aria-label="Escolha a cor primária da marca"
           />
           <Input
             value={colorInput}
@@ -252,13 +252,13 @@ function BusinessBrandingTab() {
             maxLength={7}
           />
           {normalizeHexColor(colorInput) === null && colorInput.trim() !== '' && (
-            <span className="text-xs text-destructive">Invalid hex</span>
+            <span className="text-xs text-destructive">Hex inválido</span>
           )}
         </div>
         <div className="space-y-2 pt-2 border-t border-border">
-          <Label htmlFor="primary-foreground-color">Button text color</Label>
+          <Label htmlFor="primary-foreground-color">Cor do texto do botão</Label>
           <p className="text-xs text-muted-foreground">
-            Text on primary buttons, badges, and gradient actions. Default is white on SparxIT red.
+            Texto exibido em botões primários, badges e botões de destaque. O padrão é branco.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <input
@@ -267,7 +267,7 @@ function BusinessBrandingTab() {
               value={previewForegroundColor}
               onChange={e => handlePrimaryForegroundColorChange(e.target.value)}
               className="h-10 w-14 cursor-pointer rounded border border-border bg-transparent p-0.5"
-              aria-label="Pick button text color"
+              aria-label="Escolha a cor do texto do botão"
             />
             <Input
               value={foregroundColorInput}
@@ -282,14 +282,14 @@ function BusinessBrandingTab() {
           </div>
         </div>
         <div className="rounded-md border border-border bg-muted/30 p-4 space-y-3">
-          <p className="text-xs font-medium text-muted-foreground">Live preview</p>
+          <p className="text-xs font-medium text-muted-foreground">Prévia em tempo real</p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button size="sm">Primary button</Button>
+            <Button size="sm">Botão primário</Button>
             <Button size="sm" variant="outline" className="border-primary text-primary">
-              Outline
+              Contorno
             </Button>
             <Button size="sm" className="btn-gradient text-primary-foreground border-0">
-              Gradient
+              Destaque
             </Button>
             <Badge className="bg-primary text-primary-foreground hover:bg-primary/90">Badge</Badge>
           </div>
@@ -307,7 +307,7 @@ function BusinessBrandingTab() {
         className="gap-2"
       >
         {(isUpdating || saving) ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-        Save branding
+        Salvar Identidade Visual
       </Button>
     </div>
   );
@@ -386,13 +386,13 @@ function CertTiersTab() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-muted-foreground">
-            {Object.keys(certs).length} certifications configured across 3 tiers
+            {Object.keys(certs).length} certificações reconhecidas configuradas across 3 tiers
           </p>
         </div>
         <div className="flex gap-2">
           <Dialog open={addOpen} onOpenChange={setAddOpen}>
             <DialogTrigger asChild>
-              <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Add Certification</Button>
+              <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Adicionar Certificação</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -411,7 +411,7 @@ function CertTiersTab() {
                     <SelectContent>
                       <SelectItem value="1">🏅 Tier 1 — Gold Standard (30 pts)</SelectItem>
                       <SelectItem value="2">⭐ Tier 2 — Well-Recognized (20 pts)</SelectItem>
-                      <SelectItem value="3">Tier 3 — Entry-Level (10 pts)</SelectItem>
+                      <SelectItem value="3">Tier 3 — Entry-Nível (10 pts)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -437,7 +437,7 @@ function CertTiersTab() {
           </Dialog>
           {isDirty && (
             <Button size="sm" variant="default" onClick={handleSave} disabled={isUpdating}>
-              <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Save Changes'}
+              <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Salvar Alterações'}
             </Button>
           )}
         </div>
@@ -445,7 +445,7 @@ function CertTiersTab() {
 
       {isDirty && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-700 dark:text-amber-400">
-          <AlertTriangle className="h-4 w-4" /> You have unsaved changes
+          <AlertTriangle className="h-4 w-4" /> Você tem alterações não salvas
         </div>
       )}
 
@@ -493,7 +493,7 @@ function DomainsTab() {
     const val = newDomain.trim();
     if (!val) return;
     if (domains.some(d => d.toLowerCase() === val.toLowerCase())) {
-      toast.error('Already in the list');
+      toast.error('Já adicionado à lista');
       return;
     }
     setLocalDomains([...domains, val]);
@@ -516,17 +516,17 @@ function DomainsTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{domains.length} domains configured</p>
+        <p className="text-sm text-muted-foreground">{domains.length} áreas configuradas</p>
         {isDirty && (
           <Button size="sm" onClick={handleSave} disabled={isUpdating}>
-            <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Save Changes'}
+            <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>
 
       {isDirty && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-700 dark:text-amber-400">
-          <AlertTriangle className="h-4 w-4" /> You have unsaved changes
+          <AlertTriangle className="h-4 w-4" /> Você tem alterações não salvas
         </div>
       )}
 
@@ -537,7 +537,7 @@ function DomainsTab() {
           placeholder="Add domain (e.g. 'Engineering', 'Marketing')"
           onKeyDown={e => e.key === 'Enter' && handleAdd()}
         />
-        <Button onClick={handleAdd} size="sm"><Plus className="h-4 w-4 mr-1" /> Add</Button>
+        <Button onClick={handleAdd} size="sm"><Plus className="h-4 w-4 mr-1" /> Adicionar</Button>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -566,7 +566,7 @@ function TeamsTab() {
     const val = newTeam.trim();
     if (!val) return;
     if (teams.some(t => t.toLowerCase() === val.toLowerCase())) {
-      toast.error('Already in the list');
+      toast.error('Já adicionado à lista');
       return;
     }
     setLocalTeams([...teams, val]);
@@ -589,17 +589,17 @@ function TeamsTab() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{teams.length} teams configured</p>
+        <p className="text-sm text-muted-foreground">{teams.length} equipes configuradas</p>
         {isDirty && (
           <Button size="sm" onClick={handleSave} disabled={isUpdating}>
-            <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Save Changes'}
+            <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>
 
       {isDirty && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-700 dark:text-amber-400">
-          <AlertTriangle className="h-4 w-4" /> You have unsaved changes
+          <AlertTriangle className="h-4 w-4" /> Você tem alterações não salvas
         </div>
       )}
 
@@ -607,10 +607,10 @@ function TeamsTab() {
         <Input
           value={newTeam}
           onChange={e => setNewTeam(e.target.value)}
-          placeholder="Add team (e.g. 'Frontend', 'Backend', 'QA')"
+          placeholder="Adicionar equipe (ex: 'Frontend', 'Backend', 'QA')"
           onKeyDown={e => e.key === 'Enter' && handleAdd()}
         />
-        <Button onClick={handleAdd} size="sm"><Plus className="h-4 w-4 mr-1" /> Add</Button>
+        <Button onClick={handleAdd} size="sm"><Plus className="h-4 w-4 mr-1" /> Adicionar</Button>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -640,7 +640,7 @@ function CollegesTab() {
     const val = newCollege.toLowerCase().trim();
     if (!val) return;
     if (colleges.includes(val)) {
-      toast.error('Already in the list');
+      toast.error('Já adicionado à lista');
       return;
     }
     setLocalColleges([...colleges, val]);
@@ -666,13 +666,13 @@ function CollegesTab() {
         <p className="text-sm text-muted-foreground">{colleges.length} Tier 1 college patterns configured</p>
         {isDirty && (
           <Button size="sm" onClick={handleSave} disabled={isUpdating}>
-            <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Save Changes'}
+            <Save className="h-4 w-4 mr-1" /> {isUpdating ? 'Saving...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>
       {isDirty && (
         <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-amber-700 dark:text-amber-400">
-          <AlertTriangle className="h-4 w-4" /> You have unsaved changes
+          <AlertTriangle className="h-4 w-4" /> Você tem alterações não salvas
         </div>
       )}
       <div className="flex gap-2">
@@ -682,7 +682,7 @@ function CollegesTab() {
           placeholder="Add college name pattern (e.g. 'vit', 'manipal')"
           onKeyDown={e => e.key === 'Enter' && handleAdd()}
         />
-        <Button onClick={handleAdd} size="sm"><Plus className="h-4 w-4 mr-1" /> Add</Button>
+        <Button onClick={handleAdd} size="sm"><Plus className="h-4 w-4 mr-1" /> Adicionar</Button>
       </div>
       <div className="flex flex-wrap gap-2">
         {colleges.sort().map(college => (
@@ -784,8 +784,8 @@ function UserManagementTab() {
   return (
     <Tabs defaultValue="staff" className="space-y-4">
       <TabsList className="grid w-full max-w-sm grid-cols-2">
-        <TabsTrigger value="staff">Staff</TabsTrigger>
-        <TabsTrigger value="applicants">Applicants</TabsTrigger>
+        <TabsTrigger value="staff">Equipe Interna</TabsTrigger>
+        <TabsTrigger value="applicants">Candidatos do Portal</TabsTrigger>
       </TabsList>
       <TabsContent value="staff" className="mt-0">
         <StaffUsersSection />
@@ -1134,37 +1134,37 @@ function StaffUsersSection() {
         <p className="text-sm text-muted-foreground">{users.length} users with roles</p>
         <Dialog open={addOpen} onOpenChange={setAddOpen}>
           <DialogTrigger asChild>
-            <Button size="sm"><UserPlus className="h-4 w-4 mr-1" /> Assign Role</Button>
+            <Button size="sm"><UserPlus className="h-4 w-4 mr-1" /> Atribuir Função</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Assign Role to User</DialogTitle>
+              <DialogTitle>Atribuir Função a Usuário</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label>User Email</Label>
+                <Label>E-mail do Usuário</Label>
                 <Input
                   value={newEmail}
                   onChange={e => setNewEmail(e.target.value)}
                   placeholder="user@example.com"
                   type="email"
                 />
-                <p className="text-xs text-muted-foreground mt-1">The user must have already signed up</p>
+                <p className="text-xs text-muted-foreground mt-1">O usuário já deve ter efetuado o cadastro prévio na plataforma</p>
               </div>
               <div>
-                <Label>Role</Label>
+                <Label>Função / Perfil</Label>
                 <Select value={newRole} onValueChange={setNewRole}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">Admin — Full access</SelectItem>
-                    <SelectItem value="hr">HR — Receives escalations</SelectItem>
-                    <SelectItem value="recruiter">Recruiter — Manage assigned jobs & candidates</SelectItem>
-                    <SelectItem value="interviewer">Interviewer — View assigned candidates</SelectItem>
+                    <SelectItem value="admin">Administrador — Acesso total</SelectItem>
+                    <SelectItem value="hr">RH — Recebe escalonamentos</SelectItem>
+                    <SelectItem value="recruiter">Recrutador — Gerencia vagas e candidatos</SelectItem>
+                    <SelectItem value="interviewer">Entrevistador — Visualiza candidatos atribuídos</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <Button onClick={handleAddUser} className="w-full" disabled={adding}>
-                {adding ? 'Assigning...' : 'Assign Role'}
+                {adding ? 'Atribuindo...' : 'Atribuir Função'}
               </Button>
             </div>
           </DialogContent>
@@ -1175,11 +1175,11 @@ function StaffUsersSection() {
         <Table className="min-w-[720px]">
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead className="w-48">Change Role</TableHead>
-              <TableHead className="w-36 text-center">Can Interview</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>E-mail</TableHead>
+              <TableHead>Função</TableHead>
+              <TableHead className="w-48">Alterar Função</TableHead>
+              <TableHead className="w-36 text-center">Pode Entrevistar</TableHead>
               <TableHead className="w-32"></TableHead>
             </TableRow>
           </TableHeader>
@@ -1209,12 +1209,12 @@ function StaffUsersSection() {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="admin">Admin — Full access</SelectItem>
-                          <SelectItem value="hr">HR — Receives escalations</SelectItem>
-                          <SelectItem value="recruiter">Recruiter — Assigned jobs</SelectItem>
-                          <SelectItem value="interviewer">Interviewer — Feedback only</SelectItem>
+                          <SelectItem value="admin">Administrador — Acesso total</SelectItem>
+                          <SelectItem value="hr">RH — Recebe escalonamentos</SelectItem>
+                          <SelectItem value="recruiter">Recrutador — Vagas atribuídas</SelectItem>
+                          <SelectItem value="interviewer">Entrevistador — Apenas pareceres</SelectItem>
                           <SelectItem value="__remove_staff__" className="text-destructive focus:text-destructive">
-                            Applicant — Remove staff access
+                            Candidato — Remover acesso de equipe
                           </SelectItem>
                         </SelectContent>
                       </Select>
@@ -1225,7 +1225,7 @@ function StaffUsersSection() {
                       <Switch
                         checked={!!u.profile?.can_conduct_interviews}
                         onCheckedChange={() => handleToggleCanConduct(u.user_id, !!u.profile?.can_conduct_interviews)}
-                        title={u.profile?.can_conduct_interviews ? 'Remove from interviewer pool' : 'Add to interviewer pool'}
+                        title={u.profile?.can_conduct_interviews ? 'Remover da banca de entrevistadores' : 'Adicionar à banca de entrevistadores'}
                       />
                       {u.profile?.can_conduct_interviews && <Video className="h-3.5 w-3.5 text-emerald-600" />}
                     </div>
@@ -1238,11 +1238,11 @@ function StaffUsersSection() {
                             variant="ghost"
                             size="sm"
                             className="h-7 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 px-2"
-                            title="Confirm email so user can log in"
+                            title="Confirmar e-mail para permitir o acesso"
                             disabled={confirmingId === u.user_id}
                             onClick={() => handleConfirmEmail(u.user_id, u.profile?.full_name)}
                           >
-                            {confirmingId === u.user_id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Confirm Email'}
+                            {confirmingId === u.user_id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Confirmar E-mail'}
                           </Button>
                         )}
                         {u.role !== 'admin' && (
@@ -1252,7 +1252,7 @@ function StaffUsersSection() {
                             className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 px-2"
                             onClick={() => setArchiveTarget(u)}
                           >
-                            <UserX className="h-3 w-3 mr-1" /> Archive
+                            <UserX className="h-3 w-3 mr-1" /> Arquivar
                           </Button>
                         )}
                         <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleRemoveRole(u.user_id)}>
@@ -1286,20 +1286,20 @@ function StaffUsersSection() {
       {pendingUsers.length > 0 && (
         <div className="space-y-2 pt-2">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold">Pending Approval</h3>
+            <h3 className="text-sm font-semibold">Aprovação Pendente</h3>
             <Badge variant="secondary" className="text-xs">{pendingUsers.length}</Badge>
           </div>
           <p className="text-xs text-muted-foreground">
-            These users signed up for internal access but haven&apos;t been assigned a staff role yet.
-            Applicant portal signups appear under the Applicants tab instead.
+            Estes usuários se cadastraram para acesso interno mas ainda não receberam uma função de equipe.
+            Cadastros do portal do candidato aparecem na aba Candidatos do Portal.
           </p>
           <div className="border rounded-lg overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead className="w-64">Approve as</TableHead>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>E-mail</TableHead>
+                  <TableHead className="w-64">Aprovar como</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1317,7 +1317,7 @@ function StaffUsersSection() {
                             disabled={confirmingId === u.user_id || rejectingPendingId === u.user_id}
                             onClick={() => handleConfirmEmail(u.user_id, u.full_name)}
                           >
-                            {confirmingId === u.user_id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Confirm Email'}
+                            {confirmingId === u.user_id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Confirmar E-mail'}
                           </Button>
                         )}
                         {u.email_confirmed !== true && (
@@ -1342,7 +1342,7 @@ function StaffUsersSection() {
                           disabled={registeringApplicantId === u.user_id || approvingId === u.user_id || rejectingPendingId === u.user_id}
                           onClick={() => handleRegisterAsApplicant(u.user_id, u.email)}
                         >
-                          {registeringApplicantId === u.user_id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Applicant portal'}
+                          {registeringApplicantId === u.user_id ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Mover p/ Candidato'}
                         </Button>
                         <Button
                           size="sm"
@@ -1619,19 +1619,19 @@ function ApplicantPortalUsersSection() {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        {applicants.length} applicant portal {applicants.length === 1 ? 'user' : 'users'}
+        {applicants.length} {applicants.length === 1 ? 'usuário' : 'usuários'} no portal do candidato
       </p>
       <p className="text-xs text-muted-foreground">
-        Applicant portal users without a staff role. Staff members are managed on the Staff tab.
+        Usuários cadastrados no portal de vagas sem perfil de equipe interna. Membros da equipe são gerenciados na aba Equipe Interna.
       </p>
       <div className="rounded-xl surface-card border-0 overflow-x-auto min-w-0">
         <Table className="min-w-[640px]">
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Phone</TableHead>
-              <TableHead>Joined</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>E-mail</TableHead>
+              <TableHead>Telefone</TableHead>
+              <TableHead>Cadastro em</TableHead>
               <TableHead className="w-32"></TableHead>
             </TableRow>
           </TableHeader>
@@ -1639,7 +1639,7 @@ function ApplicantPortalUsersSection() {
             {applicants.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center text-sm text-muted-foreground py-8">
-                  No applicant portal users yet.
+                  Nenhum candidato cadastrado no portal ainda.
                 </TableCell>
               </TableRow>
             ) : (
@@ -1657,7 +1657,7 @@ function ApplicantPortalUsersSection() {
                         variant="ghost"
                         size="sm"
                         className="h-7 text-xs text-amber-600 hover:text-amber-700 hover:bg-amber-50 px-2"
-                        title="Confirm email so user can log in"
+                        title="Confirmar e-mail para permitir o acesso"
                         disabled={confirmingId === a.user_id}
                         onClick={() => handleConfirmEmail(a.user_id, a.full_name)}
                       >
@@ -1692,7 +1692,7 @@ function ApplicantPortalUsersSection() {
 function RedFlagRulesTab() {
   const { configValue, isLoading, update, isUpdating } = useSystemConfig('red_flag_rules');
 
-  const defaults = { employment_gap_months: 3, frequent_switching_months: 12, short_senior_tenure_months: 6 };
+  const defaults = { employment_gap_meses: 3, frequent_switching_meses: 12, short_senior_tenure_meses: 6 };
   const saved = (configValue as Record<string, number> | null) ?? defaults;
 
   const [local, setLocal] = useState<typeof defaults>(saved as typeof defaults);
@@ -1700,14 +1700,14 @@ function RedFlagRulesTab() {
   useEffect(() => { setLocal(saved as typeof defaults); }, [configValue]);
 
   const isDirty =
-    local.employment_gap_months      !== (saved as typeof defaults).employment_gap_months      ||
-    local.frequent_switching_months  !== (saved as typeof defaults).frequent_switching_months  ||
-    local.short_senior_tenure_months !== (saved as typeof defaults).short_senior_tenure_months;
+    local.employment_gap_meses      !== (saved as typeof defaults).employment_gap_meses      ||
+    local.frequent_switching_meses  !== (saved as typeof defaults).frequent_switching_meses  ||
+    local.short_senior_tenure_meses !== (saved as typeof defaults).short_senior_tenure_meses;
 
   const fields: { key: keyof typeof defaults; label: string; description: string }[] = [
-    { key: 'employment_gap_months',      label: 'Employment Gap (months)',      description: 'Flag unexplained gaps of this length or more between roles.' },
-    { key: 'frequent_switching_months',  label: 'Frequent Switching (months)',  description: "Flag candidates whose average tenure is below this threshold across 3+ roles." },
-    { key: 'short_senior_tenure_months', label: 'Short Senior Tenure (months)', description: 'Flag senior/lead titles held for less than this duration.' },
+    { key: 'employment_gap_meses',      label: 'Employment Gap (meses)',      description: 'Flag unexplained gaps of this length or more between roles.' },
+    { key: 'frequent_switching_meses',  label: 'Frequent Switching (meses)',  description: "Flag candidates whose average tenure is below this threshold across 3+ roles." },
+    { key: 'short_senior_tenure_meses', label: 'Short Senior Tenure (meses)', description: 'Flag senior/lead titles held for less than this duration.' },
   ];
 
   if (isLoading) return <div className="text-sm text-muted-foreground">Loading...</div>;
@@ -1722,7 +1722,7 @@ function RedFlagRulesTab() {
 
       {isDirty && (
         <Alert>
-          <AlertDescription>You have unsaved changes.</AlertDescription>
+          <AlertDescription>Você tem alterações não salvas.</AlertDescription>
         </Alert>
       )}
 
@@ -1786,7 +1786,7 @@ function EmailTab() {
       const row = Array.isArray(data) ? data[0] : data;
       return {
         sentToday: Number((row as { sent_today?: number })?.sent_today ?? 0),
-        sentThisMonth: Number((row as { sent_this_month?: number })?.sent_this_month ?? 0),
+        sentThisMonth: Number((row as { sent_this_mês?: number })?.sent_this_mês ?? 0),
       };
     },
     refetchInterval: 60_000,
@@ -1797,15 +1797,15 @@ function EmailTab() {
   return (
     <Tabs defaultValue="configure" className="max-w-lg">
       <TabsList className="grid w-full grid-cols-2 mb-6">
-        <TabsTrigger value="configure">Configure</TabsTrigger>
-        <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        <TabsTrigger value="configure">Configurações de Envio</TabsTrigger>
+        <TabsTrigger value="notifications">Tipos de Notificação</TabsTrigger>
       </TabsList>
 
       <TabsContent value="configure" className="space-y-6 mt-0">
         <div>
-          <h3 className="text-sm font-medium">Email delivery</h3>
+          <h3 className="text-sm font-medium">Entrega de e-mails</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            AWS SES SMTP setup, sender identity, and send quotas.
+            Configuração do SMTP via AWS SES, identidade de remetente e cotas de envio.
           </p>
         </div>
 
@@ -1817,8 +1817,8 @@ function EmailTab() {
 
         <div className="flex items-center justify-between gap-4">
           <div>
-            <Label htmlFor="email-enabled">Email notifications enabled</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">When off, sends are logged as skipped.</p>
+            <Label htmlFor="email-enabled">Notificações por e-mail ativas</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">Quando desativado, os envios são registrados como ignorados.</p>
           </div>
           <Switch
             id="email-enabled"
@@ -1828,10 +1828,10 @@ function EmailTab() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="from-address">From address</Label>
+          <Label htmlFor="from-address">Endereço de envio (Remetente)</Label>
           <Input
             id="from-address"
-            placeholder="system@thetalentapp.io or Company Name &lt;system@thetalentapp.io&gt;"
+            placeholder="sistema@suaempresa.com.br ou Nome da Empresa &lt;sistema@suaempresa.com.br&gt;"
             value={local.from_address}
             onChange={(e) => setLocal((prev) => ({ ...prev, from_address: e.target.value }))}
           />
@@ -1841,28 +1841,28 @@ function EmailTab() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="reply-to">Reply-to (optional)</Label>
+          <Label htmlFor="reply-to">Responder para (opcional)</Label>
           <Input
             id="reply-to"
-            placeholder="hr@yourdomain.com"
+            placeholder="rh@suaempresa.com.br"
             value={local.reply_to}
             onChange={(e) => setLocal((prev) => ({ ...prev, reply_to: e.target.value }))}
           />
         </div>
 
         <div className="rounded-lg border p-4 space-y-2">
-          <p className="text-sm font-medium">Quota usage</p>
+          <p className="text-sm font-medium">Consumo de cotas</p>
           <p className="text-sm text-muted-foreground">
-            Today: <strong>{quota?.sentToday ?? '—'}</strong> / {local.daily_quota}
+            Hoje: <strong>{quota?.sentToday ?? '—'}</strong> / {local.daily_quota}
             {' · '}
-            This month: <strong>{quota?.sentThisMonth ?? '—'}</strong> / {local.monthly_quota}
+            Este mês: <strong>{quota?.sentThisMonth ?? '—'}</strong> / {local.monthly_quota}
           </p>
-          <Button variant="outline" size="sm" onClick={() => refetchQuota()}>Refresh counts</Button>
+          <Button variant="outline" size="sm" onClick={() => refetchQuota()}>Atualizar contagens</Button>
         </div>
 
         {isDirty && (
           <Alert>
-            <AlertDescription>You have unsaved changes.</AlertDescription>
+            <AlertDescription>Você tem alterações não salvas.</AlertDescription>
           </Alert>
         )}
 
@@ -1876,15 +1876,15 @@ function EmailTab() {
           })}
           disabled={!isDirty || isUpdating}
         >
-          {isUpdating ? 'Saving...' : 'Save Email Settings'}
+          {isUpdating ? 'Salvando...' : 'Salvar Configurações de E-mail'}
         </Button>
       </TabsContent>
 
       <TabsContent value="notifications" className="space-y-4 mt-0">
         <div>
-          <h3 className="text-sm font-medium">Notification types</h3>
+          <h3 className="text-sm font-medium">Tipos de notificação</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Turn individual notification types on or off. The master email toggle in Configure must also be enabled.
+            Ative ou desative notificações individuais. O botão geral em Configurações de Envio também deve estar ligado.
           </p>
         </div>
 
@@ -1909,7 +1909,7 @@ function EmailTab() {
 
         {isNotifDirty && (
           <Alert>
-            <AlertDescription>You have unsaved notification changes.</AlertDescription>
+            <AlertDescription>Você tem alterações de notificação não salvas.</AlertDescription>
           </Alert>
         )}
 
@@ -1917,7 +1917,7 @@ function EmailTab() {
           onClick={() => updateNotif(localNotif)}
           disabled={!isNotifDirty || notifUpdating}
         >
-          {notifUpdating ? 'Saving...' : 'Save Notification Settings'}
+          {notifUpdating ? 'Salvando...' : 'Salvar Notificações'}
         </Button>
       </TabsContent>
     </Tabs>
@@ -1968,19 +1968,19 @@ function AssessmentsTab() {
     <Tabs defaultValue="configure" className="max-w-4xl">
       <TabsList className="grid w-full grid-cols-2 mb-6 max-w-md">
         <TabsTrigger value="configure">Configure</TabsTrigger>
-        <TabsTrigger value="ai-generation">AI generation</TabsTrigger>
+        <TabsTrigger value="ai-generation">Geração com IA</TabsTrigger>
       </TabsList>
 
       <TabsContent value="configure" className="space-y-6 mt-0">
         <div>
-          <h3 className="text-sm font-medium">Org assessment defaults</h3>
+          <h3 className="text-sm font-medium">Padrões organizacionais de avaliações</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            New jobs inherit these values. Pass threshold: org default → job override → assessment passing score.
+            Novas vagas herdam estes valores. Ordem de prioridade da nota de corte: padrão da organização → personalização na vaga → nota da avaliação.
           </p>
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="assessment-deadline-days">Default deadline (days)</Label>
+          <Label htmlFor="assessment-deadline-days">Prazo padrão (dias)</Label>
           <Input
             id="assessment-deadline-days"
             type="number"
@@ -1997,13 +1997,13 @@ function AssessmentsTab() {
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="assessment-pass-threshold">Default pass threshold (%)</Label>
+          <Label htmlFor="assessment-pass-threshold">Nota de corte padrão (%)</Label>
           <Input
             id="assessment-pass-threshold"
             type="number"
             min={0}
             max={100}
-            placeholder="Leave empty to use each assessment's passing score"
+            placeholder="Deixe em branco para usar a nota da própria avaliação"
             value={localOrg.default_pass_threshold ?? ''}
             onChange={(e) =>
               setLocalOrg((prev) => ({
@@ -2016,8 +2016,8 @@ function AssessmentsTab() {
 
         <div className="flex items-center justify-between gap-4">
           <div>
-            <Label htmlFor="assessment-require-pass">Require pass before interview</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Block pipeline advance until assessment is passed.</p>
+            <Label htmlFor="assessment-require-pass">Exigir aprovação antes da entrevista</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">Bloqueia o avanço de fase no pipeline até que a avaliação seja aprovada.</p>
           </div>
           <Switch
             id="assessment-require-pass"
@@ -2030,8 +2030,8 @@ function AssessmentsTab() {
 
         <div className="flex items-center justify-between gap-4">
           <div>
-            <Label htmlFor="assessment-notify-recruiter">Notify recruiter on completion</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">Send in-app notification when a candidate finishes.</p>
+            <Label htmlFor="assessment-notify-recruiter">Notificar recrutador na conclusão</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">Envia notificação na plataforma quando um candidato finalizar o teste.</p>
           </div>
           <Switch
             id="assessment-notify-recruiter"
@@ -2044,26 +2044,26 @@ function AssessmentsTab() {
 
         {isOrgDirty && (
           <Alert>
-            <AlertDescription>You have unsaved org default changes.</AlertDescription>
+            <AlertDescription>Você tem alterações de padrões não salvas.</AlertDescription>
           </Alert>
         )}
 
         <Button onClick={() => updateOrg(localOrg)} disabled={!isOrgDirty || orgUpdating}>
-          {orgUpdating ? 'Saving...' : 'Save Org Defaults'}
+          {orgUpdating ? 'Salvando...' : 'Salvar Padrões da Organização'}
         </Button>
       </TabsContent>
 
       <TabsContent value="ai-generation" className="space-y-6 mt-0">
         <div>
-          <h3 className="text-sm font-medium">Global structure</h3>
+          <h3 className="text-sm font-medium">Estrutura geral das provas</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Section count, questions per section, and marks apply to all tiers.
+            Número de seções, questões por seção e pontuação aplicados a todos os níveis.
           </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="gen-section-count">Section count</Label>
+            <Label htmlFor="gen-section-count">Número de seções</Label>
             <Input
               id="gen-section-count"
               type="number"
@@ -2082,7 +2082,7 @@ function AssessmentsTab() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="gen-questions-per-section">Questions per section</Label>
+            <Label htmlFor="gen-questions-per-section">Questões por seção</Label>
             <Input
               id="gen-questions-per-section"
               type="number"
@@ -2101,7 +2101,7 @@ function AssessmentsTab() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="gen-marks-mcq">MCQ marks</Label>
+            <Label htmlFor="gen-marks-mcq">Pontos por Múltipla Escolha</Label>
             <Input
               id="gen-marks-mcq"
               type="number"
@@ -2120,7 +2120,7 @@ function AssessmentsTab() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="gen-marks-coding">Coding marks</Label>
+            <Label htmlFor="gen-marks-coding">Pontos por Programação</Label>
             <Input
               id="gen-marks-coding"
               type="number"
@@ -2139,7 +2139,7 @@ function AssessmentsTab() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="gen-marks-subjective">Subjective marks</Label>
+            <Label htmlFor="gen-marks-subjective">Pontos por Dissertativa</Label>
             <Input
               id="gen-marks-subjective"
               type="number"
@@ -2160,9 +2160,9 @@ function AssessmentsTab() {
         </div>
 
         <div>
-          <h3 className="text-sm font-medium">Per-tier settings</h3>
+          <h3 className="text-sm font-medium">Configurações por nível de experiência</h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Duration, passing score, and coding limits per experience tier. Non-tech tiers cannot enable coding.
+            Duração, nota de corte e limites de programação por nível. Níveis não-técnicos não incluem código.
           </p>
         </div>
 
@@ -2170,11 +2170,11 @@ function AssessmentsTab() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Tier</TableHead>
-                <TableHead>Duration (min)</TableHead>
-                <TableHead>Passing %</TableHead>
-                <TableHead>Min coding</TableHead>
-                <TableHead>Max coding</TableHead>
+                <TableHead>Nível</TableHead>
+                <TableHead>Duração (min)</TableHead>
+                <TableHead>% Aprovação</TableHead>
+                <TableHead>Mín. Código</TableHead>
+                <TableHead>Máx. Código</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -2253,7 +2253,7 @@ function AssessmentsTab() {
 
         {isGenDirty && (
           <Alert>
-            <AlertDescription>You have unsaved AI generation changes.</AlertDescription>
+            <AlertDescription>Você tem alterações de geração com IA não salvas.</AlertDescription>
           </Alert>
         )}
 
@@ -2264,7 +2264,7 @@ function AssessmentsTab() {
           }}
           disabled={!isGenDirty || genUpdating}
         >
-          {genUpdating ? 'Saving...' : 'Save AI Generation Settings'}
+          {genUpdating ? 'Salvando...' : 'Salvar Configurações de IA'}
         </Button>
       </TabsContent>
     </Tabs>
@@ -2286,10 +2286,10 @@ function ChitraTab() {
 
   const fields: { key: keyof typeof defaults; label: string; description: string }[] = [
     { key: 'grace_minutes',    label: 'Grace Period (minutes)',    description: 'Time after a scheduled interview before Chitra sends the first nudge.' },
-    { key: 'level1_hours',     label: 'Level 1 — Firm nudge (hours)', description: 'Hours after the first nudge before Chitra follows up firmly and loops in the recruiter.' },
-    { key: 'level2_hours',     label: 'Level 2 — HR Escalation (hours)', description: 'Total hours overdue before Chitra notifies HR.' },
-    { key: 'level3_hours',     label: 'Level 3 — Admin Report (hours)', description: 'Total hours overdue before Chitra notes this in the super-admin daily report.' },
-    { key: 'level4_hours',     label: 'Level 4 — Formal Warning (hours)', description: 'Total hours overdue before Chitra issues a formal on-record warning to all parties.' },
+    { key: 'level1_hours',     label: 'Nível 1 — Firm nudge (hours)', description: 'Hours after the first nudge before Chitra follows up firmly and loops in the recruiter.' },
+    { key: 'level2_hours',     label: 'Nível 2 — HR Escalation (hours)', description: 'Total hours overdue before Chitra notifies HR.' },
+    { key: 'level3_hours',     label: 'Nível 3 — Relatório ao Admin (hours)', description: 'Total hours overdue before Chitra notes this in the super-admin daily report.' },
+    { key: 'level4_hours',     label: 'Nível 4 — Advertência Formal (hours)', description: 'Total hours overdue before Chitra issues a formal on-record warning to all parties.' },
   ];
 
   if (isLoading) return <div className="text-sm text-muted-foreground">Loading...</div>;
@@ -2307,7 +2307,7 @@ function ChitraTab() {
 
         {isDirty && (
           <Alert>
-            <AlertDescription>You have unsaved changes.</AlertDescription>
+            <AlertDescription>Você tem alterações não salvas.</AlertDescription>
           </Alert>
         )}
 
@@ -2335,7 +2335,7 @@ function ChitraTab() {
       {/* KRA overview */}
       <div className="space-y-4 border-t pt-6">
         <div>
-          <h3 className="text-sm font-semibold">Active KRAs</h3>
+          <h3 className="text-sm font-semibold">Ativo KRAs</h3>
           <p className="text-sm text-muted-foreground mt-0.5">
             Chitra's current responsibilities.
           </p>
@@ -2359,10 +2359,10 @@ function ChitraTab() {
                 <div className="mt-2 grid grid-cols-5 gap-1.5 text-[10px]">
                   {[
                     { level: 'L0', label: 'Nudge', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
-                    { level: 'L1', label: 'Firm + Recruiter', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
-                    { level: 'L2', label: 'HR Notified', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
-                    { level: 'L3', label: 'Admin Report', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
-                    { level: 'L4', label: 'Formal Warning', color: 'bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300 font-bold' },
+                    { level: 'L1', label: 'Firme + Recrutador', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
+                    { level: 'L2', label: 'Notificação ao RH', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
+                    { level: 'L3', label: 'Relatório ao Admin', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
+                    { level: 'L4', label: 'Advertência Formal', color: 'bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300 font-bold' },
                   ].map(s => (
                     <div key={s.level} className={`rounded px-1.5 py-1 text-center ${s.color}`}>
                       <div className="font-bold">{s.level}</div>
@@ -2470,7 +2470,7 @@ function AnnouncementsTab() {
       qc.invalidateQueries({ queryKey: ['announcements-all'] });
       setMessage(''); setType('info'); setLinkLabel(''); setLinkUrl(''); setExpiry('never');
       setShowForm(false);
-      toast.success('Announcement created');
+      toast.success('Comunicado criado com sucesso');
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -2511,11 +2511,11 @@ function AnnouncementsTab() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Multiple announcements can be active simultaneously — the bar cycles through them automatically every 5 seconds.
+          Vários comunicados podem ficar ativos simultaneamente — a barra alterna entre eles a cada 5 segundos.
         </p>
         <Button size="sm" className="gap-1.5 btn-gradient text-primary-foreground" onClick={() => setShowForm(v => !v)}>
           <Plus className="w-4 h-4" />
-          New Announcement
+          Novo Comunicado
         </Button>
       </div>
 
@@ -2527,7 +2527,7 @@ function AnnouncementsTab() {
               <Textarea
                 value={message}
                 onChange={e => setMessage(e.target.value)}
-                placeholder="What do you want to announce?"
+                placeholder="O que você deseja comunicar aos usuários?"
                 rows={2}
               />
             </div>
@@ -2556,11 +2556,11 @@ function AnnouncementsTab() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>CTA Label <span className="text-muted-foreground text-xs">(optional)</span></Label>
-                <Input value={linkLabel} onChange={e => setLinkLabel(e.target.value)} placeholder="Learn more" />
+                <Label>Texto do Botão (CTA) <span className="text-muted-foreground text-xs">(opcional)</span></Label>
+                <Input value={linkLabel} onChange={e => setLinkLabel(e.target.value)} placeholder="Saiba mais" />
               </div>
               <div className="space-y-2">
-                <Label>CTA URL <span className="text-muted-foreground text-xs">(optional)</span></Label>
+                <Label>Link de Destino (CTA) <span className="text-muted-foreground text-xs">(opcional)</span></Label>
                 <Input value={linkUrl} onChange={e => setLinkUrl(e.target.value)} placeholder="https://... or /path" />
               </div>
             </div>
@@ -2583,7 +2583,7 @@ function AnnouncementsTab() {
           <Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading...
         </div>
       ) : announcements.length === 0 ? (
-        <div className="text-center py-10 text-muted-foreground text-sm">No announcements yet.</div>
+        <div className="text-center py-10 text-muted-foreground text-sm">Nenhum comunicado publicado ainda.</div>
       ) : (
         <div className="space-y-3">
           {announcements.map(a => (
@@ -2680,7 +2680,7 @@ function VendorsTab() {
       });
       setForm(emptyForm);
       setAddOpen(false);
-      toast.success('Vendor added');
+      toast.success('Fornecedor cadastrado com sucesso');
     } catch (e: unknown) {
       toast.error((e as Error).message || 'Failed to add vendor');
     }
@@ -2699,7 +2699,7 @@ function VendorsTab() {
         guarantee_days: editForm.guarantee_days ? parseInt(editForm.guarantee_days) : null,
       });
       setEditId(null);
-      toast.success('Vendor updated');
+      toast.success('Fornecedor atualizado com sucesso');
     } catch (e: unknown) {
       toast.error((e as Error).message || 'Failed to update vendor');
     }
@@ -2710,9 +2710,9 @@ function VendorsTab() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('Delete this vendor? Existing candidates tagged with this vendor source will retain their source tag.')) return;
+    if (!confirm('Excluir este fornecedor? Candidatos já vinculados a este parceiro manterão a tag de origem.')) return;
     await deleteVendor.mutateAsync(id);
-    toast.success('Vendor deleted');
+    toast.success('Fornecedor excluído com sucesso');
   }
 
   return (
@@ -2724,17 +2724,17 @@ function VendorsTab() {
         <Dialog open={addOpen} onOpenChange={setAddOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-1.5">
-              <Plus className="h-4 w-4" /> Add Vendor
+              <Plus className="h-4 w-4" /> Cadastrar Fornecedor
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>Add Recruitment Vendor</DialogTitle>
+              <DialogTitle>Cadastrar Fornecedor de Recrutamento</DialogTitle>
             </DialogHeader>
             <div className="space-y-3 pt-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="col-span-full sm:col-span-2 space-y-1">
-                  <Label>Vendor Name *</Label>
+                  <Label>Nome do Fornecedor *</Label>
                   <Input
                     placeholder="e.g. Acme Recruiting Partners"
                     value={form.name}
@@ -2754,11 +2754,11 @@ function VendorsTab() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <Label>Contact Name</Label>
+                  <Label>Nome do Contato</Label>
                   <Input placeholder="John Smith" value={form.contact_name} onChange={e => setForm(f => ({ ...f, contact_name: e.target.value }))} />
                 </div>
                 <div className="space-y-1">
-                  <Label>Contact Email</Label>
+                  <Label>E-mail de Contato</Label>
                   <Input placeholder="john@acme.com" value={form.contact_email} onChange={e => setForm(f => ({ ...f, contact_email: e.target.value }))} />
                 </div>
                 <div className="space-y-1">
@@ -2772,7 +2772,7 @@ function VendorsTab() {
               </div>
               <Button className="w-full" onClick={handleAdd} disabled={createVendor.isPending || !form.name.trim() || !form.source_key.trim()}>
                 {createVendor.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
-                Add Vendor
+                Cadastrar Fornecedor
               </Button>
             </div>
           </DialogContent>
@@ -2904,7 +2904,7 @@ function PrescreenQuestionsTab() {
       });
       setAddForm(emptyAddForm);
       setAddOpen(false);
-      toast.success('Question added');
+      toast.success('Pergunta adicionada com sucesso');
     } catch (e: unknown) {
       toast.error((e as Error).message || 'Failed to add question');
     }
@@ -2921,7 +2921,7 @@ function PrescreenQuestionsTab() {
         sort_hint: editForm.sort_hint ? parseInt(editForm.sort_hint, 10) : 0,
       });
       closeEdit();
-      toast.success('Question updated');
+      toast.success('Pergunta atualizada com sucesso');
     } catch (e: unknown) {
       toast.error((e as Error).message || 'Failed to update question');
     }
@@ -2939,22 +2939,22 @@ function PrescreenQuestionsTab() {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-sm text-muted-foreground">
-          {activeCount} active / {questions.length} total questions · {PRESCREEN_CATEGORIES.length} categories ·{' '}
-          {ASSIGNED_QUESTION_COUNT} picked per application
+          {activeCount} ativas / {questions.length} perguntas no total · {PRESCREEN_CATEGORIES.length} categorias ·{' '}
+          {ASSIGNED_QUESTION_COUNT} sorteadas por candidatura
         </p>
         <Dialog open={addOpen} onOpenChange={setAddOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-1.5 shrink-0">
-              <Plus className="h-4 w-4" /> Add Question
+              <Plus className="h-4 w-4" /> Adicionar Pergunta
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>Add Pre-screen Question</DialogTitle>
+              <DialogTitle>Adicionar Pergunta de Pré-Triagem</DialogTitle>
             </DialogHeader>
             <div className="space-y-3 pt-2">
               <div className="space-y-1">
-                <Label>Category *</Label>
+                <Label>Categoria *</Label>
                 <Select
                   value={addForm.category}
                   onValueChange={(v) => setAddForm((f) => ({ ...f, category: v as PrescreenCategory }))}
@@ -2972,7 +2972,7 @@ function PrescreenQuestionsTab() {
                 </Select>
               </div>
               <div className="space-y-1">
-                <Label>Question Text *</Label>
+                <Label>Texto da Pergunta *</Label>
                 <Textarea
                   placeholder="What interests you about working at {{company_name}}?"
                   value={addForm.question_text}
@@ -3009,7 +3009,7 @@ function PrescreenQuestionsTab() {
                 }
               >
                 {createQuestion.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
-                Add Question
+                Adicionar Pergunta
               </Button>
             </div>
           </DialogContent>
@@ -3064,7 +3064,7 @@ function PrescreenQuestionsTab() {
       <Dialog open={editOpen} onOpenChange={(open) => { if (!open) closeEdit(); else setEditOpen(true); }}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit Pre-screen Question</DialogTitle>
+            <DialogTitle>Editar Pergunta de Pré-Triagem</DialogTitle>
           </DialogHeader>
           {editing && (
             <div className="space-y-3 pt-2">
@@ -3073,7 +3073,7 @@ function PrescreenQuestionsTab() {
                 <code className="block text-xs bg-muted px-2 py-1.5 rounded font-mono">{editing.question_key}</code>
               </div>
               <div className="space-y-1">
-                <Label>Category *</Label>
+                <Label>Categoria *</Label>
                 <Select
                   value={editForm.category}
                   onValueChange={(v) => setEditForm((f) => ({ ...f, category: v as PrescreenCategory }))}
@@ -3091,7 +3091,7 @@ function PrescreenQuestionsTab() {
                 </Select>
               </div>
               <div className="space-y-1">
-                <Label>Question Text *</Label>
+                <Label>Texto da Pergunta *</Label>
                 <Textarea
                   value={editForm.question_text}
                   onChange={(e) => setEditForm((f) => ({ ...f, question_text: e.target.value }))}
@@ -3128,7 +3128,7 @@ function PrescreenQuestionsTab() {
                 }
               >
                 {updateQuestion.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
-                Save Changes
+                Salvar Alterações
               </Button>
             </div>
           )}
@@ -3247,7 +3247,7 @@ function ScorecardsTab() {
   return (
     <div className="space-y-4">
       <p className="text-sm text-muted-foreground">
-        {templates.length} scorecard template{templates.length !== 1 ? 's' : ''} — criteria used when interviewers submit feedback. Stage keys map automatically from interview stage names.
+        {templates.length} {templates.length !== 1 ? 'modelos de ficha de avaliação' : 'modelo de ficha de avaliação'} — critérios usados pelos entrevistadores no parecer. As chaves de etapa vinculam automaticamente com os nomes das etapas do pipeline.
       </p>
 
       {isLoading ? (
@@ -3255,16 +3255,16 @@ function ScorecardsTab() {
       ) : templates.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-muted-foreground">
           <ClipboardList className="h-10 w-10 opacity-20" />
-          <p className="text-sm">No scorecard templates found. Run the scorecard migration to seed defaults.</p>
+          <p className="text-sm">Nenhum modelo de ficha de avaliação encontrado.</p>
         </div>
       ) : (
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Template</TableHead>
-              <TableHead>Stage Key</TableHead>
-              <TableHead className="text-center">Criteria</TableHead>
-              <TableHead className="text-center">Kit Questions</TableHead>
+              <TableHead>Modelo</TableHead>
+              <TableHead>Chave da Etapa</TableHead>
+              <TableHead className="text-center">Critérios</TableHead>
+              <TableHead className="text-center">Perguntas do Kit</TableHead>
               <TableHead className="text-center">Status</TableHead>
               <TableHead />
             </TableRow>
@@ -3278,7 +3278,7 @@ function ScorecardsTab() {
                 <TableCell className="text-center">{t.prompt_questions.length}</TableCell>
                 <TableCell className="text-center">
                   <Badge variant={t.is_active ? 'default' : 'secondary'}>
-                    {t.is_active ? 'Active' : 'Inactive'}
+                    {t.is_active ? 'Ativo' : 'Inativo'}
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -3297,34 +3297,34 @@ function ScorecardsTab() {
       <Dialog open={editOpen} onOpenChange={open => { if (!open) closeEdit(); }}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Scorecard — {editing?.stage_key}</DialogTitle>
+            <DialogTitle>Editar Ficha de Avaliação — {editing?.stage_key}</DialogTitle>
           </DialogHeader>
           {editing && (
             <div className="space-y-4 pt-2">
               <div className="space-y-1">
-                <Label>Display name</Label>
+                <Label>Nome de Exibição</Label>
                 <Input value={displayName} onChange={e => setDisplayName(e.target.value)} />
               </div>
 
               <div className="space-y-1">
-                <Label>Stage key</Label>
+                <Label>Chave da Etapa</Label>
                 <Input value={editing.stage_key} disabled className="font-mono text-sm bg-muted" />
-                <p className="text-[11px] text-muted-foreground">Fixed — matched from interview stage names (e.g. &quot;Technical Round&quot; → technical).</p>
+                <p className="text-[11px] text-muted-foreground">Fixa — vinculada a partir do nome da etapa da entrevista (ex: "Fase Técnica" → technical).</p>
               </div>
 
               <div className="flex items-center justify-between rounded-lg border border-border p-3">
                 <div>
-                  <Label>Active</Label>
-                  <p className="text-xs text-muted-foreground">Inactive templates fall back to the general scorecard.</p>
+                  <Label>Ativo</Label>
+                  <p className="text-xs text-muted-foreground">Modelos inativos utilizam a ficha de avaliação geral como padrão.</p>
                 </div>
                 <Switch checked={isActive} onCheckedChange={setIsActive} />
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label>Rating criteria</Label>
+                  <Label>Critérios de Avaliação</Label>
                   <Button type="button" size="sm" variant="outline" className="h-7 gap-1" onClick={addCriterion}>
-                    <Plus className="h-3 w-3" /> Add
+                    <Plus className="h-3 w-3" /> Adicionar
                   </Button>
                 </div>
                 <div className="space-y-2">
@@ -3343,13 +3343,13 @@ function ScorecardsTab() {
                         </Button>
                       </div>
                       <Input
-                        placeholder="Label (e.g. Technical Depth)"
+                        placeholder="Rótulo (ex: Domínio Técnico)"
                         value={c.label}
                         onChange={e => updateCriterion(i, { label: e.target.value })}
                         className="h-8 text-sm"
                       />
                       <Input
-                        placeholder="Scale hint / description (optional)"
+                        placeholder="Dica de escala / descrição (opcional)"
                         value={c.scale_hint ?? ''}
                         onChange={e => updateCriterion(i, { scale_hint: e.target.value })}
                         className="h-8 text-sm"
@@ -3360,11 +3360,11 @@ function ScorecardsTab() {
               </div>
 
               <div className="space-y-2">
-                <Label>Interview kit questions</Label>
-                <p className="text-xs text-muted-foreground">Read-only — seeded defaults copied into interview kits at schedule time.</p>
+                <Label>Perguntas do kit de entrevista</Label>
+                <p className="text-xs text-muted-foreground">Somente leitura — perguntas padrão copiadas para o kit no agendamento.</p>
                 <ul className="rounded-lg border border-border divide-y divide-border text-sm">
                   {editing.prompt_questions.length === 0 ? (
-                    <li className="px-3 py-2 text-muted-foreground text-xs">No kit questions</li>
+                    <li className="px-3 py-2 text-muted-foreground text-xs">Nenhuma pergunta no kit</li>
                   ) : (
                     editing.prompt_questions.map((q, i) => (
                       <li key={i} className="px-3 py-2 text-muted-foreground">{i + 1}. {q}</li>
@@ -3375,7 +3375,7 @@ function ScorecardsTab() {
 
               <Button className="w-full gap-2" onClick={handleSave} disabled={updateTemplate.isPending}>
                 {updateTemplate.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                Save template
+                Salvar Modelo
               </Button>
             </div>
           )}
@@ -3386,7 +3386,7 @@ function ScorecardsTab() {
 }
 
 export default function Settings() {
-  usePageTitle('Settings');
+  usePageTitle('Configurações');
   const { role, isSuperAdmin } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const reScore = useReScoreCandidates();
@@ -3410,7 +3410,7 @@ export default function Settings() {
     return (
       <div className="flex flex-col flex-1 min-w-0 max-w-full">
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 min-w-0 max-w-full">
-          <p className="text-muted-foreground">Only admins can access settings.</p>
+          <p className="text-muted-foreground">Apenas administradores podem acessar as configurações.</p>
         </main>
       </div>
     );
@@ -3420,8 +3420,8 @@ export default function Settings() {
     <div className="flex flex-col flex-1 min-w-0 max-w-full">
       <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 pb-safe min-w-0 max-w-full">
         <PageHeader
-          title="System Configuration"
-          subtitle="Manage credential scoring rules and job settings."
+          title="Configurações do Sistema"
+          subtitle="Gerencie identidade da empresa, segurança, e-mails, regras de pontuação e vagas."
           actions={
             <Button
               variant="outline"
@@ -3430,7 +3430,7 @@ export default function Settings() {
               className="shrink-0 w-full sm:w-auto"
             >
               <RefreshCw className={`h-4 w-4 mr-1 ${reScore.isPending ? 'animate-spin' : ''}`} />
-              {reScore.isPending ? 'Re-scoring...' : 'Re-score All Candidates'}
+              {reScore.isPending ? 'Recalculando...' : 'Recalcular Pontuação dos Candidatos'}
             </Button>
           }
         />
@@ -3439,9 +3439,9 @@ export default function Settings() {
           <div className="flex items-start gap-3 min-w-0">
             <BookOpen className="h-5 w-5 text-primary shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium">Role guides & hiring playbooks</p>
+              <p className="text-sm font-medium">Manuais de processos & guias de contratação</p>
               <p className="text-xs text-muted-foreground">
-                Process docs for {isHR ? 'HR' : 'admin'} workflows — complements Features Overview.
+                Documentação de processos para fluxos de {isHR ? 'RH' : 'administração'} — complementa a Visão Geral.
               </p>
             </div>
           </div>
@@ -3455,63 +3455,62 @@ export default function Settings() {
             <TabsList className="inline-flex h-auto w-max min-w-0 flex-nowrap gap-0.5 p-1">
             {role === 'admin' && (
               <TabsTrigger value="security" className="gap-1.5 shrink-0">
-                <Lock className="h-4 w-4" /> Security
+                <Lock className="h-4 w-4" /> Segurança
               </TabsTrigger>
             )}
             {role === 'admin' && (
               <TabsTrigger value="compliance" className="gap-1.5 shrink-0">
-                <Scale className="h-4 w-4" /> Compliance
+                <Scale className="h-4 w-4" /> Conformidade
               </TabsTrigger>
             )}
             {!isHR && (
               <TabsTrigger value="users" className="gap-1.5 shrink-0">
-                <Shield className="h-4 w-4" /> User Roles
+                <Shield className="h-4 w-4" /> Usuários & Funções
               </TabsTrigger>
             )}
             {role === 'admin' && (
               <TabsTrigger value="business" className="gap-1.5 shrink-0">
-                <Store className="h-4 w-4" /> Business
+                <Store className="h-4 w-4" /> Perfil da Empresa
               </TabsTrigger>
             )}
             {role === 'admin' && (
               <TabsTrigger value="email" className="gap-1.5 shrink-0">
-                <Mail className="h-4 w-4" /> Email
+                <Mail className="h-4 w-4" /> E-mail & Notificações
               </TabsTrigger>
             )}
             {role === 'admin' && (
               <TabsTrigger value="assessments" className="gap-1.5 shrink-0">
-                <ClipboardCheck className="h-4 w-4" /> Assessments
+                <ClipboardCheck className="h-4 w-4" /> Avaliações
               </TabsTrigger>
             )}
             {role === 'admin' && (
               <TabsTrigger value="scorecards" className="gap-1.5 shrink-0">
-                <ClipboardList className="h-4 w-4" /> Scorecards
+                <ClipboardList className="h-4 w-4" /> Fichas de Avaliação
               </TabsTrigger>
             )}
             <TabsTrigger value="certifications" className="gap-1.5 shrink-0">
-              <Award className="h-4 w-4" /> Certifications
+              <Award className="h-4 w-4" /> Certificações
             </TabsTrigger>
             <TabsTrigger value="colleges" className="gap-1.5 shrink-0">
-              <GraduationCap className="h-4 w-4" /> Tier 1 Colleges
+              <GraduationCap className="h-4 w-4" /> Faculdades Tier 1
             </TabsTrigger>
             <TabsTrigger value="domains" className="gap-1.5 shrink-0">
-              <Briefcase className="h-4 w-4" /> Job Domains
+              <Briefcase className="h-4 w-4" /> Áreas de Vagas
             </TabsTrigger>
             <TabsTrigger value="teams" className="gap-1.5 shrink-0">
-              <Users className="h-4 w-4" /> Teams
+              <Users className="h-4 w-4" /> Equipes
             </TabsTrigger>
             <TabsTrigger value="vendors" className="gap-1.5 shrink-0">
-              <Building2 className="h-4 w-4" /> Vendors
+              <Building2 className="h-4 w-4" /> Fornecedores
             </TabsTrigger>
             <TabsTrigger value="application-questions" className="gap-1.5 shrink-0">
-              <FileQuestion className="h-4 w-4" /> Application Questions
+              <FileQuestion className="h-4 w-4" /> Perguntas de Candidatura
             </TabsTrigger>
             <TabsTrigger value="announcements" className="gap-1.5 shrink-0">
-              <Megaphone className="h-4 w-4" />
-              Announcements
-            </TabsTrigger>
+                <Megaphone className="h-4 w-4" /> Comunicados
+              </TabsTrigger>
             <TabsTrigger value="red-flag-rules" className="gap-1.5 shrink-0">
-              <Flag className="h-4 w-4" /> Red Flag Rules
+              <Flag className="h-4 w-4" /> Regras de Alerta
             </TabsTrigger>
             {isSuperAdmin && (
               <TabsTrigger value="chitra" className="gap-1.5 shrink-0">
@@ -3531,9 +3530,9 @@ export default function Settings() {
             <TabsContent value="security">
               <Card>
                 <CardHeader>
-                  <CardTitle>Security</CardTitle>
+                  <CardTitle>Segurança</CardTitle>
                   <CardDescription>
-                    Two-factor authentication, SAML SSO configuration, and append-only audit log.
+                    Autenticação de dois fatores, login único SAML SSO e registro de auditoria imutável.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -3547,9 +3546,9 @@ export default function Settings() {
             <TabsContent value="compliance">
               <Card>
                 <CardHeader>
-                  <CardTitle>Compliance</CardTitle>
+                  <CardTitle>Conformidade</CardTitle>
                   <CardDescription>
-                    GDPR/DPDP hooks — privacy URLs, grievance officer, and sub-processor disclosure. No certification claims.
+                    Ganchos de privacidade — URLs de termos, encarregado de dados (DPO) e relação de sub-processadores.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -3563,9 +3562,9 @@ export default function Settings() {
             <TabsContent value="business">
               <Card>
                 <CardHeader>
-                  <CardTitle>Business Branding</CardTitle>
+                  <CardTitle>Perfil & Marca da Empresa</CardTitle>
                   <CardDescription>
-                    Company logo and name shown in the app header for your organization.
+                    Logotipo da empresa, nome e cores exibidos no cabeçalho e páginas públicas.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -3579,9 +3578,9 @@ export default function Settings() {
             <TabsContent value="email">
               <Card>
                 <CardHeader>
-                  <CardTitle>Email</CardTitle>
+                  <CardTitle>E-mail & Notificações</CardTitle>
                   <CardDescription>
-                    Configure delivery settings and choose which notification types to send.
+                    Configurações de entrega AWS SES e seleção dos tipos de notificação enviadas.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -3595,9 +3594,9 @@ export default function Settings() {
             <TabsContent value="assessments">
               <Card>
                 <CardHeader>
-                  <CardTitle>Assessments</CardTitle>
+                  <CardTitle>Padrões de Avaliações Técnicas</CardTitle>
                   <CardDescription>
-                    Org-wide defaults for job assessments and AI generation profiles.
+                    Padrões organizacionais para testes de vagas e perfis de geração com IA.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -3616,9 +3615,9 @@ export default function Settings() {
                       <ClipboardList className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div>
-                      <CardTitle>Interview Scorecards</CardTitle>
+                      <CardTitle>Fichas de Avaliação de Entrevistas</CardTitle>
                       <CardDescription>
-                        Configure rating criteria per interview stage. Interviewers see these when submitting feedback; kit questions are read-only defaults for scheduled interviews.
+                        Configure os critérios de pontuação por etapa. Os entrevistadores avaliam com base nesses critérios ao enviar parecer.
                       </CardDescription>
                     </div>
                   </div>
@@ -3634,9 +3633,9 @@ export default function Settings() {
             <TabsContent value="users">
               <Card>
                 <CardHeader>
-                  <CardTitle>User Role Management</CardTitle>
+                  <CardTitle>Gestão de Usuários e Permissões</CardTitle>
                   <CardDescription>
-                    Manage internal staff roles and applicant portal users. Staff: Admin, Recruiter, Interviewer, etc. Applicants: portal access only.
+                    Gerencie funções da equipe interna e candidatos do portal. Equipe: Admin, Recrutador, Entrevistador, etc. Candidatos: acesso exclusivo ao portal.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -3649,7 +3648,7 @@ export default function Settings() {
           <TabsContent value="certifications">
             <Card>
               <CardHeader>
-                <CardTitle>Certification Tier Mapping</CardTitle>
+                <CardTitle>Mapeamento de Níveis de Certificação</CardTitle>
                 <CardDescription>
                   Define which professional certifications are recognized and their scoring tier.
                   Tier 1 = 30 pts, Tier 2 = 20 pts, Tier 3 = 10 pts in credential scoring.
@@ -3664,7 +3663,7 @@ export default function Settings() {
           <TabsContent value="colleges">
             <Card>
               <CardHeader>
-                <CardTitle>Tier 1 College Patterns</CardTitle>
+                <CardTitle>Padrões de Instituições de Ensino Tier 1</CardTitle>
                 <CardDescription>
                   Name patterns used to match Tier 1 institutions. If a candidate's institution contains any of these patterns, it scores 25 pts. 
                   AI classifies non-matching institutions into Tier 2/3 automatically.
@@ -3679,9 +3678,9 @@ export default function Settings() {
           <TabsContent value="domains">
             <Card>
               <CardHeader>
-                <CardTitle>Job Domains</CardTitle>
+                <CardTitle>Áreas de Vagas (Domínios)</CardTitle>
                 <CardDescription>
-                  Manage the list of domains available when creating job postings. Each domain can contain multiple teams.
+                  Gerencie a lista de áreas disponíveis na criação de vagas. Cada área pode conter múltiplas equipes.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -3693,9 +3692,9 @@ export default function Settings() {
           <TabsContent value="teams">
             <Card>
               <CardHeader>
-                <CardTitle>Teams</CardTitle>
+                <CardTitle>Equipes e Departamentos</CardTitle>
                 <CardDescription>
-                  Manage the list of teams available when creating job postings. Teams exist within domains.
+                  Gerencie a lista de equipes disponíveis para as vagas. As equipes pertencem a uma área de atuação.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -3712,9 +3711,9 @@ export default function Settings() {
                     <Building2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <CardTitle>Recruitment Vendors</CardTitle>
+                    <CardTitle>Fornecedores de Recrutamento</CardTitle>
                     <CardDescription>
-                      Register external recruitment partners. Select a vendor when bulk-importing their CVs — candidates get tagged with the vendor's source key for performance tracking in Reports.
+                      Cadastre agências e parceiros externos. Ao importar currículos em lote, selecione o fornecedor para rastrear a performance nos relatórios.
                     </CardDescription>
                   </div>
                 </div>
@@ -3733,9 +3732,9 @@ export default function Settings() {
                     <FileQuestion className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                   </div>
                   <div>
-                    <CardTitle>Application Question Bank</CardTitle>
+                    <CardTitle>Banco de Perguntas de Candidatura</CardTitle>
                     <CardDescription>
-                      Manage pre-screen questions assigned to job applicants. Each application receives {ASSIGNED_QUESTION_COUNT} questions drawn from active entries across {PRESCREEN_CATEGORIES.length} categories.
+                      Gerencie perguntas de pré-triagem aplicadas aos candidatos. Cada candidatura recebe {ASSIGNED_QUESTION_COUNT} perguntas sorteadas de {PRESCREEN_CATEGORIES.length} categorias ativas.
                     </CardDescription>
                   </div>
                 </div>
@@ -3754,8 +3753,8 @@ export default function Settings() {
                     <Megaphone className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <CardTitle>Announcements</CardTitle>
-                    <CardDescription>Publish banner messages visible to all logged-in users. Multiple can be active and will cycle automatically.</CardDescription>
+                    <CardTitle>Comunicados & Avisos</CardTitle>
+                    <CardDescription>Publique comunicados visíveis a todos os usuários conectados em banner rotativo no topo.</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -3768,9 +3767,9 @@ export default function Settings() {
           <TabsContent value="red-flag-rules">
             <Card>
               <CardHeader>
-                <CardTitle>Red Flag Detection Rules</CardTitle>
+                <CardTitle>Regras de Detecção de Alertas (Red Flags)</CardTitle>
                 <CardDescription>
-                  Configure the thresholds used when Gemini automatically detects warning signals during candidate profile enrichment.
+                  Configure os parâmetros usados pelo Gemini para identificar sinais de alerta no enriquecimento do perfil do candidato.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -3790,7 +3789,7 @@ export default function Settings() {
                     <div>
                       <CardTitle>Chitragupta (Chitra)</CardTitle>
                       <CardDescription>
-                        AI HR Manager — he watches all activity, enforces process discipline, escalates and rewards. Visible to super admin only.
+                        Assistente inteligente de conformidade e governança de processos de RH. Visível exclusivamente para superadministradores.
                       </CardDescription>
                     </div>
                   </div>

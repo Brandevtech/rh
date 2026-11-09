@@ -8,9 +8,9 @@ describe('candidate source labels', () => {
   });
 
   it('includes talent_email and import sources', () => {
-    expect(candidateSourceLabel('talent_email')).toBe('Talent Email');
-    expect(candidateSourceLabel('csv_import')).toBe('CSV Import');
-    expect(candidateSourceLabel('bulk_resume')).toBe('Resume Upload');
+    expect(candidateSourceLabel('talent_email')).toBe('E-mail de Talentos');
+    expect(candidateSourceLabel('csv_import')).toBe('Importação CSV');
+    expect(candidateSourceLabel('bulk_resume')).toBe('Upload de Currículo');
   });
 
   it('preserves unknown free-text after normalisation', () => {

@@ -27,7 +27,7 @@ export function ComplianceSettingsTab() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
         <Loader2 className="h-4 w-4 animate-spin" />
-        Loading compliance settings...
+        Carregando configurações de conformidade...
       </div>
     );
   }
@@ -37,34 +37,34 @@ export function ComplianceSettingsTab() {
       <Alert>
         <ShieldCheck className="h-4 w-4" />
         <AlertDescription>
-          Honest compliance hooks only — no SOC 2 or ISO 27001 claims. Full DSAR/erasure queue is deferred to a later phase.
-          See <code className="text-xs">docs/COMPLIANCE.md</code>.
+          Ganchos de conformidade e governança de dados. A fila completa de requisições de titulares (DSAR/exclusão) é tratada em fase dedicada.
+          Consulte <code className="text-xs">docs/COMPLIANCE.md</code>.
         </AlertDescription>
       </Alert>
 
       <section className="space-y-4 max-w-xl">
         <div>
-          <h3 className="text-sm font-medium">Privacy & legal URLs</h3>
+          <h3 className="text-sm font-medium">URLs de Privacidade & Termos Legais</h3>
           <p className="text-xs text-muted-foreground mt-1">
-            Shown on applicant footer and profile consent flows when configured.
+            Exibidas no rodapé da área do candidato e nos fluxos de consentimento quando configuradas.
           </p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="privacy-url">Privacy policy URL</Label>
+          <Label htmlFor="privacy-url">URL da Política de Privacidade</Label>
           <Input
             id="privacy-url"
             type="url"
-            placeholder="https://example.com/privacy"
+            placeholder="https://suaempresa.com.br/privacidade"
             value={form.privacy_policy_url ?? ''}
             onChange={(e) => setForm((prev) => ({ ...prev, privacy_policy_url: e.target.value || null }))}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="terms-url">Terms of service URL</Label>
+          <Label htmlFor="terms-url">URL dos Termos de Uso</Label>
           <Input
             id="terms-url"
             type="url"
-            placeholder="https://example.com/terms"
+            placeholder="https://suaempresa.com.br/termos"
             value={form.terms_url ?? ''}
             onChange={(e) => setForm((prev) => ({ ...prev, terms_url: e.target.value || null }))}
           />
@@ -73,13 +73,13 @@ export function ComplianceSettingsTab() {
 
       <section className="space-y-4 max-w-xl border-t pt-6">
         <div>
-          <h3 className="text-sm font-medium">Grievance officer (India DPDP)</h3>
+          <h3 className="text-sm font-medium">Encarregado de Dados / DPO (LGPD / DPDP)</h3>
           <p className="text-xs text-muted-foreground mt-1">
-            Name and email surfaced on the applicant footer for data-subject complaints.
+            Nome e e-mail informados no rodapé do portal para solicitações e direitos dos titulares de dados.
           </p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="grievance-name">Officer name</Label>
+          <Label htmlFor="grievance-name">Nome do Encarregado (DPO)</Label>
           <Input
             id="grievance-name"
             value={form.grievance_officer_name ?? ''}
@@ -87,7 +87,7 @@ export function ComplianceSettingsTab() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="grievance-email">Officer email</Label>
+          <Label htmlFor="grievance-email">E-mail do Encarregado (DPO)</Label>
           <Input
             id="grievance-email"
             type="email"
@@ -97,24 +97,24 @@ export function ComplianceSettingsTab() {
         </div>
         <Button onClick={save} disabled={isUpdating}>
           {isUpdating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-          Save compliance settings
+          Salvar configurações de conformidade
         </Button>
       </section>
 
       <section className="space-y-3 border-t pt-6">
         <div>
-          <h3 className="text-sm font-medium">Sub-processors</h3>
+          <h3 className="text-sm font-medium">Operadores e Sub-processadores de Dados</h3>
           <p className="text-xs text-muted-foreground mt-1">
-            Processors in use today. Deployers must maintain DPAs with each vendor. This list is informational — not a certification.
+            Processadores em uso atualmente. A organização deve manter acordos de processamento de dados (DPA) com cada fornecedor. Esta lista é de caráter informativo.
           </p>
         </div>
         <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Processor</TableHead>
-                <TableHead>Purpose</TableHead>
-                <TableHead>Location / note</TableHead>
+                <TableHead>Processador</TableHead>
+                <TableHead>Finalidade</TableHead>
+                <TableHead>Localização / Observações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -129,7 +129,7 @@ export function ComplianceSettingsTab() {
           </Table>
         </div>
         <p className="text-xs text-muted-foreground">
-          Data residency is chosen by the deployer (Supabase region, AWS SES region). Gemini and cross-border transfers must be disclosed in your privacy policy.
+          A residência dos dados é escolhida pelo administrador (região Supabase, região AWS SES). O uso do Gemini e transferências internacionais devem ser informados em sua política de privacidade.
         </p>
       </section>
     </div>

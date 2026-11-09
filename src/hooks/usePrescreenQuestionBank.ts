@@ -27,14 +27,14 @@ export type PrescreenQuestionInsert = {
 export type PrescreenQuestionUpdate = Partial<Omit<PrescreenQuestionInsert, 'question_key'>> & { id: string };
 
 export const PRESCREEN_CATEGORY_LABELS: Record<PrescreenCategory, string> = {
-  about_you: 'About You',
-  current_role: 'Current Role',
-  achievements: 'Achievements',
-  motivation: 'Motivation',
-  career_goals: 'Career Goals',
-  workplace: 'Workplace',
-  judgment: 'Judgment',
-  challenges: 'Challenges',
+  about_you: 'Sobre Você',
+  current_role: 'Função Atual',
+  achievements: 'Conquistas & Resultados',
+  motivation: 'Motivação',
+  career_goals: 'Objetivos de Carreira',
+  workplace: 'Ambiente de Trabalho & Cultura',
+  judgment: 'Tomada de Decisão & Julgamento',
+  challenges: 'Superação de Desafios',
 };
 
 export { PRESCREEN_CATEGORIES, ASSIGNED_QUESTION_COUNT };

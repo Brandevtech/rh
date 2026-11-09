@@ -79,48 +79,48 @@ export const DEFAULT_EMAIL_NOTIFICATION_SETTINGS: EmailNotificationSettings = {
 
 export const EMAIL_NOTIFICATION_LABELS: Record<EmailNotificationKey, { label: string; description: string }> = {
   candidate_hired_staff: {
-    label: 'Candidate hired (staff)',
-    description: 'Notify HR and admin when a candidate is marked hired.',
+    label: 'Candidato contratado (equipe)',
+    description: 'Notificar RH e administradores quando um candidato for marcado como contratado.',
   },
   candidate_hired_applicant: {
-    label: 'Candidate hired (applicant)',
-    description: 'Send next-steps email to the applicant (documentation, BGV, pre-onboarding).',
+    label: 'Candidato contratado (candidato)',
+    description: 'Enviar e-mail de próximos passos ao candidato (documentação, antecedentes e integração).',
   },
   candidate_rejected: {
-    label: 'Rejection',
-    description: 'Send rejection email to candidates/applicants with feedback when provided.',
+    label: 'Candidatura rejeitada',
+    description: 'Enviar e-mail aos candidatos com feedback e parecer quando preenchido.',
   },
   chitra_warning: {
-    label: 'Chitragupta warning',
-    description: 'Email interviewers who receive a formal Chitragupta warning.',
+    label: 'Aviso do Chitragupta',
+    description: 'Enviar e-mail para entrevistadores que receberem advertência formal do Chitragupta.',
   },
   chitra_praise: {
-    label: 'Chitragupta appreciation',
-    description: 'Email interviewers and recruiters when Chitragupta sends praise.',
+    label: 'Reconhecimento do Chitragupta',
+    description: 'Enviar e-mail para entrevistadores e recrutadores quando o Chitragupta emitir elogio.',
   },
   chitra_daily_report: {
-    label: 'Chitra daily report',
-    description: 'Email the super admin the daily executive brief.',
+    label: 'Relatório diário do Chitra',
+    description: 'Enviar ao superadministrador o resumo executivo diário por e-mail.',
   },
   chitra_weekly_report: {
-    label: 'Chitra weekly report',
-    description: 'Email the super admin the weekly pipeline report.',
+    label: 'Relatório semanal do Chitra',
+    description: 'Enviar ao superadministrador o relatório semanal do pipeline por e-mail.',
   },
   interview_scheduled: {
-    label: 'Interview scheduled',
-    description: 'Notify interviewers and panelists instantly when an interview is scheduled.',
+    label: 'Entrevista agendada',
+    description: 'Notificar entrevistadores e avaliadores instantaneamente quando uma entrevista for marcada.',
   },
   interview_cancelled: {
-    label: 'Interview cancelled',
-    description: 'Notify interviewers and panelists when a scheduled interview is cancelled.',
+    label: 'Entrevista cancelada',
+    description: 'Notificar entrevistadores e avaliadores quando uma entrevista agendada for cancelada.',
   },
   interviewer_daily_digest: {
-    label: 'Interviewer daily digest',
-    description: 'Email each interviewer and panelist a morning summary of today\'s interviews (9 AM IST).',
+    label: 'Resumo diário do entrevistador',
+    description: 'Enviar a cada entrevistador um resumo matinal das entrevistas agendadas para o dia.',
   },
   assignment_completed: {
-    label: 'Assignment completed',
-    description: 'Notify recruiters when a candidate completes an assigned assessment.',
+    label: 'Avaliação concluída',
+    description: 'Notificar recrutadores quando um candidato concluir uma avaliação técnica ou teste.',
   },
 };
 
@@ -161,23 +161,23 @@ export const DEFAULT_SSO_SETTINGS: SsoSettings = {
 export const SUB_PROCESSORS = [
   {
     name: 'Supabase (PostgreSQL, Auth, Storage, Edge Functions)',
-    purpose: 'Primary application database, authentication, file storage, serverless functions',
-    location: 'Deployer-selected region (self-hosted or cloud)',
+    purpose: 'Banco de dados principal da aplicação, autenticação, armazenamento de arquivos e funções serverless',
+    location: 'Região selecionada pelo administrador (hospedagem própria ou nuvem)',
   },
   {
     name: 'Amazon Web Services — Simple Email Service (SES)',
-    purpose: 'Transactional email delivery (auth, applicant, staff notifications)',
-    location: 'Deployer-selected AWS region',
+    purpose: 'Disparo de e-mails transacionais (autenticação, notificações de candidatos e da equipe)',
+    location: 'Região AWS selecionada pelo administrador',
   },
   {
     name: 'Google Gemini',
-    purpose: 'Resume parsing, candidate analysis, assessment generation, Chitragupta insights',
-    location: 'Google Cloud (cross-border; subject to Google DPA)',
+    purpose: 'Análise e extração de currículos, avaliação de candidatos, geração de provas e insights do Chitragupta',
+    location: 'Google Cloud (transferência internacional; sujeito ao DPA do Google)',
   },
   {
-    name: 'Piston (code execution)',
-    purpose: 'Sandboxed execution of candidate coding assessment submissions',
-    location: 'Self-hosted recommended (see PISTON_URL); public emkc.org fallback is dev-only',
+    name: 'Piston (execução de código)',
+    purpose: 'Execução isolada em sandbox para submissões de código em avaliações técnicas',
+    location: 'Hospedagem própria recomendada (ver PISTON_URL); fallback público emkc.org apenas para desenvolvimento',
   },
 ] as const;
 
