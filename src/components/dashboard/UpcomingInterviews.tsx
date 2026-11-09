@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { CalendarDays, Video, Phone, MapPin } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { format, parseISO, isToday, isTomorrow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 const MAX_ITEMS = 4;
 
@@ -97,7 +98,7 @@ export function UpcomingInterviews() {
         const job = jobId ? jobMap.get(jobId) : null;
         return {
           id: iv.id,
-          candidate_name: cand?.name || 'Unknown',
+          candidate_name: cand?.name || 'Desconhecido',
           job_title: job?.title || '—',
           stage_name: stage?.stage_name || '—',
           scheduled_at: iv.scheduled_at,
@@ -120,11 +121,11 @@ export function UpcomingInterviews() {
 
   return (
     <SectionCard
-      title="Upcoming interviews"
-      description={!isLoading && interviews.length > 0 ? `${interviews.length} in the next 7 days` : undefined}
+      title="Próximas entrevistas"
+      description={!isLoading && interviews.length > 0 ? `${interviews.length} nos próximos 7 dias` : undefined}
       actions={
         <Button variant="ghost" size="sm" asChild className="h-8 px-2 text-muted-foreground">
-          <Link to="/calendar">See all</Link>
+          <Link to="/calendar">Ver todas</Link>
         </Button>
       }
       className="flex h-full flex-col"
@@ -137,7 +138,7 @@ export function UpcomingInterviews() {
       ) : interviews.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-2 py-10">
           <CalendarDays className="h-8 w-8 text-muted-foreground/30" />
-          <p className="text-sm text-muted-foreground">No interviews scheduled this week</p>
+          <p className="text-sm text-muted-foreground">Nenhuma entrevista agendada esta semana</p>
         </div>
       ) : (
         <div className="-mx-2 space-y-4">
@@ -149,7 +150,7 @@ export function UpcomingInterviews() {
               <div className="space-y-0.5">
                 {grouped[day].map(iv => {
                   const ModeIcon = iv.interview_mode ? MODE_ICON[iv.interview_mode] : null;
-                  const time = format(parseISO(iv.scheduled_at), 'h:mm a');
+                  const time = format(parseISO(iv.scheduled_at), 'HH:mm');
                   return (
                     <div
                       key={iv.id}
@@ -172,7 +173,7 @@ export function UpcomingInterviews() {
           {hasMore && (
             <div className="px-2 text-center">
               <Link to="/calendar" className="text-caption font-medium text-primary-text hover:underline">
-                See all {interviews.length} interviews
+                Ver todas as {interviews.length} entrevistas
               </Link>
             </div>
           )}

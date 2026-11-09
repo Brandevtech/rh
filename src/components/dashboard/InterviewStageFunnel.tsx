@@ -148,9 +148,9 @@ export function InterviewStageFunnel() {
 
   return (
     <SectionCard
-      title={isInterviewer ? 'My interview stages' : 'Interview stages'}
+      title={isInterviewer ? 'Minhas etapas de entrevista' : 'Etapas de entrevista'}
       description={!isLoading && stageRows.length > 0
-        ? `${total.toLocaleString()} interviews across ${stageRows.length} stage${stageRows.length === 1 ? '' : 's'}`
+        ? `${total.toLocaleString()} entrevistas em ${stageRows.length} etapa${stageRows.length === 1 ? '' : 's'}`
         : undefined}
       className="flex h-full flex-col"
       contentClassName="flex flex-1 flex-col"
@@ -161,12 +161,12 @@ export function InterviewStageFunnel() {
           {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-9 rounded-md" />)}
         </div>
       ) : stageRows.length === 0 ? (
-        <p className="py-8 text-center text-sm text-muted-foreground">No interview data yet</p>
+        <p className="py-8 text-center text-sm text-muted-foreground">Nenhum dado de entrevista ainda</p>
       ) : (
         <>
           <div
             role="img"
-            aria-label={`Interviews by stage: ${stageRows.map(s => `${s.stage_name} ${s.entered}`).join(', ')}`}
+            aria-label={`Entrevistas por etapa: ${stageRows.map(s => `${s.stage_name} ${s.entered}`).join(', ')}`}
             className="flex h-3 w-full gap-0.5"
           >
             {stageRows.map((stage, idx) => (
@@ -180,9 +180,9 @@ export function InterviewStageFunnel() {
 
           <div className="mt-5 flex items-center gap-3 px-2 pb-1 text-caption text-muted-foreground">
             <span className="size-2.5 shrink-0" aria-hidden />
-            <span className="flex-1">Stage</span>
-            <span className="w-16 text-right">Interviews</span>
-            <span className="w-18 text-center">Proceeded</span>
+            <span className="flex-1">Etapa</span>
+            <span className="w-16 text-right">Entrevistas</span>
+            <span className="w-18 text-center">Aprovados</span>
           </div>
           <ul className="flex-1 space-y-0.5">
             {stageRows.map((stage, idx) => (

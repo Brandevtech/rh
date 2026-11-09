@@ -23,11 +23,11 @@ export function RecruiterLeaderboard({ period }: Props) {
 
   return (
     <SectionCard
-      title="Recruiter performance"
-      description={`Hires from sourced candidates, last ${period === 'week' ? '7' : '30'} days`}
+      title="Desempenho dos recrutadores"
+      description={`Contratações de candidatos triados, últimos ${period === 'week' ? '7' : '30'} dias`}
       actions={
         <Button variant="ghost" size="sm" asChild className="h-8 px-2 text-muted-foreground">
-          <Link to="/reports">Full report</Link>
+          <Link to="/reports">Relatório completo</Link>
         </Button>
       }
       className="flex h-full flex-col"
@@ -39,13 +39,13 @@ export function RecruiterLeaderboard({ period }: Props) {
         </div>
       ) : top5.length === 0 ? (
         <div className="flex flex-1 items-center justify-center py-8 text-sm text-muted-foreground">
-          No recruiter activity this {period}
+          Nenhuma atividade de recrutadores {period === 'week' ? 'esta semana' : 'este mês'}
         </div>
       ) : (
         <>
           <div className="flex items-center gap-3 px-2 pb-1 text-caption text-muted-foreground">
-            <span className="flex-1">Recruiter</span>
-            <span className="w-20 text-right">Hired / sourced</span>
+            <span className="flex-1">Recrutador</span>
+            <span className="w-20 text-right">Contratados / Triados</span>
           </div>
           <ol className="space-y-0.5">
             {top5.map(r => (
@@ -59,7 +59,7 @@ export function RecruiterLeaderboard({ period }: Props) {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium" title={r.recruiter_name}>{r.recruiter_name}</p>
-                  <p className="text-caption tabular-nums text-muted-foreground">{r.in_pipeline} in pipeline</p>
+                  <p className="text-caption tabular-nums text-muted-foreground">{r.in_pipeline} no pipeline</p>
                 </div>
                 <div className="w-20 shrink-0 space-y-1 text-right">
                   <p className="text-sm font-medium tabular-nums">
@@ -72,7 +72,7 @@ export function RecruiterLeaderboard({ period }: Props) {
                     ticks={12}
                     size="sm"
                     series={3}
-                    label={`${r.hired} of ${r.sourced} hired`}
+                    label={`${r.hired} de ${r.sourced} contratados`}
                     className="h-3"
                   />
                 </div>

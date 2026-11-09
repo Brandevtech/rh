@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { Trophy } from 'lucide-react';
 import { SectionCard } from '@/components/ui/section-card';
 import { SegmentedProgress } from '@/components/ui/segmented-progress';
@@ -24,12 +25,12 @@ function initials(name: string): string {
 
 export function RecruiterSpotlight() {
   const { data, isLoading, isError } = useRecruiterOfMonth();
-  const monthLabel = format(new Date(), 'MMMM yyyy');
+  const monthLabel = format(new Date(), "MMMM 'de' yyyy", { locale: ptBR });
 
   return (
     <SectionCard
-      title="Recruiter of the month"
-      description={`${monthLabel} · scored on activity`}
+      title="Recrutador do mês"
+      description={`${monthLabel} · pontuado por atividade`}
       actions={<Trophy className="size-5 text-muted-foreground" strokeWidth={1.5} aria-hidden />}
       className="flex h-full flex-col"
       contentClassName="flex flex-1 flex-col"
@@ -47,13 +48,13 @@ export function RecruiterSpotlight() {
         </div>
       ) : isError ? (
         <div className="flex flex-1 items-center justify-center py-8 text-sm text-muted-foreground">
-          Couldn't load this month's activity
+          Não foi possível carregar as atividades deste mês
         </div>
       ) : !data ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-1 py-8 text-center">
-          <p className="text-sm font-medium text-foreground">No recruiter activity yet this month</p>
+          <p className="text-sm font-medium text-foreground">Nenhuma atividade de recrutadores este mês</p>
           <p className="max-w-[28ch] text-caption text-pretty text-muted-foreground">
-            Hires, stage moves, on-time feedback and sourcing will rank the team here.
+            Contratações, avanços de etapa, feedbacks no prazo e triagens ranquearão a equipe aqui.
           </p>
         </div>
       ) : (
@@ -65,15 +66,15 @@ export function RecruiterSpotlight() {
             </Avatar>
             <div className="min-w-0 flex-1">
               <p className="truncate text-title" title={data.name}>{data.name}</p>
-              <p className="text-caption text-muted-foreground">{data.role === 'hr' ? 'HR' : 'Recruiter'}</p>
+              <p className="text-caption text-muted-foreground">{data.role === 'hr' ? 'RH' : 'Recrutador'}</p>
             </div>
             <div className="shrink-0 text-right">
               <p className="text-kpi tabular-nums">{data.score.total.toLocaleString()}</p>
-              <p className="text-caption text-muted-foreground">points</p>
+              <p className="text-caption text-muted-foreground">pontos</p>
             </div>
           </div>
 
-          <ul className="space-y-2.5" aria-label="Score breakdown">
+          <ul className="space-y-2.5" aria-label="Detalhamento da pontuação">
             {BREAKDOWN.map(({ key, series }) => (
               <li key={key} className="space-y-1">
                 <div className="flex items-baseline justify-between gap-2 text-caption">
@@ -98,10 +99,10 @@ export function RecruiterSpotlight() {
 
           <p className="mt-auto text-caption text-pretty text-muted-foreground">
             {data.runnerUpTotal === null
-              ? 'Only recruiter with activity this month.'
+              ? 'Único recrutador com atividade este mês.'
               : data.runnerUpTotal === data.score.total
-                ? `Tied on points; ahead on hires and stage moves · ${data.rankedCount} ranked.`
-                : `Leads the next recruiter by ${(data.score.total - data.runnerUpTotal).toLocaleString()} points · ${data.rankedCount} ranked.`}
+                ? `Empatado em pontos; à frente em contratações e avanços de etapa · ${data.rankedCount} no ranking.`
+                : `Lidera o próximo recrutador por ${(data.score.total - data.runnerUpTotal).toLocaleString()} pontos · ${data.rankedCount} no ranking.`}
           </p>
         </div>
       )}

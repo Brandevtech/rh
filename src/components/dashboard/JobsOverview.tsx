@@ -94,11 +94,11 @@ export function JobsOverview() {
 
   return (
     <SectionCard
-      title="Active jobs"
-      description={!isLoading && totalOpen > 0 ? `${totalOpen} open` : undefined}
+      title="Vagas ativas"
+      description={!isLoading && totalOpen > 0 ? `${totalOpen} abertas` : undefined}
       actions={
         <Button variant="ghost" size="sm" asChild className="h-8 px-2 text-muted-foreground">
-          <Link to="/jobs">View all</Link>
+          <Link to="/jobs">Ver todas</Link>
         </Button>
       }
     >
@@ -109,7 +109,7 @@ export function JobsOverview() {
       ) : jobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 py-10 text-center">
           <Briefcase className="h-8 w-8 text-muted-foreground/30" />
-          <p className="text-sm text-muted-foreground">No active jobs</p>
+          <p className="text-sm text-muted-foreground">Nenhuma vaga ativa</p>
         </div>
       ) : (
         <ul className="-mx-2 grid gap-0.5 sm:grid-cols-2 sm:gap-x-4">
@@ -122,7 +122,7 @@ export function JobsOverview() {
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-foreground">{job.title}</p>
                   <p className="truncate text-caption text-muted-foreground">
-                    {job.primaryRecruiter ?? 'No primary recruiter'}
+                    {job.primaryRecruiter ?? 'Sem recrutador principal'}
                   </p>
                 </div>
                 <span className="flex shrink-0 items-center gap-1 text-caption tabular-nums text-muted-foreground">
@@ -130,7 +130,7 @@ export function JobsOverview() {
                   {job.candidateCount}
                 </span>
                 <Badge variant={STATUS_VARIANT[job.status] ?? 'neutral'} className="shrink-0 capitalize">
-                  {job.status}
+                  {job.status === 'open' ? 'Aberta' : job.status === 'paused' ? 'Pausada' : job.status}
                 </Badge>
               </Link>
             </li>

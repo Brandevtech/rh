@@ -17,6 +17,7 @@ import {
   LabelList,
 } from 'recharts';
 import { startOfWeek, subWeeks, format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface WeekPoint {
   week: string;
@@ -54,7 +55,7 @@ async function fetchSourcingTrend(): Promise<WeekPoint[]> {
       return d >= weekStart && d < subWeeks(weekStart, -1);
     }).length;
     buckets.push({
-      week: i === 0 ? 'This week' : i === 1 ? 'Last week' : format(weekStart, 'MMM d'),
+      week: i === 0 ? 'Esta semana' : i === 1 ? 'Semana passada' : format(weekStart, "d 'de' MMM", { locale: ptBR }),
       count,
     });
   }
@@ -81,12 +82,12 @@ export function SourcingTrend() {
 
   return (
     <SectionCard
-      title="Candidates added"
-      description={isLoading ? 'Per week, last 8 weeks' : `${total.toLocaleString()} added in the last 8 weeks`}
+      title="Candidatos adicionados"
+      description={isLoading ? 'Por semana, últimas 8 semanas' : `${total.toLocaleString()} adicionados nas últimas 8 semanas`}
       padding="6"
       actions={!isLoading && trend !== null ? (
         <Badge variant={trend >= 0 ? 'success' : 'danger'} className="tabular-nums">
-          {trend >= 0 ? '+' : ''}{trend}% vs last week
+          {trend >= 0 ? '+' : ''}{trend}% vs semana passada
         </Badge>
       ) : undefined}
       className="flex h-full flex-col"
@@ -96,15 +97,15 @@ export function SourcingTrend() {
         <Skeleton className="flex-1 min-h-[240px] rounded-lg" />
       ) : total === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-1 py-10 text-center">
-          <p className="text-sm font-medium text-foreground">No candidates added in the last 8 weeks</p>
-          <p className="text-caption text-muted-foreground">New candidates will appear here week by week.</p>
+          <p className="text-sm font-medium text-foreground">Nenhum candidato adicionado nas últimas 8 semanas</p>
+          <p className="text-caption text-muted-foreground">Novos candidatos aparecerão aqui semana a semana.</p>
         </div>
       ) : (
         <>
         <div
           className={sparse ? 'h-[160px]' : 'flex-1 min-h-[240px]'}
           role="img"
-          aria-label={`Candidates added per week: ${points.map(p => `${p.week} ${p.count}`).join(', ')}`}
+          aria-label={`Candidatos adicionados por semana: ${points.map(p => `${p.week} ${p.count}`).join(', ')}`}
         >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -141,7 +142,7 @@ export function SourcingTrend() {
                 }}
                 labelStyle={{ color: 'hsl(var(--foreground))', fontWeight: 500 }}
                 itemStyle={{ color: 'hsl(var(--muted-foreground))' }}
-                formatter={(value: number) => [value, 'Candidates']}
+                formatter={(value: number) => [value, 'Candidatos']}
               />
               <Bar
                 dataKey="count"
@@ -180,15 +181,15 @@ export function SourcingTrend() {
         {sparse && (
           <dl className="mt-auto grid grid-cols-3 gap-3 border-t pt-4">
             <div>
-              <dt className="text-caption text-muted-foreground">This week</dt>
+              <dt className="text-caption text-muted-foreground">Esta semana</dt>
               <dd className="text-title tabular-nums">{thisWeek}</dd>
             </div>
             <div>
-              <dt className="text-caption text-muted-foreground">Active weeks</dt>
-              <dd className="text-title tabular-nums">{activeWeeks}<span className="text-muted-foreground"> of {points.length}</span></dd>
+              <dt className="text-caption text-muted-foreground">Semanas ativas</dt>
+              <dd className="text-title tabular-nums">{activeWeeks}<span className="text-muted-foreground"> de {points.length}</span></dd>
             </div>
             <div>
-              <dt className="text-caption text-muted-foreground">Weekly average</dt>
+              <dt className="text-caption text-muted-foreground">Média semanal</dt>
               <dd className="text-title tabular-nums">{average.toFixed(1)}</dd>
             </div>
           </dl>

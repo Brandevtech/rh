@@ -45,7 +45,7 @@ export function SourceBreakdown() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           <BarChart2 className="h-4 w-4" />
-          Candidate Sources
+          Origem dos Candidatos
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 p-0 pb-4">
@@ -54,7 +54,7 @@ export function SourceBreakdown() {
             {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-9 rounded-lg" />)}
           </div>
         ) : sources.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8 px-6">No source data yet</p>
+          <p className="text-sm text-muted-foreground text-center py-8 px-6">Nenhum dado de origem ainda</p>
         ) : (
           <ScrollArea className="h-[280px]">
             <div className="px-4 space-y-1.5">

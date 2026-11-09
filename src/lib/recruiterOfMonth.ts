@@ -8,10 +8,10 @@ export const RECRUITER_SCORE_WEIGHTS = {
 export type RecruiterScoreKey = keyof typeof RECRUITER_SCORE_WEIGHTS;
 
 export const RECRUITER_SCORE_LABELS: Record<RecruiterScoreKey, string> = {
-  hires: 'Hires',
-  advances: 'Stage moves',
-  onTimeFeedback: 'On-time feedback',
-  sourced: 'Candidates sourced',
+  hires: 'Contratações',
+  advances: 'Avanços de etapa',
+  onTimeFeedback: 'Feedback no prazo',
+  sourced: 'Candidatos triados',
 };
 
 export const ON_TIME_FEEDBACK_HOURS = 24;

@@ -14,12 +14,12 @@ interface StageConfig {
 }
 
 const STAGES: StageConfig[] = [
-  { key: 'new',         label: 'New',       bar: 'bg-blue-500',    dot: 'bg-blue-500',    text: 'text-blue-700' },
-  { key: 'reviewing',   label: 'Reviewing', bar: 'bg-yellow-500',  dot: 'bg-yellow-500',  text: 'text-yellow-700' },
-  { key: 'shortlisted', label: 'Hired',  bar: 'bg-emerald-500', dot: 'bg-emerald-500', text: 'text-emerald-700' },
-  { key: 'hold',        label: 'On Hold',   bar: 'bg-orange-400',  dot: 'bg-orange-400',  text: 'text-orange-700' },
-  { key: 'rejected',    label: 'Rejected',  bar: 'bg-red-400',     dot: 'bg-red-400',     text: 'text-red-700' },
-  { key: 'backout',     label: 'Backout',   bar: 'bg-slate-400',   dot: 'bg-slate-400',   text: 'text-slate-600' },
+  { key: 'new',         label: 'Novo',       bar: 'bg-blue-500',    dot: 'bg-blue-500',    text: 'text-blue-700' },
+  { key: 'reviewing',   label: 'Em Revisão', bar: 'bg-yellow-500',  dot: 'bg-yellow-500',  text: 'text-yellow-700' },
+  { key: 'shortlisted', label: 'Contratado',  bar: 'bg-emerald-500', dot: 'bg-emerald-500', text: 'text-emerald-700' },
+  { key: 'hold',        label: 'Em Espera',   bar: 'bg-orange-400',  dot: 'bg-orange-400',  text: 'text-orange-700' },
+  { key: 'rejected',    label: 'Rejeitado',  bar: 'bg-red-400',     dot: 'bg-red-400',     text: 'text-red-700' },
+  { key: 'backout',     label: 'Desistência',   bar: 'bg-slate-400',   dot: 'bg-slate-400',   text: 'text-slate-600' },
 ];
 
 export function PipelineFunnel() {
@@ -68,7 +68,7 @@ export function PipelineFunnel() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           <GitMerge className="h-4 w-4" />
-          {isInterviewer ? 'My Candidates' : 'Candidate Pipeline'}
+          {isInterviewer ? 'Meus Candidatos' : 'Pipeline de Candidatos'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-1.5">

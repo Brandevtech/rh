@@ -80,7 +80,7 @@ export function TopPerformers() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-yellow-500" />
-            Top Performers
+            Melhores Desempenhos
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -106,14 +106,14 @@ export function TopPerformers() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-yellow-500" />
-          Top Performers
+          Melhores Desempenhos
         </CardTitle>
       </CardHeader>
       <CardContent>
         {performers.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Trophy className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground">No completed assessments yet</p>
+            <p className="text-sm text-muted-foreground">Nenhuma avaliação concluída ainda</p>
           </div>
         ) : (
           <div className="space-y-4">

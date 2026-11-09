@@ -4,6 +4,7 @@ import { SectionCard } from '@/components/ui/section-card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDistanceToNow, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import {
   Zap,
   Clock,
@@ -42,7 +43,7 @@ export function ActionItems() {
       iconBg: 'bg-[hsl(var(--chip-danger-bg))]',
       iconFg: 'text-[hsl(var(--chip-danger-text))]',
       label: c.name,
-      sub: `${days}d in "${c.candidate_status || 'new'}" — needs action`,
+      sub: `${days}d em "${c.candidate_status || 'novo'}" — requer ação`,
       href: `/hiring?view=list`,
     });
   });
@@ -57,7 +58,7 @@ export function ActionItems() {
       iconBg: 'bg-[hsl(var(--chip-warning-bg))]',
       iconFg: 'text-[hsl(var(--chip-warning-text))]',
       label: j.title,
-      sub: `Deadline in ${daysLeft} day${daysLeft !== 1 ? 's' : ''} — ${format(new Date(j.application_deadline), 'dd MMM')}`,
+      sub: `Prazo em ${daysLeft} dia${daysLeft !== 1 ? 's' : ''} — ${format(new Date(j.application_deadline), "dd 'de' MMM", { locale: ptBR })}`,
       href: `/jobs`,
     });
   });
@@ -69,8 +70,8 @@ export function ActionItems() {
       icon: ClipboardCheck,
       iconBg: 'bg-chitra-bg',
       iconFg: 'text-chitra',
-      label: candidate?.name ?? 'Candidate',
-      sub: `Assessment expires ${formatDistanceToNow(new Date(a.deadline), { addSuffix: true })}`,
+      label: candidate?.name ?? 'Candidato',
+      sub: `Avaliação expira ${formatDistanceToNow(new Date(a.deadline), { addSuffix: true, locale: ptBR })}`,
       href: `/hiring?view=list`,
     });
   });
@@ -84,7 +85,7 @@ export function ActionItems() {
       iconBg: 'bg-[hsl(var(--chip-neutral-bg))]',
       iconFg: 'text-[hsl(var(--chip-neutral-text))]',
       label: candidate?.name ?? 'Candidate',
-      sub: `${stage?.stage_name ?? 'Interview'} at ${format(new Date(v.scheduled_at), 'h:mm a')} today`,
+      sub: `${stage?.stage_name ?? 'Entrevista'} às ${format(new Date(v.scheduled_at), 'HH:mm')} hoje`,
       href: `/calendar`,
     });
   });
@@ -98,7 +99,7 @@ export function ActionItems() {
       iconBg: 'bg-[hsl(var(--chip-warning-bg))]',
       iconFg: 'text-[hsl(var(--chip-warning-text))]',
       label: candidate?.name ?? 'Candidate',
-      sub: `"${stage?.stage_name ?? 'Interview'}" verdict pending since ${formatDistanceToNow(new Date(v.scheduled_at), { addSuffix: true })}`,
+      sub: `Parecer da "${stage?.stage_name ?? 'Entrevista'}" pendente desde ${formatDistanceToNow(new Date(v.scheduled_at), { addSuffix: true, locale: ptBR })}`,
       href: `/hiring?view=board`,
     });
   });
@@ -109,11 +110,11 @@ export function ActionItems() {
 
   return (
     <SectionCard
-      title="Action items"
-      description={isLoading ? undefined : rows.length > 0 ? `${rows.length} need attention` : undefined}
+      title="Ações pendentes"
+      description={isLoading ? undefined : rows.length > 0 ? `${rows.length} requerem atenção` : undefined}
       actions={
         <Button variant="ghost" size="sm" asChild className="h-8 px-2 text-muted-foreground">
-          <Link to="/hiring?view=board">See all</Link>
+          <Link to="/hiring?view=board">Ver tudo</Link>
         </Button>
       }
       className="flex h-full flex-col"
@@ -136,8 +137,8 @@ export function ActionItems() {
           <div className="rounded-full bg-[hsl(var(--chip-success-bg))] p-3">
             <Zap className="h-5 w-5 text-[hsl(var(--chip-success-text))]" />
           </div>
-          <p className="text-sm font-medium text-foreground">All caught up</p>
-          <p className="text-caption text-muted-foreground">No pending actions right now</p>
+          <p className="text-sm font-medium text-foreground">Tudo em dia</p>
+          <p className="text-caption text-muted-foreground">Nenhuma ação pendente no momento</p>
         </div>
       ) : (
         <div className="-mx-2 space-y-0.5">
@@ -164,7 +165,7 @@ export function ActionItems() {
           {hasMore && (
             <div className="px-2 pt-2 text-center">
               <Link to="/hiring?view=board" className="text-caption font-medium text-primary-text hover:underline">
-                See all {rows.length} items
+                Ver todos os {rows.length} itens
               </Link>
             </div>
           )}

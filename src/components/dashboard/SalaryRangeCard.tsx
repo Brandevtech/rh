@@ -19,10 +19,10 @@ interface SalaryBucket {
 }
 
 const BUCKETS = [
-  { key: 'entry',  label: 'Entry',  max: 500_000,   color: 'bg-blue-500' },
-  { key: 'mid',    label: 'Mid',    max: 1_200_000, color: 'bg-violet-500' },
-  { key: 'senior', label: 'Senior', max: 2_500_000, color: 'bg-amber-500' },
-  { key: 'lead',   label: 'Lead+',  max: Infinity,  color: 'bg-red-500' },
+  { key: 'entry',  label: 'Júnior',  max: 500_000,   color: 'bg-blue-500' },
+  { key: 'mid',    label: 'Pleno',    max: 1_200_000, color: 'bg-violet-500' },
+  { key: 'senior', label: 'Sênior', max: 2_500_000, color: 'bg-amber-500' },
+  { key: 'lead',   label: 'Especialista',  max: Infinity,  color: 'bg-red-500' },
 ];
 
 export function SalaryRangeCard() {
@@ -68,7 +68,7 @@ export function SalaryRangeCard() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           <IndianRupee className="h-4 w-4" />
-          Hiring Salary Range
+          Faixa Salarial de Contratação
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col gap-4">
@@ -78,7 +78,7 @@ export function SalaryRangeCard() {
             {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-9 rounded-lg" />)}
           </div>
         ) : !data ? (
-          <p className="text-sm text-muted-foreground text-center py-8">No salary data for open jobs</p>
+          <p className="text-sm text-muted-foreground text-center py-8">Sem dados salariais para vagas abertas</p>
         ) : (
           <>
             {/* Overall range headline */}
@@ -86,7 +86,7 @@ export function SalaryRangeCard() {
               <span className="text-2xl font-bold">{fmt(data.overallMin)}</span>
               <span className="text-muted-foreground">–</span>
               <span className="text-2xl font-bold">{fmt(data.overallMax)}</span>
-              <span className="text-xs text-muted-foreground ml-1">across {data.totalJobs} job{data.totalJobs !== 1 ? 's' : ''}</span>
+              <span className="text-xs text-muted-foreground ml-1">em {data.totalJobs} vaga{data.totalJobs !== 1 ? 's' : ''}</span>
             </div>
 
             {/* One row per tier */}
@@ -111,7 +111,7 @@ export function SalaryRangeCard() {
                     {/* Count */}
                     <div className="flex items-baseline gap-1 shrink-0 text-right">
                       <span className="text-sm font-bold">{b.count}</span>
-                      <span className="text-[11px] text-muted-foreground">job{b.count !== 1 ? 's' : ''}</span>
+                      <span className="text-[11px] text-muted-foreground">vaga{b.count !== 1 ? 's' : ''}</span>
                     </div>
                   </div>
                 );

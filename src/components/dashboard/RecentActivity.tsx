@@ -15,6 +15,7 @@ import {
   Star,
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface ActivityItem {
   id: string;
@@ -112,13 +113,13 @@ export function RecentActivity() {
         if (ca.status === 'completed' && ca.completed_at) {
           items.push({ id: `completed-${ca.id}`, type: 'assessment_completed', title: 'Assessment Completed', description: `${candidate.name} completed "${assessment.title}"`, timestamp: ca.completed_at });
         } else if (ca.status === 'in_progress' && ca.started_at) {
-          items.push({ id: `started-${ca.id}`, type: 'assessment_started', title: 'Assessment Started', description: `${candidate.name} started "${assessment.title}"`, timestamp: ca.started_at });
+          items.push({ id: `started-${ca.id}`, type: 'assessment_started', title: 'Avaliação Iniciada', description: `${candidate.name} iniciou "${assessment.title}"`, timestamp: ca.started_at });
         } else if (ca.status === 'invited') {
-          items.push({ id: `invited-${ca.id}`, type: 'assessment_assigned', title: 'Assessment Assigned', description: `${candidate.name} invited to "${assessment.title}"`, timestamp: ca.created_at });
+          items.push({ id: `invited-${ca.id}`, type: 'assessment_assigned', title: 'Avaliação Atribuída', description: `${candidate.name} convidado para "${assessment.title}"`, timestamp: ca.created_at });
         } else if (ca.status === 'evaluated') {
-          items.push({ id: `evaluated-${ca.id}`, type: 'assessment_evaluated', title: 'Assessment Evaluated', description: `${candidate.name}'s "${assessment.title}" was reviewed`, timestamp: ca.completed_at || ca.created_at });
+          items.push({ id: `evaluated-${ca.id}`, type: 'assessment_evaluated', title: 'Avaliação Corrigida', description: `A avaliação "${assessment.title}" de ${candidate.name} foi corrigida`, timestamp: ca.completed_at || ca.created_at });
         } else if (ca.status === 'expired') {
-          items.push({ id: `expired-${ca.id}`, type: 'assessment_expired', title: 'Assessment Expired', description: `${candidate.name}'s "${assessment.title}" expired`, timestamp: ca.created_at });
+          items.push({ id: `expired-${ca.id}`, type: 'assessment_expired', title: 'Avaliação Expirada', description: `A avaliação "${assessment.title}" de ${candidate.name} expirou`, timestamp: ca.created_at });
         }
       });
 
@@ -133,7 +134,7 @@ export function RecentActivity() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           <Activity className="h-4 w-4" />
-          {isInterviewer ? 'My Recent Activity' : 'Recent Activity'}
+          {isInterviewer ? 'Minhas Atividades Recentes' : 'Atividades Recentes'}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 p-0">
@@ -154,7 +155,7 @@ export function RecentActivity() {
             <div className="p-3 rounded-full bg-muted">
               <Activity className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className="text-sm text-muted-foreground">No recent activity</p>
+            <p className="text-sm text-muted-foreground">Nenhuma atividade recente</p>
           </div>
         ) : (
           <ScrollArea className="h-[420px]">
@@ -180,7 +181,7 @@ export function RecentActivity() {
                         )}
                         {activity.actor && <span className="text-muted-foreground/40">·</span>}
                         <span className="text-muted-foreground/60">
-                          {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true, locale: ptBR })}
                         </span>
                       </p>
                     </div>

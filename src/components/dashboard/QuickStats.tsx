@@ -101,7 +101,7 @@ export function QuickStats() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Target className="h-5 w-5" />
-            This Week's Performance
+            Desempenho desta Semana
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -128,14 +128,14 @@ export function QuickStats() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5" />
-          This Week's Performance
+          Desempenho desta Semana
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Completions */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Assessments Completed</span>
+            <span className="text-sm font-medium">Avaliações Concluídas</span>
             <div className="flex items-center gap-1">
               {weekOverWeekChange >= 0 ? (
                 <TrendingUp className="h-4 w-4 text-green-500" />
@@ -149,11 +149,11 @@ export function QuickStats() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-3xl font-bold">{stats.thisWeekCompleted}</span>
-            <span className="text-sm text-muted-foreground">vs {stats.lastWeekCompleted} last week</span>
+            <span className="text-sm text-muted-foreground">vs {stats.lastWeekCompleted} semana passada</span>
           </div>
         </div>
 
-        {/* Pass Rate */}
+        {/* Taxa de Aprovação */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Pass Rate</span>
@@ -163,11 +163,11 @@ export function QuickStats() {
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <CheckCircle className="h-3 w-3 text-green-500" />
-              {stats.thisWeekPassed} passed
+              {stats.thisWeekPassed} aprovados
             </span>
             <span className="flex items-center gap-1">
               <AlertCircle className="h-3 w-3 text-red-500" />
-              {stats.thisWeekFailed} failed
+              {stats.thisWeekFailed} reprovados
             </span>
           </div>
         </div>
@@ -176,11 +176,11 @@ export function QuickStats() {
         <div className="grid grid-cols-2 gap-4 pt-4 border-t">
           <div className="text-center p-3 bg-muted/50 rounded-lg">
             <div className="text-2xl font-bold text-amber-600">{stats.pendingReview}</div>
-            <div className="text-xs text-muted-foreground">Pending Review</div>
+            <div className="text-xs text-muted-foreground">Aguardando Correção</div>
           </div>
           <div className="text-center p-3 bg-muted/50 rounded-lg">
             <div className="text-2xl font-bold text-red-600">{stats.expiringSoon}</div>
-            <div className="text-xs text-muted-foreground">Expiring in 3 days</div>
+            <div className="text-xs text-muted-foreground">Expirando em 3 dias</div>
           </div>
         </div>
 
@@ -188,7 +188,7 @@ export function QuickStats() {
         {stats.avgCompletionTime > 0 && (
           <div className="pt-4 border-t">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Avg. Completion Time</span>
+              <span className="text-sm text-muted-foreground">Tempo Médio de Conclusão</span>
               <span className="text-sm font-medium">{stats.avgCompletionTime} min</span>
             </div>
           </div>
