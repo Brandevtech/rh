@@ -248,7 +248,6 @@ export default function Auth() {
             alt="RIA"
             className="h-16 w-auto mb-3 object-contain rounded-lg shadow-xs"
           />
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">RIA</h1>
           <p className="text-sm text-muted-foreground">Plataforma de Recrutamento & Gestão de Talentos</p>
         </div>
 
@@ -460,8 +459,7 @@ export default function Auth() {
 
         )}
 
-        <div className="text-center text-sm text-muted-foreground mt-6 space-y-2">
-          <p>Ao continuar, você concorda com os termos de serviço da RIA.</p>
+        <div className="text-center text-sm text-muted-foreground mt-6">
           <div className="flex items-center justify-center gap-1.5">
             <span>Desenvolvido por</span>
             <a
