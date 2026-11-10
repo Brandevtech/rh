@@ -41,13 +41,13 @@ export default function Help() {
   const selected = guideId ? getGuide(guideId) : undefined;
   const canViewSelected = selected && visibleGuides.some(g => g.id === selected.id);
 
-  usePageTitle(selected && canViewSelected ? selected.title : 'Help & Guides');
+  usePageTitle(selected && canViewSelected ? selected.title : 'Ajuda & Guias');
 
   if (!role) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <main className="flex-1 container mx-auto px-4 py-8">
-          <p className="text-muted-foreground">Sign in to view role-based guides.</p>
+          <p className="text-muted-foreground">Faça login para ver os manuais da sua função.</p>
         </main>
         <Footer />
       </div>
@@ -111,7 +111,7 @@ export default function Help() {
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-1">
             <BookOpen className="h-5 w-5 text-primary" />
-            <h1 className="text-2xl font-bold">Help & Guides</h1>
+            <h1 className="text-2xl font-bold">Ajuda & Guias</h1>
           </div>
           <p className="text-sm text-muted-foreground">
             Process playbooks for your role. For capability lists, see{' '}
@@ -147,7 +147,7 @@ export default function Help() {
         {otherGuides.length > 0 && (
           <section>
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">
-              {role === 'admin' ? 'All playbooks' : 'Related guides'}
+              {role === 'admin' ? 'Todos os manuais' : 'Guias relacionados'}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {otherGuides.map(guide => (

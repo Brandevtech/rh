@@ -3446,7 +3446,7 @@ export default function Settings() {
             </div>
           </div>
           <Button variant="outline" size="sm" className="shrink-0" asChild>
-            <Link to="/help">Open Help & Guides</Link>
+            <Link to="/help">Abrir Ajuda & Guias</Link>
           </Button>
         </div>
 

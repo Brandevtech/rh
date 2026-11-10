@@ -629,7 +629,7 @@ export default function Jobs() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Delete this job posting? Applications will also be deleted.')) {
+    if (confirm('Excluir esta publicação de vaga? As candidaturas vinculadas também serão excluídas.')) {
       await deleteJob.mutateAsync(id);
     }
   };
