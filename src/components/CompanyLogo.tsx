@@ -36,11 +36,6 @@ export function CompanyLogo({ compact = false, className }: CompanyLogoProps) {
           )}
         />
       </picture>
-      {!compact && (
-        <span className="font-bold tracking-tight text-foreground truncate max-w-[140px] text-base sm:text-lg hidden sm:inline">
-          {name}
-        </span>
-      )}
     </div>
   );
 }
