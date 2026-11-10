@@ -84,61 +84,63 @@ function buildPlainSummary(input: {
   if (openingsLeft <= 0 && noShowCount > 0) {
     const n = noShowCount;
     return n === 1
-      ? 'This role is filled on paper, but 1 no-show still needs a decision so the board stays clean.'
-      : `This role is filled on paper, but ${n} no-shows still need a decision so the board stays clean.`;
+      ? 'Esta vaga está preenchida no papel, mas 1 falta (no-show) ainda precisa de decisão para manter o painel limpo.'
+      : `Esta vaga está preenchida no papel, mas ${n} faltas (no-shows) ainda precisam de decisão para manter o painel limpo.`;
   }
 
   if (healthy) {
-    return `Depth looks solid: ${cleanActive} ${cleanActive === 1 ? 'person' : 'people'} still in play for about ${funnelTarget} we need. Clear Do before sourcing more.`;
+    return `Volume sólido: ${cleanActive} ${cleanActive === 1 ? 'pessoa' : 'pessoas'} ainda em processo para cerca de ${funnelTarget} necessárias. Resolva as ações pendentes antes de buscar mais.`;
   }
 
   // Time pressure
   if (deadlineOverdue) {
     const thin = openingsLeft > 0 && cleanActive < funnelTarget;
     return thin
-      ? 'The application deadline has passed. Work the people you already have, and only source if the funnel stays thin.'
-      : 'The application deadline has passed. Work the people you already have; only source if depth is thin.';
+      ? 'O prazo de inscrições expirou. Avance com os candidatos que você já possui e busque novos apenas se o funil continuar vazio.'
+      : 'O prazo de inscrições expirou. Avance com os candidatos que você já possui; busque novos apenas se o volume estiver baixo.';
   }
 
   if (nearDeadline && daysToDeadline != null && daysToDeadline >= 0) {
     const dayCue =
       daysToDeadline === 0
-        ? 'Applications close today.'
+        ? 'As inscrições encerram hoje.'
         : daysToDeadline === 1
-          ? 'You have 1 day left on applications.'
-          : `You have ${daysToDeadline} days left on applications.`;
+          ? 'Resta 1 dia para o encerramento das inscrições.'
+          : `Restam ${daysToDeadline} dias para o encerramento das inscrições.`;
     if (weeklyAdd > 0) {
-      return `${dayCue} Focus on this week's add and advancing people already in the funnel.`;
+      return `${dayCue} Foque nas adições desta semana e em avançar quem já está no funil.`;
     }
-    return `${dayCue} Focus on advancing people already in the funnel.`;
+    return `${dayCue} Foque em avançar as pessoas que já estão no funil.`;
   }
 
   // Depth / volume
   if (openingsLeft > 0 && cleanActive < funnelTarget) {
     const addCue =
-      weeklyAdd > 0 ? ' Plan on adding a few this week.' : ' Keep advancing people already in play.';
-    return `Only ${cleanActive} ${peopleWord} still in play for ${openingsLeft} ${openingWord} — we usually want about ${funnelTarget}.${addCue}`;
+      weeklyAdd > 0 ? ' Planeje adicionar novos candidatos esta semana.' : ' Continue avançando os candidatos em processo.';
+    const peopleText = cleanActive === 1 ? 'Apenas 1 pessoa está' : `Apenas ${cleanActive} pessoas estão`;
+    const openingText = openingsLeft === 1 ? '1 vaga aberta' : `${openingsLeft} vagas abertas`;
+    return `${peopleText} em processo para ${openingText} — normalmente recomendamos cerca de ${funnelTarget}.${addCue}`;
   }
 
   // Shortlist when depth is OK
   if (hasShortlist && openingsLeft > 0) {
-    return 'You have enough people in early stages — prioritize shortlisting the stronger fits before adding volume.';
+    return 'Você possui candidatos suficientes nas etapas iniciais — priorize selecionar os mais aderentes antes de adicionar novos.';
   }
 
   // Openings still left, depth OK
   if (openingsLeft > 0) {
     return openingsLeft === 1
-      ? "1 role still open. Keep the pipeline moving until it's filled."
-      : `${openingsLeft} ${roleWord} still open. Keep the pipeline moving until they're filled.`;
+      ? '1 vaga ainda aberta. Mantenha o pipeline ativo até preenchê-la.'
+      : `${openingsLeft} vagas ainda abertas. Mantenha o pipeline ativo até preenchê-las.`;
   }
 
   if (noShowCount > 0) {
     return noShowCount === 1
-      ? '1 no-show still needs a decision so the board stays clean.'
-      : `${noShowCount} no-shows still need a decision so the board stays clean.`;
+      ? '1 falta (no-show) ainda precisa de decisão para manter o painel limpo.'
+      : `${noShowCount} faltas (no-shows) ainda precisam de decisão para manter o painel limpo.`;
   }
 
-  return 'Review Do for next clicks; Radar is weekly volume and funnel strategy.';
+  return 'Verifique as ações a fazer; o Radar acompanha o volume semanal e a estratégia do funil.';
 }
 
 function formatDeadlineLabel(iso: string, now: number): string {

@@ -149,3 +149,23 @@ export const jobStatusLabels: Record<JobStatus, string> = {
   closed: 'Fechada',
   cancelled: 'Cancelada',
 };
+
+export const jobDomainLabels: Record<string, string> = {
+  Engineering: 'Engenharia',
+  Design: 'Design',
+  Marketing: 'Marketing',
+  Sales: 'Vendas',
+  Operations: 'Operações',
+  HR: 'RH (Recursos Humanos)',
+  Finance: 'Finanças',
+  Product: 'Produto',
+  'Data Science': 'Ciência de Dados',
+  DevOps: 'DevOps',
+  QA: 'QA (Qualidade / Testes)',
+  Support: 'Suporte',
+};
+
+export function getDomainLabel(domain?: string | null): string {
+  if (!domain) return '';
+  return jobDomainLabels[domain] || domain;
+}

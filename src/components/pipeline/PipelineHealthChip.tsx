@@ -134,7 +134,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
             />
           ) : (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-              <p className="text-sm text-muted-foreground">No analysis yet for this job.</p>
+              <p className="text-sm text-muted-foreground">Nenhuma análise para esta vaga ainda.</p>
               <Button
                 type="button"
                 variant="outline"
@@ -148,7 +148,7 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
                 ) : (
                   <Sparkles className="h-3.5 w-3.5" aria-hidden />
                 )}
-                {scoring ? 'Analysing…' : 'Generate Saúde do Pipeline'}
+                {scoring ? 'Analisando…' : 'Gerar Saúde do Pipeline'}
               </Button>
             </div>
           )}
@@ -179,14 +179,14 @@ export function PipelineHealthChip({ jobId }: PipelineHealthChipProps) {
           className="h-9 gap-1.5"
           onClick={() => void handleAnalyse({ openDrawer: true })}
           disabled={scoring || trackerLoading}
-          aria-label="Generate Saúde do Pipeline"
+          aria-label="Gerar Saúde do Pipeline"
         >
           {scoring ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
           ) : (
             <Sparkles className="size-4 text-primary" strokeWidth={1.5} aria-hidden />
           )}
-          {scoring ? 'Analysing…' : 'Generate Saúde do Pipeline'}
+          {scoring ? 'Analisando…' : 'Gerar Saúde do Pipeline'}
         </Button>
         {drawer}
       </>

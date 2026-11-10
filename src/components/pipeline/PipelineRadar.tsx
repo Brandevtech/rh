@@ -8,10 +8,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { cn } from '@/lib/utils';
 
 const RADAR_INFO =
-  'Do = next clicks (Approve / Schedule / Chase). Radar = weekly volume + funnel strategy.';
+  'Ações = próximos cliques (Aprovar / Agendar / Cobrar). Radar = volume semanal + estratégia do funil.';
 
 const PEOPLE_IN_PLAY_INFO =
-  'Non-rejected, excluding no-shows. Aim ≈ 4× openings.';
+  'Candidatos ativos (não reprovados, excluindo faltas). Meta ≈ 4× o número de vagas.';
 
 export interface PipelineRadarProps {
   plan: PipelineClosePlan;
@@ -94,7 +94,7 @@ function RadarPanelBody({ plan }: { plan: PipelineClosePlan }) {
   const showWeekly =
     !plan.healthy && ((plan.weeklyAdd > 0 && plan.openingsLeft > 0) || Boolean(shortlist));
 
-  const peopleInPlayValue = `${plan.cleanActive} still in play (aim ~${plan.funnelTarget})`;
+  const peopleInPlayValue = `${plan.cleanActive} em processo (meta ~${plan.funnelTarget})`;
 
   const shortlistCue = (() => {
     if (!shortlist) return null;
@@ -120,16 +120,16 @@ function RadarPanelBody({ plan }: { plan: PipelineClosePlan }) {
           {showWeekly ? (
             <section className="space-y-2">
               <p className="text-[11px] font-bold uppercase tracking-wide text-teal-700 dark:text-teal-300 px-0.5">
-                Do this week
+                A Fazer Esta Semana
               </p>
               <div className="space-y-2">
                 {plan.weeklyAdd > 0 && plan.openingsLeft > 0 ? (
                   <ActionCue
-                    verb={`Add ${plan.weeklyAdd}`}
+                    verb={`Adicionar ${plan.weeklyAdd}`}
                     detail={
                       plan.nearDeadline && plan.deadlineLabel
-                        ? `candidates by ${plan.deadlineLabel}`
-                        : 'candidates this week'
+                        ? `candidatos até ${plan.deadlineLabel}`
+                        : 'candidatos esta semana'
                     }
                   />
                 ) : null}
@@ -146,11 +146,11 @@ function RadarPanelBody({ plan }: { plan: PipelineClosePlan }) {
             </p>
             <div className="space-y-1">
               {plan.openingsLeft > 0 ? (
-                <StatusRow label="Openings left" value={String(plan.openingsLeft)} emphasize />
+                <StatusRow label="Vagas restantes" value={String(plan.openingsLeft)} emphasize />
               ) : null}
               {plan.openingsLeft > 0 ? (
                 <StatusRow
-                  label="People in play"
+                  label="Em processo"
                   value={peopleInPlayValue}
                   emphasize={plan.cleanActive < plan.funnelTarget}
                   labelAddon={<PeopleInPlayInfo />}
@@ -158,14 +158,14 @@ function RadarPanelBody({ plan }: { plan: PipelineClosePlan }) {
               ) : null}
               {plan.deadlineLabel ? (
                 <StatusRow
-                  label="Deadline"
+                  label="Prazo final"
                   value={plan.deadlineLabel}
                   emphasize={plan.nearDeadline || plan.deadlineOverdue}
                 />
               ) : null}
               {plan.openingsLeft <= 0 && plan.noShowCount > 0 ? (
                 <StatusRow
-                  label="No-shows"
+                  label="Faltas (No-shows)"
                   value={String(plan.noShowCount)}
                   emphasize
                 />
@@ -176,7 +176,7 @@ function RadarPanelBody({ plan }: { plan: PipelineClosePlan }) {
           {noteLines.length > 0 ? (
             <section className="space-y-1.5">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground px-0.5">
-                Funnel notes
+                Notas do funil
               </p>
               <ul className="space-y-1">
                 {noteLines.map((line) => (
@@ -264,8 +264,8 @@ export function PipelineRadar({ plan, jobTitle, className }: PipelineRadarProps)
 
   const heading = jobTitle?.trim() || 'Radar';
   const subtitle = plan.healthy
-    ? 'Radar · maintain / improve'
-    : 'Radar · weekly strategy';
+    ? 'Radar · manter / melhorar'
+    : 'Radar · estratégia semanal';
 
   const infoTooltip = (
     <Tooltip>

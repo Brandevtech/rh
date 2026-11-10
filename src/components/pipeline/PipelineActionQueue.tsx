@@ -38,7 +38,7 @@ export function PipelineActionQueue({
       aria-label="Fila de ações da vaga"
     >
       <span className="shrink-0 text-caption font-medium uppercase tracking-[0.04em] text-muted-foreground">
-        Do
+        A Fazer
       </span>
       <ul className="-my-1 flex min-w-0 snap-x items-center gap-2 overflow-x-auto py-1 pr-8 scrollbar-none">
         {items.map((item) => {

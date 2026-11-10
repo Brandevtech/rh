@@ -68,6 +68,16 @@ import type { Candidate } from '@/types/database';
 
 const PIPELINE_TERMINAL_STATUSES = new Set(['shortlisted', 'rejected', 'backout']);
 
+export function formatStageDisplayName(name?: string | null): string {
+  if (!name) return '';
+  const lower = name.toLowerCase().trim();
+  if (lower === 'screening') return 'Triagem';
+  if (lower === 'technical round' || lower === 'technical') return 'Etapa Técnica';
+  if (lower === 'managerial / panel' || lower === 'managerial') return 'Etapa Gestão / Painel';
+  if (lower === 'hr round' || lower === 'hr_final') return 'Etapa RH';
+  return name;
+}
+
 type FitScoreFilter = 'all' | '70' | '80' | '90';
 
 const PIPELINE_STATUS_FILTERS: { value: InterviewVerdict; label: string }[] = [
@@ -1040,7 +1050,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                     className="gap-1.5 h-9"
                   >
                     <Filter className="w-3.5 h-3.5" />
-                    Filters
+                    Filtros
                     {activeFilterCount > 0 && (
                       <span className="rounded-full bg-background/20 px-1.5 text-xs">{activeFilterCount}</span>
                     )}
@@ -1102,14 +1112,14 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                       className="w-full h-8 text-muted-foreground"
                       onClick={clearPipelineFilters}
                     >
-                      Clear all filters
+                      Limpar todos os filtros
                     </Button>
                   )}
                 </PopoverContent>
               </Popover>
               {canManage && (
                 <Button size="sm" variant="outline" onClick={() => setShowTemplates(true)} className="gap-1">
-                  <Layers className="w-4 h-4" /> Templates
+                  <Layers className="w-4 h-4" /> Modelos
                 </Button>
               )}
             </div>
@@ -1204,7 +1214,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
               <p className="text-xs text-muted-foreground">Aplique um modelo para estruturar as etapas do processo seletivo.</p>
               {canManage && (
                 <Button variant="outline" onClick={() => setShowTemplates(true)} className="gap-1">
-                  <Layers className="w-4 h-4" /> Manage Templates
+                  <Layers className="w-4 h-4" /> Gerenciar Modelos
                 </Button>
               )}
             </CardContent>
@@ -1237,7 +1247,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                     <DroppableColumn
                       key={stage.id}
                       stageId={stage.id}
-                      stageName={stage.stage_name}
+                      stageName={formatStageDisplayName(stage.stage_name)}
                       count={stageInterviews.length}
                       isFirst={idx === 0}
                       isLast={idx === selectedJobStages.length - 1}

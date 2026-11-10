@@ -5,6 +5,7 @@ import {
   startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay, endOfDay,
 } from 'date-fns';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { ptBR } from 'date-fns/locale';
 import { Footer } from '@/components/Footer';
 import { useScheduledInterviews } from '@/hooks/useScheduledInterviews';
 import { ScheduleInterviewDialog } from '@/components/pipeline/ScheduleInterviewDialog';
@@ -30,22 +31,22 @@ const VIEW_LABELS: Record<CalView, string> = {
 type CalView = 'month' | 'week' | 'list';
 
 const MODE_LEGEND = [
-  { label: 'Video', icon: Video, dot: 'bg-blue-500' },
-  { label: 'In Person', icon: MapPin, dot: 'bg-emerald-500' },
-  { label: 'Phone', icon: Phone, dot: 'bg-amber-500' },
+  { label: 'Vídeo', icon: Video, dot: 'bg-blue-500' },
+  { label: 'Presencial', icon: MapPin, dot: 'bg-emerald-500' },
+  { label: 'Telefone', icon: Phone, dot: 'bg-amber-500' },
 ];
 
 function getNavLabel(view: CalView, date: Date): string {
-  if (view === 'month') return format(date, 'MMMM yyyy');
+  if (view === 'month') return format(date, 'MMMM yyyy', { locale: ptBR });
   if (view === 'week') {
     const start = startOfWeek(date, { weekStartsOn: 1 });
     const end = endOfWeek(date, { weekStartsOn: 1 });
     if (format(start, 'MMM yyyy') === format(end, 'MMM yyyy')) {
-      return `${format(start, 'd')} – ${format(end, 'd MMM yyyy')}`;
+      return `${format(start, 'd')} – ${format(end, 'd MMM yyyy', { locale: ptBR })}`;
     }
-    return `${format(start, 'd MMM')} – ${format(end, 'd MMM yyyy')}`;
+    return `${format(start, 'd MMM', { locale: ptBR })} – ${format(end, 'd MMM yyyy', { locale: ptBR })}`;
   }
-  return 'All Interviews';
+  return 'Todas as Entrevistas';
 }
 
 function navigateDate(view: CalView, date: Date, dir: 1 | -1): Date {
@@ -222,7 +223,7 @@ export default function InterviewCalendar() {
                       : 'bg-background text-muted-foreground hover:bg-muted/60'
                   )}
                 >
-                  {v}
+                  {VIEW_LABELS[v]}
                 </button>
               ))}
             </div>

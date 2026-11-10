@@ -156,7 +156,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
             </div>
             <Button onClick={() => onApply(job)} size="lg" className="gap-2" disabled={!!deadlinePassed}>
               <Send className="h-4 w-4" />
-              {deadlinePassed ? 'Closed' : 'Apply Now'}
+              {deadlinePassed ? 'Encerrada' : 'Candidatar-se'}
             </Button>
           </div>
         </CardHeader>

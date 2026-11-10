@@ -113,6 +113,8 @@ import {
   jobStatusLabels,
   experienceYearsLabels,
   positionTypeLabels,
+  jobDomainLabels,
+  getDomainLabel,
   isActiveJobStatus,
   isCompletedJobStatus,
   isJobStatusInListTab,
@@ -353,7 +355,7 @@ export default function Jobs() {
     await queryClient.invalidateQueries({ queryKey: ['hired-candidates'] });
   };
   const { assessments } = useAssessments();
-  const activeAssessments = assessments.filter((a) => a.status === 'active');
+  const activeAssessments = assessments.filter((a) => a.status !== 'archived');
   const { isAdminOrHR, role } = useAuth();
   const { configValue: domains } = useSystemConfig('job_domains');
   const { configValue: teams } = useSystemConfig('job_teams');
@@ -741,7 +743,7 @@ export default function Jobs() {
   const copyPublicLink = (jobId: string) => {
     const link = `${window.location.origin}/careers/${jobId}`;
     navigator.clipboard.writeText(link);
-    toast({ title: 'Link copied to clipboard' });
+    toast({ title: 'Link copiado para a área de transferência!' });
   };
 
   // Returns urgency level for deadline colouring
@@ -799,7 +801,7 @@ export default function Jobs() {
           <SelectContent>
             <SelectItem value="all">Todas as Áreas</SelectItem>
             {uniqueDomains.map(d => (
-              <SelectItem key={d} value={d}>{d}</SelectItem>
+              <SelectItem key={d} value={d}>{getDomainLabel(d)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -1019,7 +1021,7 @@ export default function Jobs() {
               {jobListTab === 'active' && canManageJobs && activeFilterCount === 0 && !searchQuery && (
                 <Button onClick={openCreate} className="gap-2">
                   <Plus className="h-4 w-4" />
-                  Create Job Posting
+                  Criar Vaga
                 </Button>
               )}
             </CardContent>
@@ -1091,7 +1093,7 @@ export default function Jobs() {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{(job as any).domain || '—'}</TableCell>
+                      <TableCell className="text-muted-foreground">{getDomainLabel((job as any).domain) || '—'}</TableCell>
                       <TableCell className="text-muted-foreground">{job.department || '—'}</TableCell>
                       <TableCell>
                         {(job as any).position_type
@@ -1186,7 +1188,7 @@ export default function Jobs() {
                               {canManageJobs && (
                                 <DropdownMenuItem onClick={() => openEdit(job)}>
                                   <Edit className="h-4 w-4 mr-2" />
-                                  Edit
+                                  Editar
                                 </DropdownMenuItem>
                               )}
                               <ClosedDropdownItem
@@ -1300,7 +1302,7 @@ export default function Jobs() {
                         {canManageJobs && (
                           <DropdownMenuItem onClick={() => openEdit(job)}>
                             <Edit className="h-4 w-4 mr-2" />
-                            Edit
+                            Editar
                           </DropdownMenuItem>
                         )}
                         <ClosedDropdownItem
@@ -1394,7 +1396,7 @@ export default function Jobs() {
                       {(job as any).domain && (
                         <div className="flex items-center gap-1 min-w-0 max-w-full">
                           <Briefcase className="h-4 w-4 shrink-0" />
-                          <span className="truncate">{(job as any).domain}</span>
+                          <span className="truncate">{getDomainLabel((job as any).domain)}</span>
                         </div>
                       )}
                       {job.department && (
@@ -1474,7 +1476,7 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Location</p>
+                          <p className="text-muted-foreground text-xs">Localização</p>
                           <p className="font-medium">{detailJob.location}</p>
                         </div>
                       </div>
@@ -1483,8 +1485,8 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <Briefcase className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Domain</p>
-                          <p className="font-medium">{(detailJob as any).domain}</p>
+                          <p className="text-muted-foreground text-xs">Área</p>
+                          <p className="font-medium">{getDomainLabel((detailJob as any).domain)}</p>
                         </div>
                       </div>
                     )}
@@ -1492,7 +1494,7 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <Users className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Team</p>
+                          <p className="text-muted-foreground text-xs">Equipe</p>
                           <p className="font-medium">{detailJob.department}</p>
                         </div>
                       </div>
@@ -1501,7 +1503,7 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <Award className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Experience</p>
+                          <p className="text-muted-foreground text-xs">Experiência</p>
                           <p className="font-medium">
                             {(detailJob as any).experience_years_range
                               ? experienceYearsLabels[(detailJob as any).experience_years_range as ExperienceYearsRange] || (detailJob as any).experience_years_range
@@ -1514,7 +1516,7 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <Users className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Openings</p>
+                          <p className="text-muted-foreground text-xs">Vagas</p>
                           <p className="font-medium">{(detailJob as any).total_openings}</p>
                         </div>
                       </div>
@@ -1523,7 +1525,7 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <IndianRupee className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Salary (Annual)</p>
+                          <p className="text-muted-foreground text-xs">Salário (Anual)</p>
                           <p className="font-medium">{formatSalaryRange(detailJob.salary_min, detailJob.salary_max)}</p>
                         </div>
                       </div>
@@ -1532,7 +1534,7 @@ export default function Jobs() {
                       <div className="flex items-start gap-2">
                         <CalendarDays className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
                         <div>
-                          <p className="text-muted-foreground text-xs">Application Deadline</p>
+                          <p className="text-muted-foreground text-xs">Prazo de Inscrição</p>
                           <p className={`font-medium ${detailJob.status === 'open' ? deadlineClasses[urgency] : 'text-muted-foreground'}`}>
                             {format(new Date(detailJob.application_deadline), 'dd MMM yyyy')}
                             {deadlineBadge[urgency] && detailJob.status === 'open' && <span className="ml-2 text-xs font-normal">{deadlineBadge[urgency]}</span>}
@@ -1548,7 +1550,7 @@ export default function Jobs() {
                   {detailJob.description && (
                     <>
                       <div className="mb-5">
-                        <h3 className="text-sm font-semibold mb-2">Job Description</h3>
+                        <h3 className="text-sm font-semibold mb-2">Descrição da Vaga</h3>
                         <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
                           {detailJob.description}
                         </p>
@@ -1561,7 +1563,7 @@ export default function Jobs() {
                   {detailJob.required_skills?.length > 0 && (
                     <>
                       <div className="mb-5">
-                        <h3 className="text-sm font-semibold mb-2">Required Skills</h3>
+                        <h3 className="text-sm font-semibold mb-2">Habilidades Necessárias</h3>
                         <div className="flex flex-wrap gap-1.5">
                           {detailJob.required_skills.map(skill => (
                             <Badge key={skill} variant="secondary">{skill}</Badge>
@@ -1576,7 +1578,7 @@ export default function Jobs() {
                   {detailJob.benefits?.length > 0 && (
                     <>
                       <div className="mb-5">
-                        <h3 className="text-sm font-semibold mb-2">Benefits</h3>
+                        <h3 className="text-sm font-semibold mb-2">Benefícios</h3>
                         <div className="flex flex-wrap gap-2">
                           {detailJob.benefits.map(b => (
                             <div key={b} className="flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -1595,7 +1597,7 @@ export default function Jobs() {
                     <>
                       <Separator className="my-4" />
                       <div className="mb-5">
-                        <h3 className="text-sm font-semibold mb-2">Assigned Recruiters</h3>
+                        <h3 className="text-sm font-semibold mb-2">Recrutadores Atribuídos</h3>
                         <div className="flex flex-wrap gap-2">
                           {detailJobRecruiters.map((r, i) => (
                             <Badge
@@ -1619,7 +1621,7 @@ export default function Jobs() {
                       <Separator className="my-4" />
                       <div className="mb-5">
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <h3 className="text-sm font-semibold">Hired candidates</h3>
+                          <h3 className="text-sm font-semibold">Candidatos Contratados</h3>
                           {canManageJobs && isClosed && detailHired.length < (detailJob.total_openings || 1) && (
                             <Button
                               type="button"
@@ -1629,7 +1631,7 @@ export default function Jobs() {
                               onClick={() => openAssignHiredDialog(detailJob, 'add')}
                             >
                               <UserCheck className="h-3.5 w-3.5" />
-                              Assign hired
+                              Atribuir contratado
                             </Button>
                           )}
                         </div>
@@ -1665,7 +1667,7 @@ export default function Jobs() {
                                     className="h-7 shrink-0 text-xs"
                                     onClick={() => openAssignHiredDialog(detailJob, 'change', c)}
                                   >
-                                    Change
+                                    Alterar
                                   </Button>
                                 )}
                               </div>
@@ -1702,7 +1704,7 @@ export default function Jobs() {
                     {canManageJobs && (
                       <Button variant="outline" onClick={() => { openEdit(detailJob); setDetailJob(null); }} className="gap-2">
                         <Edit className="h-4 w-4" />
-                        Edit
+                        Editar
                       </Button>
                     )}
                     <ClosedJobTooltipWrap closed={isInactive}>
@@ -1732,37 +1734,37 @@ export default function Jobs() {
                     {canManageJobs && detailJob.status === 'draft' && (
                       <Button variant="outline" onClick={() => { handleStatusChange(detailJob, 'open'); setDetailJob(null); }} className="gap-2">
                         <Play className="h-4 w-4" />
-                        Publish
+                        Publicar
                       </Button>
                     )}
                     {canManageJobs && detailJob.status === 'open' && (
                       <Button variant="outline" onClick={() => { handleStatusChange(detailJob, 'paused'); setDetailJob(null); }} className="gap-2">
                         <Pause className="h-4 w-4" />
-                        Pause
+                        Pausar
                       </Button>
                     )}
                     {canManageJobs && detailJob.status === 'paused' && (
                       <Button variant="outline" onClick={() => { handleStatusChange(detailJob, 'open'); setDetailJob(null); }} className="gap-2">
                         <Play className="h-4 w-4" />
-                        Resume
+                        Retomar
                       </Button>
                     )}
                     {canManageJobs && isActiveJobStatus(detailJob.status) && (
                       <Button variant="outline" onClick={() => { handleStatusChange(detailJob, 'closed'); setDetailJob(null); }} className="gap-2">
                         <Archive className="h-4 w-4" />
-                        Close
+                        Encerrar
                       </Button>
                     )}
                     {canManageJobs && isActiveJobStatus(detailJob.status) && (
                       <Button variant="outline" onClick={() => { handleStatusChange(detailJob, 'cancelled'); setDetailJob(null); }} className="gap-2">
                         <Ban className="h-4 w-4" />
-                        Cancel
+                        Cancelar
                       </Button>
                     )}
                     {canManageJobs && isCompletedJobStatus(detailJob.status) && (
                       <Button variant="outline" onClick={() => { handleStatusChange(detailJob, 'open'); setDetailJob(null); }} className="gap-2">
                         <ArchiveRestore className="h-4 w-4" />
-                        Re-open
+                        Reabrir
                       </Button>
                     )}
                   </div>
@@ -1805,7 +1807,7 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Domain</Label>
+                  <Label>Área</Label>
                   <Select
                     value={form.domain}
                     onValueChange={(value) => setForm(prev => ({ ...prev, domain: value }))}
@@ -1815,21 +1817,24 @@ export default function Jobs() {
                     </SelectTrigger>
                     <SelectContent>
                       {domainList.map(d => (
-                        <SelectItem key={d} value={d}>{d}</SelectItem>
+                        <SelectItem key={d} value={d}>{getDomainLabel(d)}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="department">Team</Label>
+                  <Label htmlFor="department">Equipe</Label>
                   <Select
                     value={form.department}
                     onValueChange={(value) => setForm(prev => ({ ...prev, department: value }))}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione a equipe" />
+                      <SelectValue placeholder={teamList.length === 0 ? "Nenhuma equipe cadastrada em Configurações" : "Selecione a equipe"} />
                     </SelectTrigger>
                     <SelectContent>
+                      {teamList.length === 0 && (
+                        <SelectItem value="none" disabled>Nenhuma equipe cadastrada (configure em Configurações &gt; Equipes)</SelectItem>
+                      )}
                       {teamList.map(t => (
                         <SelectItem key={t} value={t}>{t}</SelectItem>
                       ))}
@@ -1933,7 +1938,7 @@ export default function Jobs() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="salary_min">Min Salary - Annual (₹)</Label>
+                  <Label htmlFor="salary_min">Salário Mínimo - Anual (R$)</Label>
                   <Input
                     id="salary_min"
                     type="number"
@@ -1943,7 +1948,7 @@ export default function Jobs() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="salary_max">Max Salary - Annual (₹)</Label>
+                  <Label htmlFor="salary_max">Salário Máximo - Anual (R$)</Label>
                   <Input
                     id="salary_max"
                     type="number"
@@ -1983,7 +1988,7 @@ export default function Jobs() {
                   onChange={(e) => setForm(prev => ({ ...prev, application_deadline: e.target.value }))}
                 />
                 <p className="text-xs text-muted-foreground">
-                  A visual warning will appear when the deadline passes. The job won't auto-close.
+                  Um aviso visual aparecerá quando o prazo expirar. A vaga não será encerrada automaticamente.
                 </p>
               </div>
 
@@ -2041,7 +2046,7 @@ export default function Jobs() {
                           <SelectItem value="none">Nenhuma selecionada</SelectItem>
                           {activeAssessments.map((a) => (
                             <SelectItem key={a.id} value={a.id}>
-                              {a.title}
+                              {a.title}{a.status === 'draft' ? ' (Rascunho)' : ''}
                             </SelectItem>
                           ))}
                         </SelectContent>
