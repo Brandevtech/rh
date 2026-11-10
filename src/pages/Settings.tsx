@@ -2285,23 +2285,23 @@ function ChitraTab() {
   );
 
   const fields: { key: keyof typeof defaults; label: string; description: string }[] = [
-    { key: 'grace_minutes',    label: 'Grace Period (minutes)',    description: 'Time after a scheduled interview before Chitra sends the first nudge.' },
-    { key: 'level1_hours',     label: 'Nível 1 — Firm nudge (hours)', description: 'Hours after the first nudge before Chitra follows up firmly and loops in the recruiter.' },
-    { key: 'level2_hours',     label: 'Nível 2 — HR Escalation (hours)', description: 'Total hours overdue before Chitra notifies HR.' },
-    { key: 'level3_hours',     label: 'Nível 3 — Relatório ao Admin (hours)', description: 'Total hours overdue before Chitra notes this in the super-admin daily report.' },
-    { key: 'level4_hours',     label: 'Nível 4 — Advertência Formal (hours)', description: 'Total hours overdue before Chitra issues a formal on-record warning to all parties.' },
+    { key: 'grace_minutes',    label: 'Período de Tolerância (minutos)',    description: 'Tempo após a entrevista agendada antes da R-IA enviar o primeiro lembrete.' },
+    { key: 'level1_hours',     label: 'Nível 1 — Cobrança Firme (horas)',   description: 'Horas após o primeiro lembrete antes da R-IA cobrar com firmeza e copiar o recrutador.' },
+    { key: 'level2_hours',     label: 'Nível 2 — Escalonamento ao RH (horas)', description: 'Total de horas em atraso antes da R-IA notificar a liderança de RH.' },
+    { key: 'level3_hours',     label: 'Nível 3 — Relatório ao Admin (horas)',  description: 'Total de horas em atraso antes da R-IA incluir no relatório diário do super admin.' },
+    { key: 'level4_hours',     label: 'Nível 4 — Advertência Formal (horas)', description: 'Total de horas em atraso antes da R-IA emitir uma advertência formal a todas as partes.' },
   ];
 
-  if (isLoading) return <div className="text-sm text-muted-foreground">Loading...</div>;
+  if (isLoading) return <div className="text-sm text-muted-foreground">Carregando...</div>;
 
   return (
     <div className="space-y-8">
       {/* Escalation thresholds */}
       <div className="space-y-4">
         <div>
-          <h3 className="text-sm font-semibold">Escalation Thresholds</h3>
+          <h3 className="text-sm font-semibold">Limites de Escalonamento</h3>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Controls when Chitra advances each escalation level for overdue interview feedback.
+            Controla quando a R-IA avança cada nível de cobrança para feedbacks de entrevista em atraso.
           </p>
         </div>
 
@@ -2328,37 +2328,37 @@ function ChitraTab() {
         </div>
 
         <Button onClick={() => update(local)} disabled={!isDirty || isUpdating}>
-          {isUpdating ? 'Saving...' : 'Save Thresholds'}
+          {isUpdating ? 'Salvando...' : 'Salvar Limites'}
         </Button>
       </div>
 
       {/* KRA overview */}
       <div className="space-y-4 border-t pt-6">
         <div>
-          <h3 className="text-sm font-semibold">Ativo KRAs</h3>
+          <h3 className="text-sm font-semibold">KRAs Ativos</h3>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Chitra's current responsibilities.
+            Responsabilidades e monitoramentos atuais da R-IA.
           </p>
         </div>
 
         <div className="space-y-3">
           {/* KRA 1 */}
-          <div className="rounded-lg border bg-violet-50/40 dark:bg-violet-950/20 border-violet-200 dark:border-violet-800 p-4">
+          <div className="rounded-lg border bg-primary/5 dark:bg-primary/10 border-primary/20 p-4">
             <div className="flex items-start gap-3">
-              <div className="p-1.5 rounded-full bg-violet-100 dark:bg-violet-900/40 shrink-0 mt-0.5">
-                <Eye className="h-3.5 w-3.5 text-violet-600 dark:text-violet-400" />
+              <div className="p-1.5 rounded-full bg-primary/10 text-primary shrink-0 mt-0.5">
+                <Eye className="h-3.5 w-3.5" />
               </div>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold">KRA 1 — Overdue Interview Feedback</p>
-                  <Badge variant="outline" className="text-[10px] bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-400">Active</Badge>
+                  <p className="text-sm font-semibold">KRA 1 — Feedback de Entrevista Atrasado</p>
+                  <Badge variant="outline" className="text-[10px] bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-400">Ativo</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Monitors every scheduled interview. Escalates from a warm nudge to a formal on-record warning if feedback isn't submitted within the grace period.
+                  Monitora todas as entrevistas agendadas. Escala de um lembrete amigável a uma advertência formal caso o feedback não seja enviado no prazo.
                 </p>
                 <div className="mt-2 grid grid-cols-5 gap-1.5 text-[10px]">
                   {[
-                    { level: 'L0', label: 'Nudge', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
+                    { level: 'L0', label: 'Lembrete', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
                     { level: 'L1', label: 'Firme + Recrutador', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
                     { level: 'L2', label: 'Notificação ao RH', color: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' },
                     { level: 'L3', label: 'Relatório ao Admin', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
@@ -2376,26 +2376,26 @@ function ChitraTab() {
 
           {/* Planned KRAs */}
           <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Planned (Phase 2+)</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Planejado (Fase 2+)</p>
             <div className="space-y-1.5 text-sm text-muted-foreground">
-              <p>KRA 2 — Candidate Stage Stagnation: flag candidates stuck &gt;5 days with no activity</p>
-              <p>KRA 3 — Job Deadline Pipeline Health: alert when deadline &lt;5 days with few advanced candidates</p>
-              <p>KRA 4 — Reward & Recognition: praise interviewers and recruiters for on-time actions</p>
-              <p>KRA 5 — Super Admin Daily Report: 8 AM briefing of all violations, rewards, and pipeline health</p>
-              <p>KRA 6 — Two-Way Chat: natural language queries to Chitra about pipeline state and team performance</p>
+              <p>KRA 2 — Estagnação de Candidatos: alerta candidatos estagnados há &gt;5 dias sem atividade</p>
+              <p>KRA 3 — Saúde do Prazo da Vaga: alerta quando o prazo estiver &lt;5 dias com poucos candidatos avançados</p>
+              <p>KRA 4 — Reconhecimento & Elogios: parabeniza entrevistadores e recrutadores por agilidade</p>
+              <p>KRA 5 — Relatório Diário ao Super Admin: resumo diário às 8h com alertas, destaques e saúde do funil</p>
+              <p>KRA 6 — Chat Interativo: consultas em linguagem natural à R-IA sobre o status das vagas e equipe</p>
             </div>
           </div>
         </div>
 
         {/* Guardrails */}
         <div className="rounded-lg border p-4 space-y-2">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Guardrails</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Diretrizes de Segurança</p>
           <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-            <li>Chitra never modifies candidate data, pipeline positions, or interview records.</li>
-            <li>Chitra only inserts into <code className="bg-muted px-1 rounded">notifications</code> and <code className="bg-muted px-1 rounded">chitra_escalations</code>.</li>
-            <li>Chitra does not contact candidates — internal users only.</li>
-            <li>All Chitra actions are logged and auditable via the <code className="bg-muted px-1 rounded">chitra_escalations</code> table.</li>
-            <li>Super admin is the only user who cannot be acted upon by Chitra.</li>
+            <li>A R-IA nunca modifica dados de candidatos, etapas do funil ou registros de entrevistas.</li>
+            <li>A R-IA apenas insere em <code className="bg-muted px-1 rounded">notifications</code> e <code className="bg-muted px-1 rounded">chitra_escalations</code>.</li>
+            <li>A R-IA não entra em contato com candidatos — apenas usuários internos.</li>
+            <li>Todas as ações da R-IA são auditáveis através da tabela <code className="bg-muted px-1 rounded">chitra_escalations</code>.</li>
+            <li>O super administrador é o único usuário sobre o qual a R-IA não pode agir.</li>
           </ul>
         </div>
       </div>
@@ -3514,7 +3514,7 @@ export default function Settings() {
             </TabsTrigger>
             {isSuperAdmin && (
               <TabsTrigger value="chitra" className="gap-1.5 shrink-0">
-                <Eye className="h-4 w-4" /> Chitra
+                <Eye className="h-4 w-4" /> R-IA
               </TabsTrigger>
             )}
             {extensionTabs.map((t) => (
@@ -3783,11 +3783,11 @@ export default function Settings() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-violet-100 dark:bg-violet-900/40">
-                      <Eye className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+                    <div className="p-2 rounded-full bg-primary/10 text-primary">
+                      <Eye className="h-5 w-5" />
                     </div>
                     <div>
-                      <CardTitle>Chitragupta (Chitra)</CardTitle>
+                      <CardTitle>R-IA (Assistente de RH)</CardTitle>
                       <CardDescription>
                         Assistente inteligente de conformidade e governança de processos de RH. Visível exclusivamente para superadministradores.
                       </CardDescription>

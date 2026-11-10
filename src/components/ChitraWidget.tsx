@@ -7,6 +7,7 @@ import { extensions } from '@/lib/extensions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { isPublicRoute } from '@/lib/publicRoutes';
 
@@ -47,10 +48,10 @@ function ChitraEyeIcon({ className }: { className?: string }) {
 function ChitraAvatar({ size = 'sm' }: { size?: 'sm' | 'md' }) {
   return (
     <div className={cn(
-      'rounded-full bg-violet-600 flex items-center justify-center shrink-0 shadow-xs',
+      'rounded-full bg-primary flex items-center justify-center shrink-0 shadow-xs border border-primary/20',
       size === 'sm' ? 'h-7 w-7' : 'h-9 w-9',
     )}>
-      <Eye className={cn('text-white', size === 'sm' ? 'h-3.5 w-3.5' : 'h-6 w-6')} />
+      <Eye className={cn('text-primary-foreground', size === 'sm' ? 'h-3.5 w-3.5' : 'h-5 w-5')} />
     </div>
   );
 }
@@ -71,11 +72,11 @@ function MessageBubble({
     return (
       <div className="flex items-start justify-end gap-2">
         <div className="min-w-0 max-w-[85%] space-y-1">
-          <div className="rounded-2xl rounded-tr-sm bg-violet-600 px-3 py-2 text-xs text-white shadow-xs">
+          <div className="rounded-2xl rounded-tr-sm bg-primary px-3 py-2 text-xs text-primary-foreground shadow-xs">
             <p className="leading-snug">{n.message || n.title}</p>
           </div>
           <p className="text-[10px] text-muted-foreground/60 text-right pr-0.5">
-            {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+            {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: ptBR })}
           </p>
         </div>
       </div>
@@ -83,18 +84,18 @@ function MessageBubble({
   }
 
   const typeColor: Record<string, string> = {
-    chitra_warning: 'bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800',
-    chitra_praise:  'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800',
+    chitra_warning: 'bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 text-foreground',
+    chitra_praise:  'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-foreground',
   };
-  const bubbleClass = typeColor[n.type] ?? 'bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800';
+  const bubbleClass = typeColor[n.type] ?? 'bg-muted/60 dark:bg-muted/30 border-border text-foreground';
   const Attachment = extensions.ChitraMessageAttachment;
 
   return (
-    <div className={cn('flex items-start gap-2', !n.is_read && 'opacity-100', n.is_read && 'opacity-80')}>
+    <div className={cn('flex items-start gap-2', !n.is_read && 'opacity-100', n.is_read && 'opacity-85')}>
       <ChitraAvatar size="sm" />
       <div className="flex-1 min-w-0 space-y-1.5">
         <div className={cn('rounded-2xl rounded-tl-sm border px-3 py-2.5 text-xs shadow-xs', bubbleClass)}>
-          {n.type !== 'chitra_query' && n.title !== 'Chitragupta' && (
+          {n.type !== 'chitra_query' && n.title !== 'Chitragupta' && n.title !== 'R-IA' && (
             <p className="font-semibold text-foreground leading-tight">{n.title}</p>
           )}
           <p className="text-muted-foreground leading-snug mt-0.5">{cleanMessage(n.message)}</p>
@@ -108,18 +109,18 @@ function MessageBubble({
               <button
                 key={btn.label}
                 onClick={() => onAction(btn.link, n.id)}
-                className="text-[11px] px-2.5 py-1 rounded-full bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 hover:bg-violet-200 dark:hover:bg-violet-800/60 font-medium transition-colors border border-violet-200 dark:border-violet-700"
+                className="text-[11px] px-2.5 py-1 rounded-full bg-primary/10 hover:bg-primary/20 text-primary dark:text-primary-foreground dark:bg-primary/20 font-medium transition-colors border border-primary/20"
               >
-                {btn.label === 'View drafts' ? 'Archive in Settings' : btn.label}
+                {btn.label === 'View drafts' ? 'Ver rascunhos' : btn.label}
               </button>
             ))}
           </div>
         )}
 
         <p className="text-[10px] text-muted-foreground/60 pl-0.5">
-          {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+          {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: ptBR })}
           {!n.is_read && (
-            <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-violet-500 align-middle" />
+            <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-primary align-middle" />
           )}
         </p>
       </div>
@@ -165,10 +166,10 @@ export function ChitraNavButton() {
       className={cn(
         'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-colors focus:outline-hidden md:hidden',
         isOpen
-          ? 'border-violet-400/50 bg-violet-100 text-violet-700 dark:border-violet-500/40 dark:bg-violet-900/40 dark:text-violet-300'
-          : 'border-violet-300/30 bg-violet-50 text-violet-600 hover:border-violet-400/50 hover:bg-violet-100 dark:border-violet-700/30 dark:bg-violet-950/30 dark:text-violet-400 dark:hover:bg-violet-950/50',
+          ? 'border-primary/50 bg-primary/15 text-primary dark:bg-primary/30 dark:text-primary-foreground'
+          : 'border-primary/30 bg-primary/5 text-primary hover:border-primary/50 hover:bg-primary/15 dark:border-primary/40 dark:bg-primary/20 dark:text-primary-foreground',
       )}
-      aria-label={isOpen ? 'Close Chitragupta' : 'Open Chitragupta'}
+      aria-label={isOpen ? 'Fechar R-IA' : 'Abrir R-IA'}
       aria-pressed={isOpen}
     >
       <ChitraEyeIcon className="h-5 w-5" />
@@ -362,32 +363,32 @@ function ChitraWidget() {
 
   const launcherClass = cn(
     'relative h-14 w-14 rounded-full shadow-xl flex items-center justify-center transition-all duration-200',
-    'bg-violet-600 hover:bg-violet-700 active:scale-95',
+    'bg-primary hover:bg-primary/90 text-primary-foreground active:scale-95',
     'ring-2 ring-white dark:ring-background',
   );
 
   const panelHeader = (
-    <div className="flex items-center gap-2.5 px-4 py-3 bg-violet-600 dark:bg-violet-700 shrink-0">
+    <div className="flex items-center gap-2.5 px-4 py-3 bg-primary text-primary-foreground shrink-0 border-b border-primary/20">
       <div className="p-1 rounded-full bg-white/20">
-        <Eye className="h-4 w-4 text-white" />
+        <Eye className="h-4 w-4 text-primary-foreground" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-white leading-tight">Chitragupta</p>
-        <p className="text-[10px] text-violet-200 leading-tight">AI HR Manager · The Talent App</p>
+        <p className="text-sm font-semibold text-primary-foreground leading-tight">R-IA</p>
+        <p className="text-[10px] text-primary-foreground/75 leading-tight">Assistente de RH com IA · RIA</p>
       </div>
       {!isMobile && (
         <button
           onClick={() => setIsMinimized(true)}
-          className="p-1 rounded-md text-violet-200 hover:text-white hover:bg-white/10 transition-colors"
-          title="Minimise"
+          className="p-1 rounded-md text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 transition-colors"
+          title="Minimizar"
         >
           <Minus className="h-3.5 w-3.5" />
         </button>
       )}
       <button
         onClick={handleClose}
-        className="p-1 rounded-md text-violet-200 hover:text-white hover:bg-white/10 transition-colors"
-        title="Close"
+        className="p-1 rounded-md text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/10 transition-colors"
+        title="Fechar"
       >
         <X className="h-3.5 w-3.5" />
       </button>
@@ -396,15 +397,15 @@ function ChitraWidget() {
 
   const messagesBody = chitraMessages.length === 0 ? (
     <div className="flex flex-col items-center justify-center flex-1 gap-3 text-center px-6 py-8">
-      <div className="p-3 rounded-full bg-violet-100 dark:bg-violet-900/40">
-        <Eye className="h-5 w-5 text-violet-500" />
+      <div className="p-3 rounded-full bg-primary/10 text-primary">
+        <Eye className="h-5 w-5" />
       </div>
       <div>
-        <p className="text-sm font-medium">Chitragupta is watching</p>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-sm font-semibold text-foreground">R-IA está monitorando</p>
+        <p className="text-xs text-muted-foreground mt-1 max-w-[260px] leading-relaxed">
           {isSuperAdmin
-            ? "Messages will appear here. Ask me anything about your pipeline."
-            : "Messages from Chitragupta will appear here. He'll reach out when action is needed."}
+            ? "As mensagens aparecerão aqui. Pergunte qualquer coisa sobre o funil de recrutamento."
+            : "As mensagens da R-IA aparecerão aqui. Ela entrará em contato quando uma ação for necessária."}
         </p>
       </div>
     </div>
@@ -422,8 +423,8 @@ function ChitraWidget() {
       {isSending && (
         <div className="flex items-center gap-2">
           <ChitraAvatar size="sm" />
-          <div className="bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-800 rounded-2xl rounded-tl-sm px-3 py-2.5">
-            <Loader2 className="h-3.5 w-3.5 text-violet-500 animate-spin" />
+          <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-2xl rounded-tl-sm px-3 py-2.5">
+            <Loader2 className="h-3.5 w-3.5 text-primary animate-spin" />
           </div>
         </div>
       )}
@@ -431,7 +432,7 @@ function ChitraWidget() {
   );
 
   const chatInputBar = isSuperAdmin ? (
-    <div className="shrink-0 border-t border-violet-100 dark:border-violet-900 p-2.5 bg-background pb-safe">
+    <div className="shrink-0 border-t border-border p-2.5 bg-background pb-safe">
       <div className="flex items-center gap-2">
         <input
           ref={inputRef}
@@ -439,20 +440,20 @@ function ChitraWidget() {
           value={chatInput}
           onChange={e => setChatInput(e.target.value)}
           onKeyDown={handleInputKeyDown}
-          placeholder="Ask Chitragupta anything…"
+          placeholder="Pergunte qualquer coisa à R-IA…"
           disabled={isSending}
-          className="flex-1 text-xs rounded-xl border border-violet-200 dark:border-violet-800 bg-violet-50/50 dark:bg-violet-950/20 px-3 py-2 outline-hidden focus:ring-2 focus:ring-violet-400 focus:border-transparent placeholder:text-muted-foreground/50 disabled:opacity-50"
+          className="flex-1 text-xs rounded-xl border border-border bg-muted/40 px-3 py-2 outline-hidden focus:ring-2 focus:ring-primary/40 focus:border-transparent placeholder:text-muted-foreground/50 disabled:opacity-50 text-foreground"
         />
         <button
           onClick={handleSendMessage}
           disabled={!chatInput.trim() || isSending}
-          className="shrink-0 h-8 w-8 rounded-xl bg-violet-600 hover:bg-violet-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
-          title="Send"
+          className="shrink-0 h-8 w-8 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors shadow-xs"
+          title="Enviar"
         >
           {isSending ? (
-            <Loader2 className="h-3.5 w-3.5 text-white animate-spin" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
           ) : (
-            <Send className="h-3.5 w-3.5 text-white" />
+            <Send className="h-3.5 w-3.5" />
           )}
         </button>
       </div>
@@ -476,7 +477,7 @@ function ChitraWidget() {
       <div className="fixed z-50 bottom-5 right-5 flex flex-col items-end gap-3">
         {panelOpen && (
           <div
-            className="w-[340px] rounded-2xl shadow-2xl border border-violet-200 dark:border-violet-800 bg-background overflow-hidden flex flex-col opacity-100 transition-all duration-200"
+            className="w-[340px] rounded-2xl shadow-2xl border border-border bg-card overflow-hidden flex flex-col opacity-100 transition-all duration-200"
             style={{ maxHeight: isSuperAdmin ? '520px' : '480px' }}
           >
             {panelHeader}
@@ -495,12 +496,12 @@ function ChitraWidget() {
             }
           }}
           className={launcherClass}
-          aria-label="Open Chitra"
+          aria-label={panelOpen ? "Fechar R-IA" : "Abrir R-IA"}
         >
           {panelOpen ? (
-            <ChevronDown className="h-5 w-5 text-white" />
+            <ChevronDown className="h-5 w-5 text-primary-foreground" />
           ) : (
-            <ChitraEyeIcon className="text-white" />
+            <ChitraEyeIcon className="text-primary-foreground" />
           )}
 
           {unreadCount > 0 && !panelOpen && (
@@ -510,7 +511,7 @@ function ChitraWidget() {
           )}
 
           {unreadCount > 0 && !panelOpen && (
-            <span className="absolute inset-0 rounded-full animate-ping bg-violet-400 opacity-30" />
+            <span className="absolute inset-0 rounded-full animate-ping bg-primary opacity-30" />
           )}
         </button>
       </div>
