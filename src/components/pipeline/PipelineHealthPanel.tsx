@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import {
   AlertTriangle,
   ExternalLink,
@@ -32,7 +33,7 @@ const GRADE_LETTER: Record<string, string> = {
  * stage names, and key risk phrases. Deterministic regex — no NLP.
  */
 const HEALTH_STAT_RE =
-  /(\d+(?:\.\d+)?%|\d+\s*\/\s*\d+|\d+(?:\.\d+)?\s+(?:days?|hours?|weeks?|candidates?)|\d+\s+out\s+of\s+\d+|(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\s+out\s+of\s+\d+|L\d+\s+Round|conversion(?:\s+rate)?|no-shows?)/gi;
+  /(\d+(?:\.\d+)?%|\d+\s*\/\s*\d+|\d+(?:\.\d+)?\s+(?:days?|hours?|weeks?|candidates?|dias?|horas?|semanas?|candidatos?)|\d+\s+out\s+of\s+\d+|(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\s+out\s+of\s+\d+|L\d+\s+Round|conversion(?:\s+rate)?|no-shows?)/gi;
 
 function highlightHealthText(
   text: string,
@@ -116,7 +117,7 @@ export function PipelineHealthPanel({
         <div className="flex flex-1 min-w-0 items-baseline gap-0 divide-x divide-border">
           <div className="pr-3 sm:pr-4 min-w-0">
             <p className="text-[10px] font-medium text-muted-foreground leading-none mb-0.5">
-              Overall
+              Geral
             </p>
             <p className="text-sm font-semibold tabular-nums text-foreground leading-none">
               {analysis.overall_score}
@@ -126,7 +127,7 @@ export function PipelineHealthPanel({
 
           <div className="px-3 sm:px-4 min-w-0">
             <p className="text-[10px] font-medium text-muted-foreground leading-none mb-0.5">
-              Speed
+              Velocidade
             </p>
             <p className="text-sm font-semibold tabular-nums text-foreground leading-none">
               {analysis.speed_score}%
@@ -135,7 +136,7 @@ export function PipelineHealthPanel({
 
           <div className="pl-3 sm:pl-4 min-w-0">
             <p className="text-[10px] font-medium text-muted-foreground leading-none mb-0.5">
-              Health
+              Saúde
             </p>
             <p className="text-sm font-semibold tabular-nums text-foreground leading-none">
               {analysis.health_score}%
@@ -165,7 +166,7 @@ export function PipelineHealthPanel({
           <div className="flex items-start gap-2.5">
             <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" aria-hidden />
             <div className="min-w-0 space-y-1.5">
-              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Risks</p>
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Riscos</p>
               <ul className="space-y-2">
                 {analysis.risks.map((risk, i) => (
                   <li
@@ -183,7 +184,7 @@ export function PipelineHealthPanel({
 
       {/* Recommendation — short next step; Action Queue owns execution CTAs */}
       <div className="mt-4 rounded-lg bg-muted/40 border border-border px-4 py-3.5">
-        <p className="text-sm font-semibold text-foreground mb-1.5">Recommendation</p>
+        <p className="text-sm font-semibold text-foreground mb-1.5">Recomendação</p>
         <p className="text-sm text-foreground/90 leading-relaxed">
           {highlightHealthText(analysis.recommendation)}
         </p>
@@ -192,15 +193,15 @@ export function PipelineHealthPanel({
           className="mt-2 text-xs font-medium text-primary hover:underline"
           onClick={() => navigate(`/pipeline?job=${jobId}`)}
         >
-          See actions on Pipeline
+          Ver ações no Funil
         </button>
       </div>
 
       {/* Footer actions */}
       <div className="mt-6 pt-4 border-t border-border space-y-3">
         <p className="text-xs text-muted-foreground">
-          Last generated{' '}
-          {formatDistanceToNow(parseISO(analysis.generated_at), { addSuffix: true })}
+          Gerado{' '}
+          {formatDistanceToNow(parseISO(analysis.generated_at), { addSuffix: true, locale: ptBR })}
         </p>
         <div className="flex items-center gap-2.5 flex-wrap">
           {showViewFullReport && (
@@ -211,7 +212,7 @@ export function PipelineHealthPanel({
               onClick={() => navigate(`/reports?job=${jobId}`)}
             >
               <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-              View full report
+              Ver relatório completo
             </Button>
           )}
           <Button
@@ -223,7 +224,7 @@ export function PipelineHealthPanel({
             disabled={scoring}
           >
             <RefreshCw className={cn('h-3.5 w-3.5', scoring && 'animate-spin')} aria-hidden />
-            Regenerate
+            {scoring ? 'Analisando…' : 'Regerar'}
           </Button>
         </div>
       </div>

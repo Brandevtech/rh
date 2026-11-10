@@ -38,6 +38,7 @@ import {
   BarChart3, Trophy, Briefcase, UserRound, Building2, Gauge,
 } from 'lucide-react';
 import { differenceInDays, parseISO, subDays, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { useToast } from '@/hooks/use-toast';
 import { usePipelineAnalysis, useAnalysePipeline, computePipelineMetrics } from '@/hooks/usePipelineAnalysis';
 import { PipelineHealthPanel } from '@/components/pipeline/PipelineHealthPanel';
@@ -51,10 +52,33 @@ const verdictColors: Record<string, string> = {
   no_show:   'bg-muted text-muted-foreground',
 };
 
+const verdictLabels: Record<string, string> = {
+  proceeded: 'Avançado',
+  rejected:  'Reprovado',
+  hold:      'Em espera',
+  no_show:   'Não compareceu',
+};
+
 const modeLabels: Record<string, string> = {
-  in_person: 'In-Person',
-  video:     'Video',
-  phone:     'Phone',
+  in_person: 'Presencial',
+  video:     'Vídeo',
+  phone:     'Telefone',
+};
+
+const jobStatusLabels: Record<string, string> = {
+  open:   'Aberta',
+  paused: 'Pausada',
+  draft:  'Rascunho',
+  closed: 'Encerrada',
+};
+
+const sourceLabels: Record<string, string> = {
+  manual: 'Manual',
+  referral: 'Indicação',
+  linkedin: 'LinkedIn',
+  vendor: 'Fornecedor',
+  careers_page: 'Página de Vagas',
+  job_board: 'Portal de Vagas',
 };
 
 // ── Tooltip-wrapped truncated cell ───────────────────────────────────────────
@@ -93,7 +117,7 @@ function TruncCell({
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function Reports() {
-  usePageTitle('Reports — Recruitment Tracker');
+  usePageTitle('Relatórios — Acompanhamento de Recrutamento');
   const { toast } = useToast();
   const { isAdminOrHR } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -180,30 +204,28 @@ export default function Reports() {
     view === 'job' && !selectedJobId,
   );
 
-  const activeJobs = (jobs || []).filter(j => j.status !== 'closed');
-
   const staticColumns = [
-    { key: 'sno',           label: 'S.No',             width: 'w-12' },
-    { key: 'recruiter',     label: 'Recruiter',         width: 'w-32' },
-    { key: 'source',        label: 'Source',            width: 'w-24' },
-    { key: 'position',      label: 'Position Name',     width: 'w-44' },
-    { key: 'name',          label: 'Candidate Name',    width: 'w-40' },
-    { key: 'phone',         label: 'Contact Number',    width: 'w-36' },
-    { key: 'email',         label: 'Email',             width: 'w-48' },
-    { key: 'total_exp',     label: 'Total Exp.',        width: 'w-24' },
-    { key: 'relevant_exp',  label: 'Relevant Exp.',     width: 'w-28' },
-    { key: 'current_ctc',   label: 'Current CTC',       width: 'w-28' },
-    { key: 'expected_ctc',  label: 'Expected Salary',   width: 'w-32' },
-    { key: 'notice_period', label: 'Notice Period',     width: 'w-28' },
-    { key: 'status',        label: 'Interview Status',  width: 'w-32' },
+    { key: 'sno',           label: 'Nº',                  width: 'w-12' },
+    { key: 'recruiter',     label: 'Recrutador',          width: 'w-32' },
+    { key: 'source',        label: 'Origem',              width: 'w-24' },
+    { key: 'position',      label: 'Vaga',                width: 'w-44' },
+    { key: 'name',          label: 'Nome do Candidato',   width: 'w-40' },
+    { key: 'phone',         label: 'Telefone',            width: 'w-36' },
+    { key: 'email',         label: 'E-mail',              width: 'w-48' },
+    { key: 'total_exp',     label: 'Exp. Total',          width: 'w-24' },
+    { key: 'relevant_exp',  label: 'Exp. Relevante',      width: 'w-28' },
+    { key: 'current_ctc',   label: 'Salário Atual',       width: 'w-28' },
+    { key: 'expected_ctc',  label: 'Pretensão Salarial',  width: 'w-32' },
+    { key: 'notice_period', label: 'Aviso Prévio',        width: 'w-28' },
+    { key: 'status',        label: 'Status da Entrevista',width: 'w-32' },
   ];
 
-  const stageSubColumns = ['Status', 'Interviewer', 'Feedback', 'Date', 'Time', 'Mode'];
+  const stageSubColumns = ['Status', 'Entrevistador', 'Feedback', 'Data', 'Horário', 'Modalidade'];
 
   const trailingColumns = [
-    { key: 'final_feedback', label: 'Final Feedback', width: 'w-40' },
-    { key: 'remarks',        label: 'Remarks',        width: 'w-40' },
-    { key: 'comms_rating',   label: 'Comms Rating',   width: 'w-28' },
+    { key: 'final_feedback', label: 'Feedback Final',           width: 'w-40' },
+    { key: 'remarks',        label: 'Observações',              width: 'w-40' },
+    { key: 'comms_rating',   label: 'Avaliação de Comunicação', width: 'w-32' },
   ];
 
   const getOverallStatus = (interviews: Record<string, any>, stagesList: TrackerStage[]) => {
@@ -245,8 +267,8 @@ export default function Reports() {
       });
     } catch (err) {
       toast({
-        title: 'Analysis failed',
-        description: err instanceof Error ? err.message : 'Unknown error',
+        title: 'Falha na análise',
+        description: err instanceof Error ? err.message : 'Erro desconhecido',
         variant: 'destructive',
       });
     }
@@ -261,7 +283,7 @@ export default function Reports() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0">
             <div className="flex items-center gap-2 min-w-0">
               <FileSpreadsheet className="w-6 h-6 text-primary shrink-0" />
-              <h1 className="text-xl sm:text-2xl font-bold text-foreground truncate">Recruitment Tracker</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground truncate">Acompanhamento de Recrutamento</h1>
             </div>
             <div className="flex rounded-lg border border-border overflow-hidden sm:ml-2 w-fit">
               <button
@@ -272,7 +294,7 @@ export default function Reports() {
                 )}
               >
                 <FileSpreadsheet className="h-3.5 w-3.5" />
-                By Job
+                Por Vaga
               </button>
               <button
                 onClick={() => setView('recruiter')}
@@ -282,7 +304,7 @@ export default function Reports() {
                 )}
               >
                 <Trophy className="h-3.5 w-3.5" />
-                By Recruiter
+                Por Recrutador
               </button>
               <button
                 onClick={() => setView('vendor')}
@@ -292,7 +314,7 @@ export default function Reports() {
                 )}
               >
                 <Building2 className="h-3.5 w-3.5" />
-                By Vendor
+                Por Fornecedor
               </button>
               {isAdminOrHR && (
                 <button
@@ -303,7 +325,7 @@ export default function Reports() {
                   )}
                 >
                   <Gauge className="h-3.5 w-3.5" />
-                  Time & Velocity
+                  Tempo & Velocidade
                 </button>
               )}
             </div>
@@ -313,7 +335,7 @@ export default function Reports() {
           {view === 'job' ? (
             selectedJobId && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>Viewing:</span>
+                <span>Visualizando:</span>
                 <span className="font-medium text-foreground truncate max-w-[280px]">
                   {(jobs || []).find(j => j.id === selectedJobId)?.title ?? ''}
                 </span>
@@ -321,16 +343,16 @@ export default function Reports() {
             )
           ) : view === 'velocity' ? null : (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">Period:</span>
+              <span className="text-sm text-muted-foreground">Período:</span>
               <Select value={dateRange} onValueChange={setDateRange}>
                 <SelectTrigger className="w-40">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7">Last 7 days</SelectItem>
-                  <SelectItem value="14">Last 14 days</SelectItem>
-                  <SelectItem value="30">Last 30 days</SelectItem>
-                  <SelectItem value="90">Last 90 days</SelectItem>
+                  <SelectItem value="7">Últimos 7 dias</SelectItem>
+                  <SelectItem value="14">Últimos 14 dias</SelectItem>
+                  <SelectItem value="30">Últimos 30 dias</SelectItem>
+                  <SelectItem value="90">Últimos 90 dias</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -347,7 +369,7 @@ export default function Reports() {
           <>
             {recruiterQuery && (
               <p className="text-sm text-muted-foreground mb-3">
-                Showing recruiters matching &ldquo;{searchParams.get('q')}&rdquo;
+                Exibindo recrutadores correspondentes a &ldquo;{searchParams.get('q')}&rdquo;
               </p>
             )}
             {recruiterLoading ? (
@@ -358,9 +380,9 @@ export default function Reports() {
               <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
                 <UserRound className="w-16 h-16 mb-4 opacity-30" />
                 <p className="text-lg font-medium">
-                  {recruiterQuery ? 'No recruiters match that name' : 'No candidates sourced in this period'}
+                  {recruiterQuery ? 'Nenhum recrutador corresponde a esse nome' : 'Nenhum candidato captado neste período'}
                 </p>
-                <p className="text-sm">{recruiterQuery ? 'Try a different name or clear the filter' : 'Try extending the date range'}</p>
+                <p className="text-sm">{recruiterQuery ? 'Tente um nome diferente ou limpe o filtro' : 'Tente estender o período de datas'}</p>
               </div>
             ) : (
               <div className="border border-border rounded-lg overflow-hidden">
@@ -368,12 +390,12 @@ export default function Reports() {
                   <thead>
                     <tr className="bg-muted border-b border-border">
                       <th className="px-3 py-2.5 text-left font-medium text-muted-foreground w-10">#</th>
-                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Recruiter</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Sourced</th>
-                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground min-w-[160px]">Pipeline</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Proceeded</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Hired</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Pending</th>
+                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Recrutador</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Captados</th>
+                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground min-w-[160px]">Funil</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Avançados</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Contratados</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Pendentes</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -403,7 +425,7 @@ export default function Reports() {
                               </div>
                               <div>
                                 <p className="font-medium text-foreground group-hover:text-primary transition-colors">{r.recruiter_name}</p>
-                                <p className="text-xs text-muted-foreground">{r.job_count} job{r.job_count !== 1 ? 's' : ''}</p>
+                                <p className="text-xs text-muted-foreground">{r.job_count} {r.job_count !== 1 ? 'vagas' : 'vaga'}</p>
                               </div>
                             </div>
                           </td>
@@ -452,7 +474,7 @@ export default function Reports() {
                         </div>
                         <div>
                           <SheetTitle>{selectedRecruiter.recruiter_name}</SheetTitle>
-                          <p className="text-sm text-muted-foreground">Last {dateRange} days · {selectedRecruiter.sourced} candidates sourced</p>
+                          <p className="text-sm text-muted-foreground">Últimos {dateRange} dias · {selectedRecruiter.sourced} candidatos captados</p>
                         </div>
                       </div>
                     </SheetHeader>
@@ -462,28 +484,28 @@ export default function Reports() {
                       <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted/60 border border-border text-sm">
                         <Users className="h-3.5 w-3.5 text-primary" />
                         <span className="font-semibold">{selectedRecruiter.sourced}</span>
-                        <span className="text-muted-foreground text-xs">Sourced</span>
+                        <span className="text-muted-foreground text-xs">Captados</span>
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 text-sm">
                         <BarChart3 className="h-3.5 w-3.5 text-blue-600" />
                         <span className="font-semibold text-blue-700 dark:text-blue-400">{selectedRecruiter.in_pipeline}</span>
-                        <span className="text-muted-foreground text-xs">In Pipeline</span>
+                        <span className="text-muted-foreground text-xs">No Funil</span>
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800 text-sm">
                         <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                         <span className="font-semibold text-emerald-700 dark:text-emerald-400">{selectedRecruiter.proceeded}</span>
-                        <span className="text-muted-foreground text-xs">Proceeded</span>
+                        <span className="text-muted-foreground text-xs">Avançados</span>
                       </div>
                       <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-200 dark:border-emerald-800 text-sm">
                         <Trophy className="h-3.5 w-3.5 text-emerald-600" />
                         <span className="font-semibold text-emerald-700 dark:text-emerald-400">{selectedRecruiter.hired}</span>
-                        <span className="text-muted-foreground text-xs">Hired</span>
+                        <span className="text-muted-foreground text-xs">Contratados</span>
                       </div>
                       {selectedRecruiter.pending > 0 && (
                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-orange-200 dark:border-orange-800 text-sm">
                           <Clock className="h-3.5 w-3.5 text-orange-500" />
                           <span className="font-semibold text-orange-600 dark:text-orange-400">{selectedRecruiter.pending}</span>
-                          <span className="text-muted-foreground text-xs">Pending</span>
+                          <span className="text-muted-foreground text-xs">Pendentes</span>
                         </div>
                       )}
                     </div>
@@ -498,16 +520,16 @@ export default function Reports() {
                     {(recruiterDetail?.jobs.length ?? 0) > 0 && (
                       <div className="mb-6">
                         <h3 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
-                          <Briefcase className="h-4 w-4 text-muted-foreground" /> Jobs Breakdown
+                          <Briefcase className="h-4 w-4 text-muted-foreground" /> Detalhamento por Vaga
                         </h3>
                         <div className="border border-border rounded-lg overflow-hidden">
                           <table className="w-full text-xs border-collapse">
                             <thead>
                               <tr className="bg-muted border-b border-border">
-                                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Job</th>
-                                <th className="px-3 py-2 text-center font-medium text-muted-foreground">Sourced</th>
-                                <th className="px-3 py-2 text-center font-medium text-muted-foreground">Pipeline</th>
-                                <th className="px-3 py-2 text-center font-medium text-muted-foreground">Hired</th>
+                                <th className="px-3 py-2 text-left font-medium text-muted-foreground">Vaga</th>
+                                <th className="px-3 py-2 text-center font-medium text-muted-foreground">Captados</th>
+                                <th className="px-3 py-2 text-center font-medium text-muted-foreground">Funil</th>
+                                <th className="px-3 py-2 text-center font-medium text-muted-foreground">Contratados</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -533,14 +555,14 @@ export default function Reports() {
                     {(recruiterDetail?.sources.length ?? 0) > 0 && (
                       <div className="mb-6">
                         <h3 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
-                          <TrendingUp className="h-4 w-4 text-muted-foreground" /> Source Breakdown
+                          <TrendingUp className="h-4 w-4 text-muted-foreground" /> Detalhamento por Origem
                         </h3>
                         <div className="space-y-2">
                           {(recruiterDetail?.sources ?? []).map(s => {
                             const convPct = s.count > 0 ? Math.round((s.in_pipeline / s.count) * 100) : 0;
                             return (
                               <div key={s.source} className="flex items-center gap-2">
-                                <span className="text-xs text-muted-foreground capitalize w-24 shrink-0">{s.source || 'manual'}</span>
+                                <span className="text-xs text-muted-foreground capitalize w-24 shrink-0">{sourceLabels[s.source] || s.source || 'manual'}</span>
                                 <div className="flex-1">
                                   <Progress value={convPct} className="h-1.5" />
                                 </div>
@@ -549,23 +571,23 @@ export default function Reports() {
                             );
                           })}
                         </div>
-                        <p className="text-[10px] text-muted-foreground mt-1.5">Bar shows pipeline conversion per source</p>
+                        <p className="text-[10px] text-muted-foreground mt-1.5">A barra mostra a conversão do funil por origem</p>
                       </div>
                     )}
 
                     {/* Candidate list */}
                     <div>
                       <h3 className="text-sm font-semibold mb-2 flex items-center gap-1.5">
-                        <Users className="h-4 w-4 text-muted-foreground" /> Candidates ({recruiterDetail?.candidates.length ?? 0})
+                        <Users className="h-4 w-4 text-muted-foreground" /> Candidatos ({recruiterDetail?.candidates.length ?? 0})
                       </h3>
                       <div className="border border-border rounded-lg overflow-hidden">
                         <table className="w-full text-xs border-collapse">
                           <thead>
                             <tr className="bg-muted border-b border-border">
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Name</th>
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Job</th>
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Source</th>
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Highest Stage</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Nome</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Vaga</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Origem</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Etapa Mais Alta</th>
                               <th className="px-3 py-2 text-left font-medium text-muted-foreground">Status</th>
                             </tr>
                           </thead>
@@ -581,18 +603,18 @@ export default function Reports() {
                               >
                                 <td className="px-3 py-2 font-medium">{c.name}</td>
                                 <td className="px-3 py-2 text-muted-foreground">{c.job_title}</td>
-                                <td className="px-3 py-2 capitalize text-muted-foreground">{c.source || 'manual'}</td>
+                                <td className="px-3 py-2 capitalize text-muted-foreground">{sourceLabels[c.source] || c.source || 'Manual'}</td>
                                 <td className="px-3 py-2 text-muted-foreground">{c.highest_stage || '—'}</td>
                                 <td className="px-3 py-2">
                                   {c.is_hired
-                                    ? <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Hired</span>
+                                    ? <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Contratado</span>
                                     : c.overall_verdict
                                       ? <span className={cn('capitalize',
                                           c.overall_verdict === 'proceeded' && 'text-emerald-600',
                                           c.overall_verdict === 'rejected' && 'text-red-500',
                                           c.overall_verdict === 'hold' && 'text-amber-600',
                                           c.overall_verdict === 'no_show' && 'text-muted-foreground',
-                                        )}>{c.overall_verdict.replace('_', ' ')}</span>
+                                        )}>{verdictLabels[c.overall_verdict] || c.overall_verdict.replace('_', ' ')}</span>
                                       : <span className="text-muted-foreground">—</span>}
                                 </td>
                               </tr>
@@ -616,8 +638,8 @@ export default function Reports() {
             {allVendors.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
                 <Building2 className="w-16 h-16 mb-4 opacity-30" />
-                <p className="text-lg font-medium">No vendors registered</p>
-                <p className="text-sm">Add vendors in Settings → Vendors, then tag imports with a vendor during bulk upload.</p>
+                <p className="text-lg font-medium">Nenhum fornecedor cadastrado</p>
+                <p className="text-sm">Adicione fornecedores em Configurações → Fornecedores e identifique as importações durante o upload em massa.</p>
               </div>
             ) : vendorLoading ? (
               <div className="flex items-center justify-center py-24">
@@ -629,12 +651,12 @@ export default function Reports() {
                   <thead>
                     <tr className="bg-muted border-b border-border">
                       <th className="px-3 py-2.5 text-left font-medium text-muted-foreground w-10">#</th>
-                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Vendor</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Submitted</th>
-                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground min-w-[160px]">Pipeline</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Final Round</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Hired</th>
-                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Fee %</th>
+                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Fornecedor</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Enviados</th>
+                      <th className="px-3 py-2.5 text-left font-medium text-muted-foreground min-w-[160px]">Funil</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Etapa Final</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Contratados</th>
+                      <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Taxa %</th>
                       <th className="px-3 py-2.5 w-8" />
                     </tr>
                   </thead>
@@ -656,7 +678,7 @@ export default function Reports() {
                               {vs.vendor.contact_name && <p className="text-xs text-muted-foreground">{vs.vendor.contact_name}</p>}
                             </div>
                             {!vs.vendor.is_active && (
-                              <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">inactive</span>
+                              <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded">inativo</span>
                             )}
                           </div>
                         </td>
@@ -715,10 +737,10 @@ export default function Reports() {
                     {/* Stats strip */}
                     <div className="grid grid-cols-4 gap-3 mb-6">
                       {[
-                        { label: 'Submitted', value: selectedVendor.submitted, color: 'text-foreground' },
-                        { label: 'In Pipeline', value: `${selectedVendor.in_pipeline} (${selectedVendor.conversion_pct}%)`, color: 'text-primary' },
-                        { label: 'Final Round', value: selectedVendor.shortlisted, color: 'text-emerald-600' },
-                        { label: 'Hired', value: selectedVendor.hired, color: selectedVendor.hired > 0 ? 'text-emerald-600 font-bold' : 'text-muted-foreground' },
+                        { label: 'Enviados', value: selectedVendor.submitted, color: 'text-foreground' },
+                        { label: 'No Funil', value: `${selectedVendor.in_pipeline} (${selectedVendor.conversion_pct}%)`, color: 'text-primary' },
+                        { label: 'Etapa Final', value: selectedVendor.shortlisted, color: 'text-emerald-600' },
+                        { label: 'Contratados', value: selectedVendor.hired, color: selectedVendor.hired > 0 ? 'text-emerald-600 font-bold' : 'text-muted-foreground' },
                       ].map(s => (
                         <div key={s.label} className="bg-muted/50 rounded-lg p-3 text-center">
                           <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
@@ -732,15 +754,15 @@ export default function Reports() {
                         <Loader2 className="w-6 h-6 animate-spin text-primary" />
                       </div>
                     ) : vendorDetailCandidates.length === 0 ? (
-                      <p className="text-sm text-muted-foreground text-center py-8">No candidates from this vendor in the selected period.</p>
+                      <p className="text-sm text-muted-foreground text-center py-8">Nenhum candidato deste fornecedor no período selecionado.</p>
                     ) : (
                       <div className="border rounded-lg overflow-hidden">
                         <table className="w-full text-xs border-collapse">
                           <thead>
                             <tr className="bg-muted border-b">
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Candidate</th>
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Job</th>
-                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Stage</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Candidato</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Vaga</th>
+                              <th className="px-3 py-2 text-left font-medium text-muted-foreground">Etapa</th>
                               <th className="px-3 py-2 text-center font-medium text-muted-foreground">Status</th>
                             </tr>
                           </thead>
@@ -752,13 +774,13 @@ export default function Reports() {
                                 <td className="px-3 py-2.5 text-muted-foreground">{c.highest_stage ?? '—'}</td>
                                 <td className="px-3 py-2.5 text-center">
                                   {c.is_hired ? (
-                                    <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Hired</span>
+                                    <span className="bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Contratado</span>
                                   ) : c.overall_verdict ? (
                                     <span className={cn('text-[10px] px-1.5 py-0.5 rounded-full font-medium', verdictColors[c.overall_verdict] ?? 'bg-muted text-muted-foreground')}>
-                                      {c.overall_verdict}
+                                      {verdictLabels[c.overall_verdict] || c.overall_verdict}
                                     </span>
                                   ) : c.is_in_pipeline ? (
-                                    <span className="text-[10px] text-primary font-medium">In pipeline</span>
+                                    <span className="text-[10px] text-primary font-medium">No funil</span>
                                   ) : (
                                     <span className="text-[10px] text-muted-foreground">—</span>
                                   )}
@@ -782,9 +804,9 @@ export default function Reports() {
             <div className="flex items-center justify-between gap-3 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm mb-4">
               <div className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="h-4 w-4 shrink-0" />
-                <span>Could not load pipeline stats. Job list is shown without In Pipeline / Proceeded / Pending counts.</span>
+                <span>Não foi possível carregar as estatísticas do funil. A lista de vagas é exibida sem as contagens de No Funil / Avançados / Pendentes.</span>
               </div>
-              <Button variant="outline" size="sm" onClick={() => refetchJobStats()}>Retry</Button>
+              <Button variant="outline" size="sm" onClick={() => refetchJobStats()}>Tentar novamente</Button>
             </div>
           )}
           {jobsLoading ? (
@@ -794,20 +816,20 @@ export default function Reports() {
           ) : (jobs || []).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
               <FileSpreadsheet className="w-16 h-16 mb-4 opacity-30" />
-              <p className="text-lg font-medium">No jobs found</p>
+              <p className="text-lg font-medium">Nenhuma vaga encontrada</p>
             </div>
           ) : (
             <div className="border border-border rounded-lg overflow-hidden overflow-x-auto">
               <table className="w-full text-sm border-collapse min-w-[720px]">
                 <thead>
                   <tr className="bg-muted border-b border-border">
-                    <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Job</th>
+                    <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Vaga</th>
                     <th className="px-3 py-2.5 text-left font-medium text-muted-foreground w-24">Status</th>
-                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Candidates</th>
-                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">In Pipeline</th>
-                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Proceeded</th>
-                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Pending</th>
-                    <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Deadline</th>
+                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Candidatos</th>
+                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">No Funil</th>
+                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Avançados</th>
+                    <th className="px-3 py-2.5 text-center font-medium text-muted-foreground">Pendentes</th>
+                    <th className="px-3 py-2.5 text-left font-medium text-muted-foreground">Prazo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -855,7 +877,7 @@ export default function Reports() {
                           </td>
                           <td className="px-3 py-3">
                             <span className={cn('inline-block px-2 py-0.5 rounded-full text-xs font-medium border capitalize', statusCls[job.status] ?? '')}>
-                              {job.status}
+                              {jobStatusLabels[job.status] ?? job.status}
                             </span>
                           </td>
                           <td className="px-3 py-3 text-center font-semibold">{totalCandidates}</td>
@@ -883,9 +905,9 @@ export default function Reports() {
                                 deadlineDays <= 7 ? 'text-orange-600 font-medium' :
                                 deadlineDays <= 20 ? 'text-yellow-600' : 'text-muted-foreground'
                               )}>
-                                {format(parseISO(job.application_deadline), 'dd MMM yyyy')}
+                                {format(parseISO(job.application_deadline), 'dd MMM yyyy', { locale: ptBR })}
                                 {job.status === 'open' && deadlineDays !== null && deadlineDays < 0 && (
-                                  <span className="ml-1 text-xs font-normal">Expired</span>
+                                  <span className="ml-1 text-xs font-normal">Expirado</span>
                                 )}
                                 {job.status === 'open' && deadlineDays !== null && deadlineDays >= 0 && deadlineDays <= 20 && (
                                   <span className="ml-1 text-xs font-normal">≤{deadlineDays}d</span>
@@ -907,7 +929,7 @@ export default function Reports() {
           </div>
         ) : view === 'job' && rows.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-muted-foreground">
-            <p className="text-lg font-medium">No candidates found for this position</p>
+            <p className="text-lg font-medium">Nenhum candidato encontrado para esta vaga</p>
           </div>
         ) : view === 'job' ? (
           <>
@@ -917,7 +939,7 @@ export default function Reports() {
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
             >
               <ChevronRight className="h-4 w-4 rotate-180" />
-              All jobs
+              Todas as vagas
             </button>
 
             {/* ── Pipeline Summary ── */}
@@ -975,32 +997,32 @@ export default function Reports() {
                     <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-emerald-200 dark:border-emerald-800">
                       <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                       <span className="text-xl font-bold leading-none text-emerald-700 dark:text-emerald-400">{proceeded}</span>
-                      <span className="text-xs text-muted-foreground leading-none">Proceeded</span>
+                      <span className="text-xs text-muted-foreground leading-none">Avançados</span>
                     </div>
                     <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-red-200 dark:border-red-800">
                       <XCircle className="h-4 w-4 text-red-500" />
                       <span className="text-xl font-bold leading-none text-red-600 dark:text-red-400">{rejected}</span>
-                      <span className="text-xs text-muted-foreground leading-none">Rejected</span>
+                      <span className="text-xs text-muted-foreground leading-none">Reprovados</span>
                     </div>
                     {hold > 0 && (
                       <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-amber-200 dark:border-amber-800">
                         <PauseCircle className="h-4 w-4 text-amber-600" />
                         <span className="text-xl font-bold leading-none text-amber-700 dark:text-amber-400">{hold}</span>
-                        <span className="text-xs text-muted-foreground leading-none">On Hold</span>
+                        <span className="text-xs text-muted-foreground leading-none">Em Espera</span>
                       </div>
                     )}
                     {pendingFeedback > 0 && (
                       <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-orange-200 dark:border-orange-800">
                         <Clock className="h-4 w-4 text-orange-500" />
                         <span className="text-xl font-bold leading-none text-orange-600 dark:text-orange-400">{pendingFeedback}</span>
-                        <span className="text-xs text-muted-foreground leading-none">Pending Feedback</span>
+                        <span className="text-xs text-muted-foreground leading-none">Feedback Pendente</span>
                       </div>
                     )}
                     {conversionRate !== null && conversionRate > 0 && (
                       <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-violet-200 dark:border-violet-800">
                         <TrendingUp className="h-4 w-4 text-violet-600" />
                         <span className="text-xl font-bold leading-none text-violet-700 dark:text-violet-400">{conversionRate}%</span>
-                        <span className="text-xs text-muted-foreground leading-none">Conversion</span>
+                        <span className="text-xs text-muted-foreground leading-none">Conversão</span>
                       </div>
                     )}
                     <Button
@@ -1013,7 +1035,7 @@ export default function Reports() {
                       {scoring
                         ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
                         : <Sparkles className="h-3.5 w-3.5" />}
-                      {scoring ? 'Analysing…' : 'Analyse Pipeline'}
+                      {scoring ? 'Analisando…' : 'Analisar Funil'}
                     </Button>
                   </div>
 
@@ -1128,9 +1150,9 @@ export default function Reports() {
                             <td className="px-3 py-2.5 text-muted-foreground border-r border-border">{idx + 1}</td>
                             <td className="px-3 py-2.5 whitespace-nowrap border-r border-border">{row.recruiter_name || '—'}</td>
                             <td className="px-3 py-2.5 whitespace-nowrap border-r border-border capitalize">
-                              {row.source || '—'}
+                              {sourceLabels[row.source] || row.source || '—'}
                               {row.source === 'referral' && row.referred_by && (
-                                <div className="text-[11px] text-muted-foreground mt-0.5">by {row.referred_by}</div>
+                                <div className="text-[11px] text-muted-foreground mt-0.5">por {row.referred_by}</div>
                               )}
                             </td>
                             <td className="px-3 py-2.5 border-r border-border font-medium">
@@ -1151,7 +1173,7 @@ export default function Reports() {
                             <td className="px-3 py-2.5 whitespace-nowrap border-r border-border">
                               {overallStatus ? (
                                 <span className={cn('inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize', verdictColors[overallStatus] || 'bg-muted text-muted-foreground')}>
-                                  {overallStatus.replace('_', ' ')}
+                                  {verdictLabels[overallStatus] || overallStatus.replace('_', ' ')}
                                 </span>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
@@ -1165,7 +1187,7 @@ export default function Reports() {
                                 <td key={`${stage.stage_id}-status`} className="px-3 py-2.5 whitespace-nowrap border-r border-border/50">
                                   {iv?.verdict ? (
                                     <span className={cn('inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize', verdictColors[iv.verdict] || 'bg-muted text-muted-foreground')}>
-                                      {iv.verdict.replace('_', ' ')}
+                                      {verdictLabels[iv.verdict] || iv.verdict.replace('_', ' ')}
                                     </span>
                                   ) : '—'}
                                 </td>,

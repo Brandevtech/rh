@@ -47,7 +47,7 @@ function DeltaBadge({ delta, invert }: { delta: number | null; invert?: boolean 
   const improved = invert ? delta < 0 : delta > 0;
   const worsened = invert ? delta > 0 : delta < 0;
   if (delta === 0) {
-    return <span className="text-xs text-muted-foreground ml-1">no change vs prior period</span>;
+    return <span className="text-xs text-muted-foreground ml-1">sem alteração vs período anterior</span>;
   }
   return (
     <span
@@ -58,7 +58,7 @@ function DeltaBadge({ delta, invert }: { delta: number | null; invert?: boolean 
       )}
     >
       {improved ? <TrendingDown className="h-3 w-3" /> : <TrendingUp className="h-3 w-3" />}
-      {delta > 0 ? '+' : ''}{delta}d vs prior
+      {delta > 0 ? '+' : ''}{delta}d vs anterior
     </span>
   );
 }
@@ -137,12 +137,12 @@ function Charts({ metrics }: { metrics: TimeVelocityMetrics }) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Time to Hire by Job</CardTitle>
-          <CardDescription>Average days from candidate created to hired (current period)</CardDescription>
+          <CardTitle className="text-base">Tempo de Contratação por Vaga</CardTitle>
+          <CardDescription>Média de dias desde a criação do candidato até a contratação (período atual)</CardDescription>
         </CardHeader>
         <CardContent>
           {jobHireData.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">No hires in this period</p>
+            <p className="text-sm text-muted-foreground py-12 text-center">Nenhuma contratação neste período</p>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={jobHireData} margin={{ top: 8, right: 8, left: 0, bottom: 48 }}>
@@ -150,7 +150,7 @@ function Charts({ metrics }: { metrics: TimeVelocityMetrics }) {
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" interval={0} />
                 <YAxis tick={{ fontSize: 11 }} unit="d" width={36} />
                 <Tooltip
-                  formatter={(value: number) => [`${value} days`, 'Avg time to hire']}
+                  formatter={(value: number) => [`${value} dias`, 'Tempo médio até contratação']}
                   labelFormatter={(_, payload) => payload?.[0]?.payload?.fullTitle ?? ''}
                 />
                 <Bar dataKey="days" radius={[4, 4, 0, 0]}>
@@ -166,12 +166,12 @@ function Charts({ metrics }: { metrics: TimeVelocityMetrics }) {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Time to First Interview by Job</CardTitle>
-          <CardDescription>Average days from candidate created to first scheduled interview</CardDescription>
+          <CardTitle className="text-base">Tempo até a 1ª Entrevista por Vaga</CardTitle>
+          <CardDescription>Média de dias desde a criação do candidato até a primeira entrevista agendada</CardDescription>
         </CardHeader>
         <CardContent>
           {jobFirstIvData.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-12 text-center">No interviews scheduled in this period</p>
+            <p className="text-sm text-muted-foreground py-12 text-center">Nenhuma entrevista agendada neste período</p>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={jobFirstIvData} margin={{ top: 8, right: 8, left: 0, bottom: 48 }}>
@@ -179,7 +179,7 @@ function Charts({ metrics }: { metrics: TimeVelocityMetrics }) {
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-35} textAnchor="end" interval={0} />
                 <YAxis tick={{ fontSize: 11 }} unit="d" width={36} />
                 <Tooltip
-                  formatter={(value: number) => [`${value} days`, 'Avg time to 1st interview']}
+                  formatter={(value: number) => [`${value} dias`, 'Tempo médio até 1ª entrevista']}
                   labelFormatter={(_, payload) => payload?.[0]?.payload?.fullTitle ?? ''}
                 />
                 <Bar dataKey="days" fill="hsl(217 91% 60%)" radius={[4, 4, 0, 0]} />
@@ -194,10 +194,10 @@ function Charts({ metrics }: { metrics: TimeVelocityMetrics }) {
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
               <Layers className="h-4 w-4 text-muted-foreground" />
-              Average Days per Stage
+              Média de Dias por Etapa
             </CardTitle>
             <CardDescription>
-              Time from previous milestone to each stage&apos;s scheduled interview (current period)
+              Tempo desde o marco anterior até a entrevista agendada de cada etapa (período atual)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -208,8 +208,8 @@ function Charts({ metrics }: { metrics: TimeVelocityMetrics }) {
                 <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={100} />
                 <Tooltip
                   formatter={(value: number, _name, item) => [
-                    `${value} days (n=${(item?.payload as { sample?: number })?.sample ?? '—'})`,
-                    'Avg in stage',
+                    `${value} dias (n=${(item?.payload as { sample?: number })?.sample ?? '—'})`,
+                    'Média na etapa',
                   ]}
                   labelFormatter={(_, payload) => payload?.[0]?.payload?.fullName ?? ''}
                 />
@@ -261,18 +261,17 @@ export function TimeVelocitySection() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-sm text-muted-foreground max-w-xl">
-          Hiring velocity metrics derived from candidate creation, interview scheduling, and explicit hire signals
-          (candidates.hired_at or legacy shortlisted status).
+          Métricas de velocidade de contratação baseadas na criação de candidatos, agendamento de entrevistas e contratações concluídas.
         </p>
         <div className="flex items-center gap-3 shrink-0">
-          <span className="text-sm text-muted-foreground">Period:</span>
+          <span className="text-sm text-muted-foreground">Período:</span>
           <Select value={periodDays} onValueChange={setPeriodDays}>
             <SelectTrigger className="w-36">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="30">Last 30 days</SelectItem>
-              <SelectItem value="90">Last 90 days</SelectItem>
+              <SelectItem value="30">Últimos 30 dias</SelectItem>
+              <SelectItem value="90">Últimos 90 dias</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -284,10 +283,10 @@ export function TimeVelocitySection() {
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
           <AlertTriangle className="h-10 w-10 text-destructive opacity-80" />
           <div>
-            <p className="font-medium text-foreground">Could not load time & velocity metrics</p>
+            <p className="font-medium text-foreground">Não foi possível carregar as métricas de tempo e velocidade</p>
             <p className="text-sm text-muted-foreground mt-1 max-w-md">
-              {error instanceof Error ? error.message : 'Unknown error'}
-              {' '}— ensure the database migration has been applied.
+              {error instanceof Error ? error.message : 'Erro desconhecido'}
+              {' '}— verifique se a migração do banco de dados foi aplicada.
             </p>
           </div>
           <button
@@ -295,25 +294,25 @@ export function TimeVelocitySection() {
             onClick={() => refetch()}
             className="text-sm text-primary hover:underline"
           >
-            Retry
+            Tentar novamente
           </button>
         </div>
       ) : metrics ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <KpiCard
-              title="Avg Time to First Interview"
+              title="Tempo Médio até a 1ª Entrevista"
               value={formatDays(metrics.current.avg_time_to_first_interview)}
-              description={`First interviews scheduled in last ${days} days`}
+              description={`Primeiras entrevistas agendadas nos últimos ${days} dias`}
               sample={metrics.current.first_iv_sample}
               delta={firstIvDelta}
               invertDelta
               icon={Timer}
             />
             <KpiCard
-              title="Avg Time to Hire"
+              title="Tempo Médio de Contratação"
               value={formatDays(metrics.current.avg_time_to_hire)}
-              description={`Hires completed in last ${days} days`}
+              description={`Contratações concluídas nos últimos ${days} dias`}
               sample={metrics.current.hired_sample}
               delta={hireDelta}
               invertDelta
@@ -326,19 +325,19 @@ export function TimeVelocitySection() {
           {metrics.per_job.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Per-Job Summary</CardTitle>
-                <CardDescription>All jobs with hiring activity in the current period</CardDescription>
+                <CardTitle className="text-base">Resumo por Vaga</CardTitle>
+                <CardDescription>Todas as vagas com atividade de contratação no período atual</CardDescription>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="border-t border-border overflow-x-auto">
                   <table className="w-full text-sm border-collapse min-w-[640px]">
                     <thead>
                       <tr className="bg-muted border-b border-border">
-                        <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">Job</th>
-                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Activity</th>
-                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Hired</th>
-                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Avg → 1st IV</th>
-                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Avg → Hire</th>
+                        <th className="px-4 py-2.5 text-left font-medium text-muted-foreground">Vaga</th>
+                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Atividade</th>
+                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Contratados</th>
+                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Média → 1ª Entr.</th>
+                        <th className="px-4 py-2.5 text-center font-medium text-muted-foreground">Média → Contratação</th>
                       </tr>
                     </thead>
                     <tbody>
