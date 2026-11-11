@@ -664,7 +664,7 @@ export function PendingApprovalColumn({
                       </p>
                       {c.suitability_score != null && <FitBadge score={c.suitability_score} />}
                       <span className={cn(CHIP_BASE, CHIP_TONE.danger)}>
-                        Declined
+                        Recusado
                       </span>
                     </div>
                     {declineReason && (
@@ -702,7 +702,7 @@ export function PendingApprovalColumn({
                       disabled={isApproving}
                       onClick={(e) => { e.stopPropagation(); onApprove(c.id); }}
                     >
-                      <Check className="w-3 h-3 mr-1" /> Approve
+                      <Check className="w-3 h-3 mr-1" /> Aprovar
                     </Button>
                     <Button
                       size="sm"
@@ -710,7 +710,7 @@ export function PendingApprovalColumn({
                       className="h-7 text-xs flex-1 text-destructive hover:text-destructive"
                       onClick={(e) => { e.stopPropagation(); onDecline(c); }}
                     >
-                      <XIcon className="w-3 h-3 mr-1" /> Decline
+                      <XIcon className="w-3 h-3 mr-1" /> Recusar
                     </Button>
                   </div>
                   )}

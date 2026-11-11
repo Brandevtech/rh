@@ -1616,7 +1616,7 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
                 declineReasonError && 'border-destructive focus:ring-destructive',
               )}
               rows={3}
-              placeholder="e.g. Skills don't match the role requirements, Over-experienced for this level…"
+              placeholder="Ex: Habilidades não atendem aos requisitos, perfil acima da senioridade esperada…"
               value={declineReason}
               aria-invalid={declineReasonError}
               aria-required
@@ -1628,17 +1628,17 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
             {declineReasonError ? (
               <p className="text-xs text-destructive">O motivo é obrigatório para manter o histórico de triagem.</p>
             ) : (
-              <p className="text-xs text-muted-foreground">Required — helps recruiters source more relevant profiles.</p>
+              <p className="text-xs text-muted-foreground">Obrigatório — ajuda a manter o histórico de seleção.</p>
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setDeclineConfirm(null); setDeclineReason(''); setDeclineReasonError(false); }}>Cancel</Button>
+            <Button variant="outline" onClick={() => { setDeclineConfirm(null); setDeclineReason(''); setDeclineReasonError(false); }}>Cancelar</Button>
             <Button
               variant="destructive"
               disabled={!declineReason.trim()}
               onClick={() => declineConfirm && handleDeclinePending(declineConfirm.id)}
             >
-              Decline
+              Recusar
             </Button>
           </DialogFooter>
         </DialogContent>
