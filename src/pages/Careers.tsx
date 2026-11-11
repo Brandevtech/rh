@@ -260,6 +260,7 @@ export default function Careers() {
     name: '',
     email: '',
     phone: '',
+    city: '',
     linkedin_url: '',
     cover_letter: '',
     resume_file: null as File | null,
@@ -321,7 +322,7 @@ export default function Careers() {
     if (isProfileIncomplete(profile)) {
       toast({
         title: 'Complete seu perfil primeiro',
-        description: 'Adicione seu nome, telefone, LinkedIn, currículo e experiência para se candidatar.',
+        description: 'Por favor, complete seus dados cadastrais (nome, telefone, data de nascimento) para se candidatar.',
         variant: 'destructive',
       });
       navigate('/applicant/profile');
@@ -357,6 +358,7 @@ export default function Careers() {
         name: applicantProfile.full_name?.includes('@') ? prev.name : (applicantProfile.full_name || prev.name),
         email: applicantProfile.email || prev.email,
         phone: applicantProfile.phone || prev.phone,
+        city: (applicantProfile as any).city || prev.city,
         linkedin_url: applicantProfile.linkedin_url || prev.linkedin_url,
         resume_url: applicantProfile.resume_url || '',
       }));
@@ -383,21 +385,24 @@ export default function Careers() {
     }
   };
 
-  const validateLinkedIn = (url: string) => {
-    const linkedinPattern = /^https?:\/\/(www\.)?linkedin\.com\/in\/[\w-]+\/?$/i;
-    return linkedinPattern.test(url.trim());
-  };
-
   const handleSubmit = async () => {
     if (!selectedJob || !form.name.trim() || !form.email.trim()) return;
-    
-    if (!form.linkedin_url.trim() || !validateLinkedIn(form.linkedin_url)) {
-      toast({ title: 'URL do LinkedIn inválida', description: 'Informe uma URL válida do perfil no LinkedIn (ex: https://linkedin.com/in/seunome)', variant: 'destructive' });
+
+    if (!form.phone.trim()) {
+      toast({
+        title: 'Telefone obrigatório',
+        description: 'Por favor, informe seu telefone / WhatsApp de contato.',
+        variant: 'destructive',
+      });
       return;
     }
 
-    if (!form.resume_file && !useProfileResume) {
-      toast({ title: 'Currículo obrigatório', description: 'Por favor, envie seu currículo (PDF ou Word)', variant: 'destructive' });
+    if (!form.city.trim()) {
+      toast({
+        title: 'Cidade obrigatória',
+        description: 'Por favor, informe a cidade onde você mora.',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -421,15 +426,19 @@ export default function Careers() {
         resumeUrl = fileName;
       }
 
+      const formattedPhone = form.city.trim()
+        ? `${form.phone.trim()} • ${form.city.trim()}`
+        : form.phone.trim();
+
       await submitApplication.mutateAsync({
         job_id: selectedJob.id,
         job_title: selectedJob.title,
-        applicant_name: form.name,
-        applicant_email: form.email,
-        applicant_phone: form.phone || undefined,
-        cover_letter: form.cover_letter || undefined,
-        linkedin_url: form.linkedin_url.trim(),
-        resume_url: resumeUrl,
+        applicant_name: form.name.trim(),
+        applicant_email: form.email.trim(),
+        applicant_phone: formattedPhone,
+        cover_letter: form.cover_letter.trim() || undefined,
+        linkedin_url: form.linkedin_url.trim() || undefined,
+        resume_url: resumeUrl || undefined,
       });
 
       setIsSubmitted(true);
@@ -564,7 +573,7 @@ export default function Careers() {
                       <Input
                         id="email"
                         type="email"
-                        placeholder="rahul@example.com"
+                        placeholder="seu.email@exemplo.com"
                         value={form.email}
                         onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
                       />
@@ -572,26 +581,26 @@ export default function Careers() {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="phone">Telefone</Label>
+                      <Label htmlFor="phone">Telefone / WhatsApp *</Label>
                       <Input
                         id="phone"
-                        placeholder="+91 98765 43210"
+                        placeholder="(11) 99999-9999"
                         value={form.phone}
                         onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))}
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="linkedin">Perfil no LinkedIn *</Label>
+                      <Label htmlFor="city">Cidade onde mora *</Label>
                       <Input
-                        id="linkedin"
-                        placeholder="https://linkedin.com/in/seunome"
-                        value={form.linkedin_url}
-                        onChange={(e) => setForm(prev => ({ ...prev, linkedin_url: e.target.value }))}
+                        id="city"
+                        placeholder="Ex: Suzano - SP"
+                        value={form.city}
+                        onChange={(e) => setForm(prev => ({ ...prev, city: e.target.value }))}
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="resume">Currículo (PDF/Word, máx. 10MB) *</Label>
+                    <Label htmlFor="resume">Currículo (PDF/Word, máx. 10MB) (opcional)</Label>
                     <Input
                       id="resume"
                       type="file"
@@ -619,7 +628,7 @@ export default function Careers() {
                   </Button>
                   <Button
                     onClick={handleSubmit}
-                    disabled={isUploading || submitApplication.isPending || !form.name.trim() || !form.email.trim()}
+                    disabled={isUploading || submitApplication.isPending || !form.name.trim() || !form.email.trim() || !form.phone.trim() || !form.city.trim()}
                     className="gap-2"
                   >
                     <Send className="h-4 w-4" />

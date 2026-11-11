@@ -54,6 +54,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           blood_group: string | null
+          city: string | null
           created_at: string
           dob_actual: string | null
           dob_documented: string | null
@@ -82,6 +83,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           blood_group?: string | null
+          city?: string | null
           created_at?: string
           dob_actual?: string | null
           dob_documented?: string | null
@@ -110,6 +112,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           blood_group?: string | null
+          city?: string | null
           created_at?: string
           dob_actual?: string | null
           dob_documented?: string | null
@@ -790,6 +793,7 @@ export type Database = {
           candidate_current_role: string | null
           candidate_status: string
           certifications: Json | null
+          city: string | null
           created_at: string
           created_by: string | null
           credential_score: number | null
@@ -829,6 +833,7 @@ export type Database = {
           candidate_current_role?: string | null
           candidate_status?: string
           certifications?: Json | null
+          city?: string | null
           created_at?: string
           created_by?: string | null
           credential_score?: number | null
@@ -868,6 +873,7 @@ export type Database = {
           candidate_current_role?: string | null
           candidate_status?: string
           certifications?: Json | null
+          city?: string | null
           created_at?: string
           created_by?: string | null
           credential_score?: number | null
@@ -1197,6 +1203,7 @@ export type Database = {
           applicant_name: string
           applicant_phone: string | null
           candidate_id: string | null
+          city: string | null
           cover_letter: string | null
           created_at: string
           form_sent_at: string | null
@@ -1214,6 +1221,7 @@ export type Database = {
           applicant_name: string
           applicant_phone?: string | null
           candidate_id?: string | null
+          city?: string | null
           cover_letter?: string | null
           created_at?: string
           form_sent_at?: string | null
@@ -1231,6 +1239,7 @@ export type Database = {
           applicant_name?: string
           applicant_phone?: string | null
           candidate_id?: string | null
+          city?: string | null
           cover_letter?: string | null
           created_at?: string
           form_sent_at?: string | null

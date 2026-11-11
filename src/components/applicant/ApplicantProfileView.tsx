@@ -23,6 +23,7 @@ import type { ApplicantProfile } from '@/hooks/useApplicantAuth';
 import {
   User,
   Phone,
+  MapPin,
   Linkedin,
   FileText,
   Building2,
@@ -32,7 +33,6 @@ import {
   AlertTriangle,
   Clock,
   Calendar,
-  Heart,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -124,30 +124,38 @@ export function ApplicantProfileView({
             <Phone className="h-4 w-4 text-muted-foreground" />
             <span>{profile.phone || '—'}</span>
           </div>
+          {(profile as any).city && (
+            <div className="flex items-center gap-2 text-sm">
+              <MapPin className="h-4 w-4 text-muted-foreground" />
+              <span>{(profile as any).city}</span>
+            </div>
+          )}
           {profile.emergency_phone && (
             <div className="flex items-center gap-2 text-sm">
               <Phone className="h-4 w-4 text-muted-foreground" />
               <span>Emergência: {profile.emergency_phone}</span>
             </div>
           )}
-          <div className="flex items-center gap-2 text-sm">
-            <Linkedin className="h-4 w-4 text-muted-foreground" />
-            {(() => {
-              const linkedInHref = safeExternalUrl(profile.linkedin_url);
-              return linkedInHref ? (
-              <a
-                href={linkedInHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline truncate"
-              >
-                {profile.linkedin_url}
-              </a>
-              ) : (
-              <span>—</span>
-              );
-            })()}
-          </div>
+          {profile.linkedin_url && (
+            <div className="flex items-center gap-2 text-sm">
+              <Linkedin className="h-4 w-4 text-muted-foreground" />
+              {(() => {
+                const linkedInHref = safeExternalUrl(profile.linkedin_url);
+                return linkedInHref ? (
+                  <a
+                    href={linkedInHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline truncate"
+                  >
+                    {profile.linkedin_url}
+                  </a>
+                ) : (
+                  <span>{profile.linkedin_url}</span>
+                );
+              })()}
+            </div>
+          )}
           <div className="flex items-start gap-2 text-sm">
             <FileText className="h-4 w-4 text-muted-foreground mt-0.5" />
             <div className="min-w-0">
@@ -185,14 +193,10 @@ export function ApplicantProfileView({
             Dados Pessoais
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           <div>
-            <p className="text-muted-foreground">Data Nasc. (documentos)</p>
+            <p className="text-muted-foreground">Data de Nascimento</p>
             <p className="font-medium">{formatProfileDate(profile.dob_documented)}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Data Nasc. (real)</p>
-            <p className="font-medium">{formatProfileDate(profile.dob_actual)}</p>
           </div>
           <div>
             <p className="text-muted-foreground">Gênero</p>
@@ -201,13 +205,6 @@ export function ApplicantProfileView({
           <div>
             <p className="text-muted-foreground">Estado civil</p>
             <p className="font-medium">{getMaritalStatusLabel(profile.marital_status)}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground flex items-center gap-1">
-              <Heart className="h-3 w-3" />
-              Tipo sanguíneo
-            </p>
-            <p className="font-medium">{getBloodGroupLabel(profile.blood_group)}</p>
           </div>
         </CardContent>
       </Card>

@@ -41,6 +41,7 @@ import {
   Upload,
   Linkedin,
   Phone,
+  MapPin,
   FileText,
   Loader2,
   CheckCircle,
@@ -76,6 +77,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
     middle_name: '',
     last_name: '',
     phone: '',
+    city: '',
     emergency_phone: '',
     linkedin_url: '',
     resume_url: '',
@@ -112,6 +114,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
         middle_name: split.middle_name || '',
         last_name: split.last_name,
         phone: profile.phone || '',
+        city: (profile as any).city || '',
         emergency_phone: profile.emergency_phone || '',
         linkedin_url: profile.linkedin_url ? normalizeLinkedInUrl(profile.linkedin_url) : '',
         resume_url: profile.resume_url || '',
@@ -279,20 +282,14 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
   };
 
   const handleUpdateProfile = async () => {
-    const linkedinUrl = normalizeLinkedInUrl(profileForm.linkedin_url);
-    if (linkedinUrl !== profileForm.linkedin_url) {
-      setProfileForm((prev) => ({ ...prev, linkedin_url: linkedinUrl }));
-    }
-
     const validation = validateApplicantProfileSave({
       first_name: profileForm.first_name,
-      middle_name: profileForm.middle_name,
       last_name: profileForm.last_name,
+      phone: profileForm.phone,
+      city: profileForm.city,
       dob_documented: profileForm.dob_documented,
       gender: profileForm.gender,
       marital_status: profileForm.marital_status,
-      blood_group: profileForm.blood_group,
-      linkedin_url: linkedinUrl,
     });
     if (validation.valid === false) {
       toast({
@@ -305,15 +302,13 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
 
     const hasSensitiveFields =
       !!profileForm.dob_documented.trim()
-      || !!profileForm.dob_actual.trim()
       || !!profileForm.gender
-      || !!profileForm.marital_status
-      || !!profileForm.blood_group;
+      || !!profileForm.marital_status;
 
     if (hasSensitiveFields && !sensitiveDataConsent && !profile?.sensitive_data_consent_at) {
       toast({
         title: 'Consentimento obrigatório',
-        description: 'Por favor, confirme o consentimento para a coleta de dados pessoais (data de nascimento, gênero, estado civil, tipo sanguíneo) para fins de contratação.',
+        description: 'Por favor, confirme o consentimento para a coleta de dados pessoais (data de nascimento, gênero e estado civil) para fins de contratação.',
         variant: 'destructive',
       });
       return;
@@ -327,15 +322,16 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
     await updateProfile.mutateAsync({
       first_name: profileForm.first_name.trim(),
       last_name: profileForm.last_name.trim(),
-      middle_name: profileForm.middle_name.trim() || null,
-      phone: profileForm.phone,
-      emergency_phone: profileForm.emergency_phone.trim() || null,
-      linkedin_url: linkedinUrl,
-      dob_actual: profileForm.dob_actual.trim() || null,
+      middle_name: null,
+      phone: profileForm.phone.trim(),
+      city: profileForm.city.trim(),
+      emergency_phone: null,
+      linkedin_url: null,
+      dob_actual: null,
       dob_documented: profileForm.dob_documented.trim(),
       gender: profileForm.gender,
       marital_status: profileForm.marital_status,
-      blood_group: profileForm.blood_group,
+      blood_group: null,
       resume_url: profileForm.resume_url,
       work_experience: workExperience,
       education: education,
@@ -368,7 +364,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
               className="bg-muted cursor-not-allowed"
             />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="profile_first_name">Nome *</Label>
               <Input
@@ -376,15 +372,6 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                 placeholder="Nome"
                 value={profileForm.first_name}
                 onChange={(e) => setProfileForm((prev) => ({ ...prev, first_name: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="profile_middle_name">Nome do Meio</Label>
-              <Input
-                id="profile_middle_name"
-                placeholder="Opcional"
-                value={profileForm.middle_name}
-                onChange={(e) => setProfileForm((prev) => ({ ...prev, middle_name: e.target.value }))}
               />
             </div>
             <div className="space-y-2">
@@ -398,34 +385,48 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="profile_phone" className="flex items-center gap-1">
+                <Phone className="h-3 w-3" />
+                Telefone / WhatsApp *
+              </Label>
+              <Input
+                id="profile_phone"
+                placeholder="(11) 99999-9999"
+                value={profileForm.phone}
+                onChange={(e) => setProfileForm((prev) => ({ ...prev, phone: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="profile_city" className="flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                Cidade onde mora *
+              </Label>
+              <Input
+                id="profile_city"
+                placeholder="Ex: Suzano - SP"
+                value={profileForm.city}
+                onChange={(e) => setProfileForm((prev) => ({ ...prev, city: e.target.value }))}
+              />
+            </div>
+          </div>
+
           <div className="space-y-3 pt-2 border-t">
             <Label className="text-base font-semibold flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               Dados Pessoais
             </Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="profile_dob_documented">Data de Nascimento (conforme documentos) *</Label>
+                <Label htmlFor="profile_dob_documented">Data de Nascimento *</Label>
                 <Input
                   id="profile_dob_documented"
                   type="date"
                   value={profileForm.dob_documented}
                   onChange={(e) => setProfileForm((prev) => ({ ...prev, dob_documented: e.target.value }))}
                 />
-                <p className="text-xs text-muted-foreground">Conforme consta no seu documento oficial de identidade</p>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="profile_dob_actual">Data de Nascimento (real)</Label>
-                <Input
-                  id="profile_dob_actual"
-                  type="date"
-                  value={profileForm.dob_actual}
-                  onChange={(e) => setProfileForm((prev) => ({ ...prev, dob_actual: e.target.value }))}
-                />
-                <p className="text-xs text-muted-foreground">Opcional, se diferente dos documentos</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label>Gênero *</Label>
                 <Select
@@ -451,31 +452,10 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                   onValueChange={(value) => setProfileForm((prev) => ({ ...prev, marital_status: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select" />
+                    <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
                     {MARITAL_STATUS_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label className="flex items-center gap-1">
-                  <Heart className="h-3 w-3" />
-                  Tipo Sanguíneo *
-                </Label>
-                <Select
-                  value={profileForm.blood_group || undefined}
-                  onValueChange={(value) => setProfileForm((prev) => ({ ...prev, blood_group: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {BLOOD_GROUP_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
@@ -492,7 +472,7 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                   onCheckedChange={(checked) => setSensitiveDataConsent(checked === true)}
                 />
                 <Label htmlFor="sensitive-data-consent" className="text-sm font-normal leading-snug cursor-pointer">
-                  Autorizo a coleta da minha data de nascimento, gênero, estado civil e tipo sanguíneo exclusivamente para fins de verificação de emprego e admissão.
+                  Autorizo a coleta da minha data de nascimento, gênero e estado civil exclusivamente para fins de verificação de emprego e admissão.
                   {compliance.privacy_policy_url && safeExternalUrl(compliance.privacy_policy_url) && (
                     <>
                       {' '}
@@ -514,59 +494,6 @@ export function ApplicantProfileModal({ open, onOpenChange }: ApplicantProfileMo
                 </p>
               )}
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="profile_phone" className="flex items-center gap-1">
-                <Phone className="h-3 w-3" />
-                Número de Telefone
-              </Label>
-              <Input
-                id="profile_phone"
-                placeholder="+91 98765 43210"
-                value={profileForm.phone}
-                onChange={(e) => setProfileForm((prev) => ({ ...prev, phone: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="profile_emergency_phone" className="flex items-center gap-1">
-                <Phone className="h-3 w-3" />
-                Telefone de Emergência
-              </Label>
-              <Input
-                id="profile_emergency_phone"
-                placeholder="Número de contato alternativo"
-                value={profileForm.emergency_phone}
-                onChange={(e) => setProfileForm((prev) => ({ ...prev, emergency_phone: e.target.value }))}
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="profile_linkedin" className="flex items-center gap-1">
-              <Linkedin className="h-3 w-3" />
-              URL do LinkedIn *
-            </Label>
-            <Input
-              id="profile_linkedin"
-              placeholder="https://linkedin.com/in/yourprofile"
-              value={profileForm.linkedin_url}
-              onChange={(e) => {
-                setLinkedinFromResume(false);
-                setProfileForm((prev) => ({ ...prev, linkedin_url: e.target.value }));
-              }}
-              onBlur={() => {
-                const normalized = normalizeLinkedInUrl(profileForm.linkedin_url);
-                if (normalized !== profileForm.linkedin_url) {
-                  setProfileForm((prev) => ({ ...prev, linkedin_url: normalized }));
-                }
-              }}
-            />
-            <p className="text-xs text-muted-foreground">
-              {linkedinFromResume
-                ? 'Preenchido automaticamente a partir do currículo — revise e edite se necessário.'
-                : 'Obrigatório. Preenchido automaticamente se analisado durante o envio.'}
-            </p>
           </div>
 
           <div className="space-y-2">

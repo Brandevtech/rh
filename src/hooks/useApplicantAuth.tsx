@@ -23,6 +23,7 @@ export interface ApplicantProfile {
   middle_name: string | null;
   last_name: string | null;
   phone: string | null;
+  city: string | null;
   emergency_phone: string | null;
   linkedin_url: string | null;
   resume_url: string | null;
@@ -64,6 +65,7 @@ const NEW_PROFILE_COLUMNS = [
   'documents',
   'first_name',
   'last_name',
+  'city',
   'middle_name',
   'dob_actual',
   'dob_documented',
@@ -329,6 +331,7 @@ export function ApplicantAuthProvider({ children }: { children: ReactNode }) {
       'last_name',
       'middle_name',
       'phone',
+      'city',
       'emergency_phone',
       'linkedin_url',
       'resume_url',

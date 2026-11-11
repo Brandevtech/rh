@@ -374,6 +374,7 @@ export function useApplicantUpdateProfile() {
       last_name?: string;
       middle_name?: string | null;
       phone?: string;
+      city?: string;
       emergency_phone?: string | null;
       linkedin_url?: string | null;
       resume_url?: string;
@@ -408,6 +409,7 @@ export function useApplicantUpdateProfile() {
           );
         }
         if (updates.phone !== undefined) candidateUpdate.phone = updates.phone;
+        if (updates.city !== undefined) candidateUpdate.city = updates.city;
         if (updates.resume_url !== undefined) candidateUpdate.resume_url = updates.resume_url;
         if (updates.linkedin_url !== undefined) candidateUpdate.linkedin_url = updates.linkedin_url;
         if (updates.skills !== undefined) candidateUpdate.skills = updates.skills;

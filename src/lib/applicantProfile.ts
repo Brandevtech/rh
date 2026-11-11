@@ -70,11 +70,13 @@ export interface ApplicantProfileSaveInput {
   first_name: string;
   middle_name?: string | null;
   last_name: string;
+  phone?: string;
+  city?: string;
   dob_documented: string;
   gender: string;
   marital_status: string;
-  blood_group: string;
-  linkedin_url: string;
+  blood_group?: string;
+  linkedin_url?: string;
 }
 
 export function buildFullName(
@@ -146,11 +148,17 @@ export function validateApplicantProfileSave(
   if (!input.last_name.trim()) {
     return { valid: false, title: 'Sobrenome é obrigatório' };
   }
+  if (!input.phone?.trim()) {
+    return { valid: false, title: 'Telefone é obrigatório' };
+  }
+  if (input.city !== undefined && !input.city.trim()) {
+    return { valid: false, title: 'Cidade onde mora é obrigatória' };
+  }
   if (!input.dob_documented.trim()) {
     return {
       valid: false,
       title: 'Data de nascimento obrigatória',
-      description: 'Por favor, informe sua data de nascimento conforme documentos oficiais.',
+      description: 'Por favor, informe sua data de nascimento.',
     };
   }
   if (!input.gender) {
@@ -158,23 +166,6 @@ export function validateApplicantProfileSave(
   }
   if (!input.marital_status) {
     return { valid: false, title: 'Estado civil é obrigatório' };
-  }
-  if (!input.blood_group) {
-    return { valid: false, title: 'Tipo sanguíneo é obrigatório' };
-  }
-  if (!input.linkedin_url.trim()) {
-    return {
-      valid: false,
-      title: 'URL do LinkedIn é obrigatória',
-      description: 'Por favor, informe a URL do seu perfil no LinkedIn.',
-    };
-  }
-  if (!validateLinkedInUrl(input.linkedin_url)) {
-    return {
-      valid: false,
-      title: 'URL do LinkedIn inválida',
-      description: 'Informe uma URL válida do perfil no LinkedIn (ex: https://linkedin.com/in/seunome)',
-    };
   }
   return { valid: true };
 }
@@ -355,56 +346,32 @@ export function getProfileCompleteness(profile: ApplicantProfileData | null): Pr
     {
       key: 'name',
       label: 'Nome e sobrenome',
-      weight: 10,
+      weight: 25,
       complete: !!profile && hasValidName(profile),
     },
     {
       key: 'phone',
       label: 'Número de telefone',
-      weight: 10,
+      weight: 25,
       complete: !!profile?.phone?.trim(),
     },
     {
       key: 'dob_documented',
-      label: 'Data de nascimento (documentos)',
-      weight: 15,
+      label: 'Data de nascimento',
+      weight: 20,
       complete: !!profile && hasDocumentedDob(profile.dob_documented),
     },
     {
       key: 'gender',
       label: 'Gênero',
-      weight: 8,
+      weight: 15,
       complete: hasRequiredSelect(profile?.gender),
     },
     {
       key: 'marital_status',
       label: 'Estado civil',
-      weight: 8,
+      weight: 15,
       complete: hasRequiredSelect(profile?.marital_status),
-    },
-    {
-      key: 'blood_group',
-      label: 'Tipo sanguíneo',
-      weight: 8,
-      complete: hasRequiredSelect(profile?.blood_group),
-    },
-    {
-      key: 'linkedin',
-      label: 'URL do LinkedIn',
-      weight: 11,
-      complete: !!profile?.linkedin_url?.trim() && validateLinkedInUrl(profile.linkedin_url),
-    },
-    {
-      key: 'resume',
-      label: 'Currículo',
-      weight: 15,
-      complete: !!profile?.resume_url,
-    },
-    {
-      key: 'experience',
-      label: 'Experiência profissional',
-      weight: 15,
-      complete: !!profile && hasWorkExperience(profile.work_experience),
     },
   ];
 
