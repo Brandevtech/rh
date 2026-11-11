@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { toast } from 'sonner';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useNavigate, Link, useSearchParams } from 'react-router';
 import { Button } from '@/components/ui/button';
@@ -101,6 +102,8 @@ function DashboardStatCard({
   description,
   icon: Icon,
   valueClassName,
+  className,
+  badge,
   onClick,
 }: {
   title: string;
@@ -108,15 +111,20 @@ function DashboardStatCard({
   description: string;
   icon: React.ElementType;
   valueClassName?: string;
+  className?: string;
+  badge?: React.ReactNode;
   onClick?: () => void;
 }) {
   return (
     <Card
-      className={cn(onClick && 'cursor-pointer hover:bg-muted/30 transition-colors')}
+      className={cn(onClick && 'cursor-pointer hover:bg-muted/30 transition-colors', className)}
       onClick={onClick}
     >
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+          {badge}
+        </div>
         <Icon className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
@@ -401,6 +409,20 @@ export default function ApplicantDashboard() {
     (a) => a.status === 'invited' || a.status === 'in_progress',
   ).length;
 
+  const hasNotifiedRef = useRef(false);
+  useEffect(() => {
+    if (!assessmentsLoading && openAssessments > 0 && !hasNotifiedRef.current) {
+      hasNotifiedRef.current = true;
+      toast.warning('Você tem avaliações pendentes!', {
+        description: 'Faça o teste da vaga agora para avançar no processo seletivo.',
+        action: {
+          label: 'Fazer Teste',
+          onClick: () => setActiveTab('assessments'),
+        },
+      });
+    }
+  }, [assessmentsLoading, openAssessments]);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Incomplete Profile Notice */}
@@ -447,6 +469,29 @@ export default function ApplicantDashboard() {
         }
       />
 
+      {/* Pending Assessments Alert Banner */}
+      {!assessmentsLoading && openAssessments > 0 && (
+        <div
+          className="bg-amber-600 text-white cursor-pointer hover:bg-amber-700 transition-colors shadow-sm"
+          onClick={() => setActiveTab('assessments')}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-3 w-3 shrink-0">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+              </span>
+              <p className="text-sm font-medium">
+                Você possui <span className="underline font-bold">{openAssessments === 1 ? '1 avaliação pendente' : `${openAssessments} avaliações pendentes`}</span> aguardando realização!
+              </p>
+            </div>
+            <Button size="sm" variant="secondary" className="font-semibold text-amber-950 bg-white hover:bg-amber-50 shrink-0">
+              Fazer Avaliação Agora
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
         {/* Welcome Section */}
@@ -489,8 +534,15 @@ export default function ApplicantDashboard() {
           <DashboardStatCard
             title="Avaliações Pendentes"
             value={assessmentsLoading ? '—' : openAssessments}
-            description={openAssessments > 0 ? 'Pendentes ou em andamento' : 'Nenhuma avaliação pendente'}
+            description={openAssessments > 0 ? 'Aguardando sua realização' : 'Nenhuma avaliação pendente'}
             icon={ClipboardCheck}
+            className={openAssessments > 0 ? 'border-amber-500 bg-amber-50/70 dark:bg-amber-950/20 shadow-sm ring-2 ring-amber-400/30' : undefined}
+            valueClassName={openAssessments > 0 ? 'text-amber-700 dark:text-amber-400 font-extrabold' : undefined}
+            badge={openAssessments > 0 ? (
+              <Badge variant="destructive" className="bg-amber-600 hover:bg-amber-700 text-[10px] px-1.5 py-0 h-4 animate-pulse">
+                Ação Necessária
+              </Badge>
+            ) : undefined}
             onClick={() => setActiveTab('assessments')}
           />
         </div>

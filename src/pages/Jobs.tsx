@@ -1566,7 +1566,7 @@ export default function Jobs() {
                         <h3 className="text-sm font-semibold mb-2">Habilidades Necessárias</h3>
                         <div className="flex flex-wrap gap-1.5">
                           {detailJob.required_skills.map(skill => (
-                            <Badge key={skill} variant="secondary">{skill}</Badge>
+                            <Badge key={skill} variant="secondary" className="whitespace-normal break-words max-w-full text-left py-1 px-3 leading-snug">{skill}</Badge>
                           ))}
                         </div>
                       </div>

@@ -83,7 +83,7 @@ import { candidateSourceLabel } from '@/lib/candidateSources';
 import { openResumeUrl } from '@/lib/resumeStorage';
 import { notifyStaffEmail } from '@/lib/staffEmail';
 import { buildInterviewHistoryRounds, interviewStageDisplayName, type InterviewHistoryEntry } from '@/lib/interviewHistory';
-import { filterStaleLinkedInRedFlags, resolveLinkedInProfileUrl } from '@/lib/applicantProfile';
+import { filterStaleLinkedInRedFlags, resolveLinkedInProfileUrl, getGenderLabel, getMaritalStatusLabel, formatProfileDate } from '@/lib/applicantProfile';
 import { buildCurrentlyNotWorkingFlag, formatLwdRelative } from '@/lib/candidateEmployment';
 import {
   analyzeCareer,
@@ -900,6 +900,21 @@ export function CandidateDetailDrawer({
     },
   });
 
+  const { data: applicantProfile } = useQuery({
+    queryKey: ['applicant-profile-for-drawer', candidate?.email],
+    enabled: open && !!candidate?.email,
+    staleTime: 60_000,
+    queryFn: async () => {
+      if (!candidate?.email) return null;
+      const { data } = await supabase
+        .from('applicant_profiles')
+        .select('*')
+        .ilike('email', candidate.email.trim())
+        .maybeSingle();
+      return data;
+    },
+  });
+
   const { data: pipelineEnrollments = [] } = useQuery({
     queryKey: ['candidate-drawer-pipeline', candidate?.id],
     enabled: isDatabaseContext && !!candidate?.id && open,
@@ -1624,6 +1639,12 @@ export function CandidateDetailDrawer({
                     <span>{candidate.phone}</span>
                   </div>
                 )}
+                {((candidate as any).city || applicantProfile?.city) && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+                    <span>{(candidate as any).city || applicantProfile?.city}</span>
+                  </div>
+                )}
                 {(() => {
                   const linkedInUrl = resolveLinkedInProfileUrl((candidate as any).linkedin_url);
                   if (linkedInUrl) {
@@ -1650,6 +1671,39 @@ export function CandidateDetailDrawer({
                 })()}
               </div>
             </div>
+
+            {/* Dados Pessoais (Candidato) */}
+            {(applicantProfile?.dob_documented || applicantProfile?.gender || applicantProfile?.marital_status) && (
+              <div className="space-y-2 pt-3 border-t">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Dados Pessoais</h3>
+                <div className="grid grid-cols-2 gap-3 text-sm bg-muted/30 p-3 rounded-lg border">
+                  {applicantProfile.dob_documented && (
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Data de Nascimento</span>
+                      <span className="font-medium text-foreground">{formatProfileDate(applicantProfile.dob_documented)}</span>
+                    </div>
+                  )}
+                  {applicantProfile.gender && (
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Gênero</span>
+                      <span className="font-medium text-foreground">{getGenderLabel(applicantProfile.gender)}</span>
+                    </div>
+                  )}
+                  {applicantProfile.marital_status && (
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Estado Civil</span>
+                      <span className="font-medium text-foreground">{getMaritalStatusLabel(applicantProfile.marital_status)}</span>
+                    </div>
+                  )}
+                  {(applicantProfile.city || (candidate as any).city) && (
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Cidade</span>
+                      <span className="font-medium text-foreground">{applicantProfile.city || (candidate as any).city}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Ownership */}
             <div className="flex items-center gap-2 text-sm">

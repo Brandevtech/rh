@@ -198,7 +198,7 @@ AFTER INSERT OR UPDATE OF job_id ON public.candidates
 FOR EACH ROW
 EXECUTE FUNCTION public.auto_enroll_and_assign_assessment_on_candidate();
 
--- Executar retroativamente para candidatos já existentes (como a Juliana Brandão):
+-- Executar retroativamente para candidatos já existentes no banco:
 DO $$
 DECLARE
   r RECORD;

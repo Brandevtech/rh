@@ -6,10 +6,10 @@ DO $$
 DECLARE
   v_admin_id uuid;
 BEGIN
-  -- Busca o ID do seu usuário administrador
+  -- Busca o ID do usuário administrador principal
   SELECT id INTO v_admin_id 
   FROM auth.users 
-  WHERE email = 'andersonografia@gmail.com' 
+  ORDER BY created_at ASC
   LIMIT 1;
 
   -- 1. Inserir a Avaliação (Assessment)

@@ -95,7 +95,7 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
         {job.required_skills.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {job.required_skills.map(skill => (
-              <Badge key={skill} variant="secondary" className="text-xs">
+              <Badge key={skill} variant="secondary" className="text-xs whitespace-normal break-words max-w-full text-left py-0.5 px-2 leading-snug">
                 {skill}
               </Badge>
             ))}
@@ -219,7 +219,7 @@ function JobDetailView({ job, onApply, onBack }: { job: Job; onApply: (job: Job)
               <h3 className="font-semibold mb-2">Habilidades Necessárias</h3>
               <div className="flex flex-wrap gap-2">
                 {job.required_skills.map(skill => (
-                  <Badge key={skill} variant="secondary">
+                  <Badge key={skill} variant="secondary" className="whitespace-normal break-words max-w-full text-left py-1 px-3 leading-snug">
                     {skill}
                   </Badge>
                 ))}

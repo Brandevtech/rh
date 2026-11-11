@@ -53,6 +53,45 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+const SCORECARD_STAGE_TRANSLATIONS: Record<string, string> = {
+  Screening: 'Triagem',
+  Technical: 'Técnica',
+  Managerial: 'Gerencial',
+  'HR Final': 'RH Final',
+  General: 'Geral',
+};
+
+const SCORECARD_CRITERIA_TRANSLATIONS: Record<string, { label: string; scale_hint?: string }> = {
+  communication: {
+    label: 'Comunicação',
+    scale_hint: 'Clareza e profissionalismo',
+  },
+  role_fit: {
+    label: 'Adequação à Função',
+    scale_hint: 'Alinhamento com os requisitos da vaga',
+  },
+  motivation: {
+    label: 'Motivação',
+    scale_hint: 'Interesse na empresa e na oportunidade',
+  },
+  technical: {
+    label: 'Conhecimento Técnico',
+    scale_hint: 'Domínio das competências técnicas',
+  },
+  problem_solving: {
+    label: 'Resolução de Problemas',
+    scale_hint: 'Raciocínio lógico e capacidade analítica',
+  },
+  culture_fit: {
+    label: 'Alinhamento Cultural',
+    scale_hint: 'Valores e adaptação à equipe',
+  },
+  leadership: {
+    label: 'Liderança',
+    scale_hint: 'Capacidade de guiar e liderar pessoas',
+  },
+};
+
 const verdictConfig: { value: InterviewVerdict; label: string; icon: React.ComponentType<{ className?: string }>; className: string }[] = [
   { value: 'proceeded', label: 'Aprovar / Avançar', icon: ThumbsUp, className: 'border-green-500 bg-green-500/10 text-green-700 hover:bg-green-500/20' },
   { value: 'rejected', label: 'Reprovar', icon: ThumbsDown, className: 'border-red-500 bg-red-500/10 text-red-700 hover:bg-red-500/20' },
@@ -508,39 +547,45 @@ export function InterviewFeedbackDialog({
               Scorecard
               {scorecardTemplate && (
                 <span className="text-xs text-muted-foreground font-normal ml-2">
-                  {scorecardTemplate.display_name}
+                  {SCORECARD_STAGE_TRANSLATIONS[scorecardTemplate.display_name] || scorecardTemplate.display_name}
                 </span>
               )}
             </Label>
             {isNoShow && <p className="text-xs text-muted-foreground mt-1">Pontuações não se aplicam para não comparecimento</p>}
           </div>
-          {criteria.map(({ key, label, scale_hint }) => (
-            <div key={key} className="flex items-start gap-3">
-              <div className="w-32 shrink-0">
-                <span className="text-sm text-muted-foreground">{label}</span>
-                {scale_hint && (
-                  <p className="text-[10px] text-muted-foreground/70 leading-tight mt-0.5">{scale_hint}</p>
-                )}
+          {criteria.map(({ key, label, scale_hint }) => {
+            const translated = SCORECARD_CRITERIA_TRANSLATIONS[key.toLowerCase()];
+            const displayLabel = translated?.label || label;
+            const displayHint = translated?.scale_hint || scale_hint;
+
+            return (
+              <div key={key} className="flex items-start gap-3">
+                <div className="w-36 shrink-0">
+                  <span className="text-sm text-foreground/90 font-medium">{displayLabel}</span>
+                  {displayHint && (
+                    <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">{displayHint}</p>
+                  )}
+                </div>
+                <div className="flex gap-1 flex-1">
+                  {[1, 2, 3, 4, 5].map(n => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setRatings(prev => ({ ...prev, [key]: n }))}
+                      disabled={isNoShow}
+                      className={`w-8 h-8 rounded-md text-xs font-medium transition-all ${
+                        !isNoShow && (ratings[key] || 0) >= n
+                          ? 'bg-primary text-primary-foreground'
+                          : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex gap-1 flex-1">
-                {[1, 2, 3, 4, 5].map(n => (
-                  <button
-                    key={n}
-                    type="button"
-                    onClick={() => setRatings(prev => ({ ...prev, [key]: n }))}
-                    disabled={isNoShow}
-                    className={`w-8 h-8 rounded-md text-xs font-medium transition-all ${
-                      !isNoShow && (ratings[key] || 0) >= n
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
-                    }`}
-                  >
-                    {n}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Interview Mode */}
