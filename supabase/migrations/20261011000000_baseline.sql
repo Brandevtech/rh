@@ -5569,8 +5569,8 @@ GRANT ALL ON TABLE public.assessments TO anon;
 GRANT ALL ON TABLE public.assessments TO authenticated;
 GRANT ALL ON TABLE public.assessments TO service_role;
 
-GRANT SELECT,REFERENCES,TRIGGER,MAINTAIN ON TABLE public.audit_log TO anon;
-GRANT SELECT,REFERENCES,TRIGGER,MAINTAIN ON TABLE public.audit_log TO authenticated;
+GRANT SELECT,REFERENCES,TRIGGER ON TABLE public.audit_log TO anon;
+GRANT SELECT,REFERENCES,TRIGGER ON TABLE public.audit_log TO authenticated;
 GRANT ALL ON TABLE public.audit_log TO service_role;
 
 GRANT ALL ON TABLE public.candidate_assessments TO anon;
@@ -5983,8 +5983,8 @@ GRANT ALL ON TABLE public.assessment_templates TO service_role;
 GRANT ALL ON TABLE public.assessments TO anon;
 GRANT ALL ON TABLE public.assessments TO authenticated;
 GRANT ALL ON TABLE public.assessments TO service_role;
-GRANT SELECT,REFERENCES,TRIGGER,MAINTAIN ON TABLE public.audit_log TO anon;
-GRANT SELECT,REFERENCES,TRIGGER,MAINTAIN ON TABLE public.audit_log TO authenticated;
+GRANT SELECT,REFERENCES,TRIGGER ON TABLE public.audit_log TO anon;
+GRANT SELECT,REFERENCES,TRIGGER ON TABLE public.audit_log TO authenticated;
 GRANT ALL ON TABLE public.audit_log TO service_role;
 GRANT ALL ON TABLE public.candidate_assessments TO anon;
 GRANT ALL ON TABLE public.candidate_assessments TO authenticated;

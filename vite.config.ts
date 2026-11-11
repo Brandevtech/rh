@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
         name: "The Talent App",
         short_name: "Talent App",
         description: "Recruitment pipeline and talent management",
-        theme_color: "#D64541",
+        theme_color: "#0B3132",
         background_color: "#ffffff",
         display: "standalone",
         orientation: "portrait-primary",

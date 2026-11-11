@@ -1,7 +1,7 @@
 import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { getCompanyName } from "./email.ts";
 
-const DEFAULT_PRIMARY_COLOR = "#D64541";
+const DEFAULT_PRIMARY_COLOR = "#0B3132";
 const GITHUB_REPO_URL = "https://github.com/vikashsparxit/the-talent-app";
 const SPARXIT_URL = "https://www.sparxitsolutions.com";
 const TALENT_APP_NAME = "The Talent App";

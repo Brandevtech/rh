@@ -128,7 +128,7 @@ export const DEFAULT_BUSINESS_BRANDING: BusinessBranding = {
   logo_desktop_url: null,
   logo_mobile_url: null,
   company_name: 'RIA',
-  primary_color: '#0C3233',
+  primary_color: '#0B3132',
   primary_foreground_color: '#DBD4C2',
 };
 

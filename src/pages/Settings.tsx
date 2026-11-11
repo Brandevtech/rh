@@ -148,7 +148,7 @@ function BusinessBrandingTab() {
     const primary_color = normalizeHexColor(colorInput);
     const primary_foreground_color = normalizeHexColor(foregroundColorInput);
     if (!primary_color) {
-      toast.error('Informe uma cor hexadecimal válida (ex: #D64541)');
+      toast.error('Informe uma cor hexadecimal válida (ex: #0B3132)');
       return;
     }
     if (!primary_foreground_color) {
@@ -247,7 +247,7 @@ function BusinessBrandingTab() {
           <Input
             value={colorInput}
             onChange={e => handlePrimaryColorChange(e.target.value)}
-            placeholder="#D64541"
+            placeholder="#0B3132"
             className="max-w-32 font-mono text-sm uppercase"
             maxLength={7}
           />

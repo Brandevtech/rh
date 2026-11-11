@@ -68,7 +68,7 @@
     var b = document.createElement('button');
     b.type = 'button';
     b.textContent = 'Reload';
-    b.style.cssText = 'padding:10px 20px;border-radius:8px;border:none;background:#D64541;color:#fff;font-size:14px;font-weight:600;cursor:pointer';
+    b.style.cssText = 'padding:10px 20px;border-radius:8px;border:none;background:#0B3132;color:#fff;font-size:14px;font-weight:600;cursor:pointer';
     b.onclick = reload;
     box.appendChild(h);
     box.appendChild(p);
