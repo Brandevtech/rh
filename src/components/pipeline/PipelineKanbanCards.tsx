@@ -453,7 +453,7 @@ export function DraggablePipelineCard({
                   )}
                   {primarySignal === 'new' && (
                     <span className={cn(CHIP_BASE, 'bg-accent text-accent-foreground')}>
-                      NEW
+                      NOVO
                     </span>
                   )}
                   {primarySignal === 'form_pending' && (
@@ -499,14 +499,14 @@ export function DraggablePipelineCard({
                   className="h-7 text-xs flex-1 min-w-28"
                   onClick={(e) => { e.stopPropagation(); onFeedback(); }}
                 >
-                  <Star className="w-3 h-3 mr-1" /> Edit Feedback
+                  <Star className="w-3 h-3 mr-1" /> Editar Parecer
                 </Button>
               </>
             ) : isFeedbackOverdue ? (
               <>
                 {canManage && (
                   <Button size="sm" variant="outline" className="h-7 text-xs flex-1" onClick={(e) => { e.stopPropagation(); onSchedule(); }}>
-                    <CalendarDays className="w-3 h-3 mr-1" /> Reschedule
+                    <CalendarDays className="w-3 h-3 mr-1" /> Reagendar
                   </Button>
                 )}
                 {cancelButton}
@@ -520,12 +520,12 @@ export function DraggablePipelineCard({
                   )}
                   onClick={(e) => { e.stopPropagation(); onFeedback(); }}
                 >
-                  <Star className="w-3 h-3 mr-1" /> Feedback
+                  <Star className="w-3 h-3 mr-1" /> Parecer
                 </Button>
                 {hasMeetingLink && (
                   <Button size="sm" variant="outline" className="h-7 text-xs flex-1" asChild>
                     <a href={meetingHref!} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                      <ExternalLink className="w-3 h-3 mr-1" /> Join
+                      <ExternalLink className="w-3 h-3 mr-1" /> Entrar
                     </a>
                   </Button>
                 )}
@@ -541,17 +541,17 @@ export function DraggablePipelineCard({
                   asChild
                 >
                   <a href={meetingHref!} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                    <ExternalLink className="w-3 h-3 mr-1" /> Join
+                    <ExternalLink className="w-3 h-3 mr-1" /> Entrar
                   </a>
                 </Button>
                 {canManage && (
                   <Button size="sm" variant="outline" className="h-7 text-xs flex-1" onClick={(e) => { e.stopPropagation(); onSchedule(); }}>
-                    <CalendarDays className="w-3 h-3 mr-1" /> Reschedule
+                    <CalendarDays className="w-3 h-3 mr-1" /> Reagendar
                   </Button>
                 )}
                 {cancelButton}
                 <Button size="sm" variant="outline" className="h-7 text-xs flex-1" onClick={(e) => { e.stopPropagation(); onFeedback(); }}>
-                  <Star className="w-3 h-3 mr-1" /> Feedback
+                  <Star className="w-3 h-3 mr-1" /> Parecer
                 </Button>
               </>
             ) : !isScheduled ? (
@@ -565,23 +565,23 @@ export function DraggablePipelineCard({
                     variant={primaryAction === 'schedule' ? 'default' : 'outline'}
                     onClick={(e) => { e.stopPropagation(); onSchedule(); }}
                   >
-                    <CalendarDays className="w-3 h-3 mr-1" /> Schedule
+                    <CalendarDays className="w-3 h-3 mr-1" /> Agendar
                   </Button>
                 )}
                 <Button size="sm" variant="outline" className="h-7 text-xs flex-1" onClick={(e) => { e.stopPropagation(); onFeedback(); }}>
-                  <Star className="w-3 h-3 mr-1" /> Feedback
+                  <Star className="w-3 h-3 mr-1" /> Parecer
                 </Button>
               </>
             ) : (
               <>
                 {canManage && (
                   <Button size="sm" variant="outline" className="h-7 text-xs flex-1" onClick={(e) => { e.stopPropagation(); onSchedule(); }}>
-                    <CalendarDays className="w-3 h-3 mr-1" /> Reschedule
+                    <CalendarDays className="w-3 h-3 mr-1" /> Reagendar
                   </Button>
                 )}
                 {cancelButton}
                 <Button size="sm" variant="outline" className="h-7 text-xs flex-1" onClick={(e) => { e.stopPropagation(); onFeedback(); }}>
-                  <Star className="w-3 h-3 mr-1" /> Feedback
+                  <Star className="w-3 h-3 mr-1" /> Parecer
                 </Button>
               </>
             )}
