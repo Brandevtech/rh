@@ -3171,12 +3171,14 @@ function ScorecardsTab() {
   const [displayName, setDisplayName] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [criteria, setCriteria] = useState<EditableCriterion[]>([]);
+  const [questions, setQuestions] = useState<string[]>([]);
 
   function openEdit(template: ScorecardTemplateRow) {
     setEditing(template);
     setDisplayName(template.display_name);
     setIsActive(template.is_active);
     setCriteria(template.criteria.map(c => ({ ...c, keyLocked: true })));
+    setQuestions(template.prompt_questions ? [...template.prompt_questions] : []);
     setEditOpen(true);
   }
 
@@ -3208,16 +3210,28 @@ function ScorecardsTab() {
 
   function removeCriterion(index: number) {
     if (criteria.length <= 1) {
-      toast.error('At least one criterion is required');
+      toast.error('É necessário pelo menos um critério de avaliação');
       return;
     }
     setCriteria(prev => prev.filter((_, i) => i !== index));
   }
 
+  function addQuestion() {
+    setQuestions(prev => [...prev, '']);
+  }
+
+  function updateQuestion(index: number, text: string) {
+    setQuestions(prev => prev.map((q, i) => (i === index ? text : q)));
+  }
+
+  function removeQuestion(index: number) {
+    setQuestions(prev => prev.filter((_, i) => i !== index));
+  }
+
   async function handleSave() {
     if (!editing) return;
     if (!displayName.trim()) {
-      toast.error('Display name is required');
+      toast.error('O nome de exibição é obrigatório');
       return;
     }
     const validationError = validateCriteria(criteria);
@@ -3236,11 +3250,12 @@ function ScorecardsTab() {
           label: label.trim(),
           ...(scale_hint?.trim() ? { scale_hint: scale_hint.trim() } : {}),
         })),
+        prompt_questions: questions.map(q => q.trim()).filter(Boolean),
       });
-      toast.success('Scorecard template updated');
+      toast.success('Ficha de avaliação atualizada com sucesso');
       closeEdit();
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : 'Failed to update template');
+      toast.error(e instanceof Error ? e.message : 'Falha ao atualizar modelo');
     }
   }
 
@@ -3360,17 +3375,47 @@ function ScorecardsTab() {
               </div>
 
               <div className="space-y-2">
-                <Label>Perguntas do kit de entrevista</Label>
-                <p className="text-xs text-muted-foreground">Somente leitura — perguntas padrão copiadas para o kit no agendamento.</p>
-                <ul className="rounded-lg border border-border divide-y divide-border text-sm">
-                  {editing.prompt_questions.length === 0 ? (
-                    <li className="px-3 py-2 text-muted-foreground text-xs">Nenhuma pergunta no kit</li>
-                  ) : (
-                    editing.prompt_questions.map((q, i) => (
-                      <li key={i} className="px-3 py-2 text-muted-foreground">{i + 1}. {q}</li>
-                    ))
-                  )}
-                </ul>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Perguntas do Kit de Entrevista</Label>
+                    <p className="text-xs text-muted-foreground">Perguntas-guia padrão copiadas para o kit da entrevista desta etapa.</p>
+                  </div>
+                  <Button type="button" size="sm" variant="outline" className="h-7 gap-1" onClick={addQuestion}>
+                    <Plus className="h-3 w-3" /> Adicionar
+                  </Button>
+                </div>
+                {questions.length === 0 ? (
+                  <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
+                    Nenhuma pergunta cadastrada. Clique em "Adicionar" para incluir perguntas padrão.
+                  </div>
+                ) : (
+                  <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                    {questions.map((q, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <span className="text-xs font-semibold text-muted-foreground mt-2 w-5 shrink-0 text-right">
+                          {i + 1}.
+                        </span>
+                        <Textarea
+                          value={q}
+                          onChange={e => updateQuestion(i, e.target.value)}
+                          placeholder="Digite a pergunta-guia para o entrevistador..."
+                          rows={2}
+                          className="flex-1 text-sm resize-none"
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 w-8 p-0 text-destructive hover:text-destructive shrink-0 mt-1"
+                          onClick={() => removeQuestion(i)}
+                          title="Remover pergunta"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <Button className="w-full gap-2" onClick={handleSave} disabled={updateTemplate.isPending}>

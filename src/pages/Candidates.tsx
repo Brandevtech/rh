@@ -344,7 +344,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
   const [currentPage, setCurrentPage] = useState(1);
 
   const advSearchActive = Object.values(advSearch).some(v => v.trim() !== '');
-  const hasBooleanSearch = /\b(AND|OR|NOT)\b/i.test(deferredSearch);
+  const hasBooleanSearch = /\b(AND|OR|NOT|OU|NÃO|NAO)\b/i.test(deferredSearch) || /\s+E\s+/i.test(deferredSearch);
   const hasNlFilters = skillFilter.length > 0 || !!stageFilter || !!locationFilter
     || !!advSearch.expMin || !!advSearch.expMax;
   // Simple text search is server-side paginated; boolean/skill/advanced/missing still need full pool
@@ -582,14 +582,20 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
     const q = query.trim();
     if (!q) return true;
     const h = haystack.toLowerCase();
-    // Split on AND/OR/NOT keeping delimiters
-    if (/\b(AND|OR|NOT)\b/i.test(q)) {
-      // Tokenise: split by whitespace-surrounded AND/OR/NOT
-      const tokens = q.split(/\s+(AND|OR|NOT)\s+/i);
+    // Split on AND/OR/NOT/E/OU/NÃO/NAO keeping delimiters
+    if (/\b(AND|OR|NOT|OU|NÃO|NAO)\b/i.test(q) || /\s+E\s+/i.test(q)) {
+      // Tokenise: split by whitespace-surrounded operators
+      const tokens = q.split(/\s+(AND|OR|NOT|E|OU|NÃO|NAO)\s+/i);
       const ops: string[] = [];
       // Extract operators from original string
-      const opMatches = q.match(/\s+(AND|OR|NOT)\s+/gi) || [];
-      opMatches.forEach(m => ops.push(m.trim().toUpperCase()));
+      const opMatches = q.match(/\s+(AND|OR|NOT|E|OU|NÃO|NAO)\s+/gi) || [];
+      opMatches.forEach(m => {
+        const raw = m.trim().toUpperCase();
+        if (raw === 'E') ops.push('AND');
+        else if (raw === 'OU') ops.push('OR');
+        else if (raw === 'NÃO' || raw === 'NAO') ops.push('NOT');
+        else ops.push(raw);
+      });
 
       let result: boolean | null = null;
       let notNext = false;
@@ -1412,7 +1418,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder={isMobile ? 'Buscar candidatos…' : 'Buscar… ou use AND / OR / NOT (ex: "React AND Python NOT Java")'}
+              placeholder={isMobile ? 'Buscar candidatos…' : 'Buscar… ou use E / OU / NÃO (ex: "React E Python NÃO Java")'}
               className="pl-10 pr-4 h-9 md:h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -1481,7 +1487,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
               </Button>
             )}
             <p className="text-xs text-muted-foreground">
-              Dica: a busca principal suporta <strong>AND</strong>, <strong>OR</strong>, <strong>NOT</strong> — ex: <code className="bg-muted px-1 rounded">React AND Python NOT Java</code>
+              Dica: a busca principal suporta <strong>E</strong> (AND), <strong>OU</strong> (OR), <strong>NÃO</strong> (NOT) — ex: <code className="bg-muted px-1 rounded">React E Python NÃO Java</code>
             </p>
           </div>
         )}
@@ -2239,7 +2245,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   <Label htmlFor="name">Nome Completo *</Label>
                   <Input
                     id="name"
-                    placeholder="Rahul Sharma"
+                    placeholder="Ana Silva"
                     value={form.name}
                     onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                   />
@@ -2249,7 +2255,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   <Input
                     id="email"
                     type="email"
-                    placeholder="rahul@example.com"
+                    placeholder="ana@exemplo.com"
                     value={form.email}
                     onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))}
                   />
@@ -2260,7 +2266,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   <Label htmlFor="phone">Telefone</Label>
                   <Input
                     id="phone"
-                    placeholder="+91 98765 43210"
+                    placeholder="+55 11 98765-4321"
                     value={form.phone}
                     onChange={(e) => setForm(prev => ({ ...prev, phone: e.target.value }))}
                   />
@@ -2269,7 +2275,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                   <Label htmlFor="linkedin_url">URL do LinkedIn</Label>
                   <Input
                     id="linkedin_url"
-                    placeholder="https://linkedin.com/in/rahulsharma"
+                    placeholder="https://linkedin.com/in/anasilva"
                     value={form.linkedin_url}
                     onChange={(e) => setForm(prev => ({ ...prev, linkedin_url: e.target.value }))}
                   />
@@ -2519,7 +2525,7 @@ export default function Candidates({ mode = 'pipeline', embedded = false }: Cand
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <Input placeholder="Título do Prêmio" className="sm:col-span-2" value={award.title || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, title: e.target.value } : item) }))} />
-                      <Input placeholder="Year" value={award.year || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, year: e.target.value } : item) }))} />
+                      <Input placeholder="Ano" value={award.year || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, year: e.target.value } : item) }))} />
                     </div>
                     <Input placeholder="Emissor / Organização" value={award.issuer || ''} onChange={e => setForm(prev => ({ ...prev, awards: (prev.awards || []).map((item: any, i: number) => i === idx ? { ...item, issuer: e.target.value } : item) }))} />
                   </div>

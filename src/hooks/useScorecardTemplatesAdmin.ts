@@ -53,16 +53,22 @@ export type ScorecardTemplateUpdate = {
   stage_key: string;
   display_name: string;
   criteria: ScorecardCriterion[];
+  prompt_questions?: string[];
   is_active: boolean;
 };
 
 export function useUpdateScorecardTemplate() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, display_name, criteria, is_active }: ScorecardTemplateUpdate) => {
+    mutationFn: async ({ id, display_name, criteria, prompt_questions, is_active }: ScorecardTemplateUpdate) => {
       const { data, error } = await supabase
         .from('scorecard_templates')
-        .update({ display_name, criteria, is_active })
+        .update({
+          display_name,
+          criteria,
+          is_active,
+          ...(prompt_questions !== undefined ? { prompt_questions } : {}),
+        })
         .eq('id', id)
         .select('id, stage_key, display_name, criteria, prompt_questions, is_active, created_at, updated_at')
         .single();
