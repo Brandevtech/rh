@@ -41,7 +41,7 @@ export function InterviewKitPanel({
   compact = false,
 }: InterviewKitPanelProps) {
   const hasQuestions = (kit?.questions?.length ?? 0) > 0;
-  const canGenerate = allowGenerate && !!onGenerate;
+  const canGenerate = (allowGenerate || !hasQuestions) && !!onGenerate;
 
   return (
     <div className={cn('rounded-lg border bg-muted/20', compact ? 'p-3' : 'p-4')}>
@@ -57,10 +57,10 @@ export function InterviewKitPanel({
         </summary>
 
         <div className="mt-3 space-y-3">
-          {isLoading ? (
+          {isLoading || isGenerating ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Carregando perguntas…
+              {isGenerating ? 'Gerando perguntas…' : 'Carregando perguntas…'}
             </div>
           ) : hasQuestions ? (
             <>

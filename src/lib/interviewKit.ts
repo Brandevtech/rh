@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { InterviewKitDrawerInterview } from '@/components/pipeline/InterviewKitDrawer';
+import { DEFAULT_INTERVIEW_DURATION_MINUTES } from '@/lib/interviewConflicts';
 
 const INTERVIEW_KIT_SELECT = `
   id, candidate_id, scheduled_at,
@@ -16,10 +17,15 @@ export async function fetchInterviewForKit(interviewId: string): Promise<Intervi
   return data as InterviewKitDrawerInterview | null;
 }
 
-/** True when scheduled_at is in the past (matches Calendar list Join-link hiding). */
-export function isPastInterview(scheduledAt: string | null | undefined): boolean {
+/** True when scheduled_at plus duration window is in the past (respects active slot window). */
+export function isPastInterview(
+  scheduledAt: string | null | undefined,
+  durationMinutes = DEFAULT_INTERVIEW_DURATION_MINUTES,
+): boolean {
   if (!scheduledAt) return false;
-  return new Date(scheduledAt).getTime() < Date.now();
+  const start = new Date(scheduledAt).getTime();
+  if (Number.isNaN(start)) return false;
+  return start + durationMinutes * 60_000 < Date.now();
 }
 
 /** Fire-and-forget kit generation after schedule/reschedule. Failures are silent (template fallback in edge fn). */
