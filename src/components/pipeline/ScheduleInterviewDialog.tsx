@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CalendarDays, Video, MapPin, Phone, Loader2, Link, AlertTriangle } from 'lucide-react';
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
 import type { CandidateInterview, InterviewMode } from '@/hooks/useInterviewPipeline';
 import type { ScheduleInterviewData } from '@/lib/interviewPanelists';
@@ -51,9 +52,7 @@ const MINUTES = [0, 15, 30, 45];
 const MAX_PANELISTS = 4;
 
 function formatHour(h: number) {
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const h12 = h % 12 === 0 ? 12 : h % 12;
-  return `${h12}:00 ${ampm}`;
+  return `${String(h).padStart(2, '0')}:00`;
 }
 
 /** Non-empty http(s) URL for video meeting links. */
@@ -307,7 +306,7 @@ export function ScheduleInterviewDialog({
                   className={cn('w-full justify-start text-left font-normal', !selectedDate && 'text-muted-foreground')}
                 >
                   <CalendarDays className="mr-2 h-4 w-4" />
-                  {selectedDate ? format(selectedDate, 'PPP') : 'Escolha uma data'}
+                  {selectedDate ? format(selectedDate, 'PPP', { locale: ptBR }) : 'Escolha uma data'}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -317,6 +316,7 @@ export function ScheduleInterviewDialog({
                   onSelect={(d) => { setSelectedDate(d); setCalendarOpen(false); }}
                   disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                   initialFocus
+                  locale={ptBR}
                 />
               </PopoverContent>
             </Popover>
