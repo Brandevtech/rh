@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const SUFFIX = "The Talent App";
+const SUFFIX = "RH";
 
 export function usePageTitle(title?: string) {
   useEffect(() => {

@@ -28,7 +28,7 @@ export function useJobPostingMeta(input: JobPostingInput | null): void {
 
     const previousTitle = document.title;
     const description = (input.description ?? input.title).replace(/\s+/g, ' ').trim().slice(0, 200);
-    document.title = `${input.title} | Careers | The Talent App`;
+    document.title = `${input.title} | Carreiras | RH`;
     upsertMeta('name', 'description', description);
     upsertMeta('property', 'og:title', input.title);
     upsertMeta('property', 'og:description', description);
