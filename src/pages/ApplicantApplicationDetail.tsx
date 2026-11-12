@@ -26,7 +26,8 @@ import {
 const statusColors: Record<string, string> = {
   new: 'bg-blue-100 text-blue-800',
   reviewing: 'bg-yellow-100 text-yellow-800',
-  shortlisted: 'bg-green-100 text-green-800',
+  shortlisted: 'bg-emerald-100 text-emerald-800 font-medium',
+  hired: 'bg-emerald-100 text-emerald-800 font-medium',
   rejected: 'bg-red-100 text-red-800',
   converted: 'bg-purple-100 text-purple-800',
 };
@@ -34,7 +35,8 @@ const statusColors: Record<string, string> = {
 const statusLabels: Record<string, string> = {
   new: 'Enviada',
   reviewing: 'Em Análise',
-  shortlisted: 'Pré-selecionado',
+  shortlisted: 'Aprovado / Contratado',
+  hired: 'Aprovado / Contratado',
   rejected: 'Não Selecionado',
   converted: 'Etapa de Entrevistas',
 };
@@ -141,6 +143,22 @@ export default function ApplicantApplicationDetail() {
             </Badge>
           </div>
         </div>
+
+        {application.status === 'shortlisted' && (
+          <Card className="border-emerald-200 bg-emerald-50/70 dark:border-emerald-800 dark:bg-emerald-950/30">
+            <CardContent className="pt-6 flex items-start gap-3">
+              <CheckCircle className="h-6 w-6 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-semibold text-emerald-900 dark:text-emerald-200">
+                  Parabéns! Você foi aprovado(a) neste processo seletivo!
+                </p>
+                <p className="text-sm text-emerald-800/90 dark:text-emerald-300/90">
+                  Nossa equipe de Recursos Humanos entrará em contato em breve para fornecer as instruções de comparecimento, envio de documentação e início das atividades.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {formPending && (
           <Card className="border-amber-200 bg-amber-50/50 dark:border-amber-800 dark:bg-amber-950/20">

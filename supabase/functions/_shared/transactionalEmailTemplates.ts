@@ -886,31 +886,34 @@ export function buildCandidateHiredApplicantEmail(
   const safeCompany = escapeHtml(companyName);
 
   const bodyHtml = [
-    emailHeading("Congratulations!"),
-    emailParagraph(`Dear ${escapeHtml(applicantName)},`),
+    emailHeading("Parabéns pela Aprovação! 🎉"),
+    emailParagraph(`Olá, ${escapeHtml(applicantName)}!`),
     emailParagraph(
-      `We are pleased to inform you that you have been <strong>selected</strong> for <strong>${safeJob}</strong> at ${safeCompany}.`,
+      `Temos uma excelente notícia: você foi <strong>aprovado(a)</strong> no processo seletivo para a vaga de <strong>${safeJob}</strong> na ${safeCompany}!`,
     ),
     emailParagraph(
-      "Our team will reach out shortly with the next steps, which may include documentation collection, background verification, and pre-onboarding activities before a formal offer letter is issued.",
+      "Nossa equipe de Recursos Humanos entrará em contato em breve para fornecer todas as orientações sobre os próximos passos, documentação necessária e instruções de comparecimento para a sua admissão.",
     ),
-    emailParagraph("Please keep an eye on your email and respond promptly to any requests from our HR team."),
+    emailParagraph("Fique atento(a) ao seu e-mail e WhatsApp para responder às solicitações da equipe."),
+    emailParagraph("Seja muito bem-vindo(a) à nossa equipe!"),
     emailSignOff(companyName),
   ].join("");
 
   return {
-    subject: `Next steps for your role at ${companyName} — ${jobTitle}`,
+    subject: `Parabéns! Próximos passos para sua contratação na ${companyName} — ${jobTitle}`,
     html: wrapEmailLayout(branding, bodyHtml),
     text: [
-      `Dear ${applicantName},`,
+      `Olá, ${applicantName}!`,
       "",
-      `We are pleased to inform you that you have been selected for ${jobTitle} at ${companyName}.`,
+      `Temos uma excelente notícia: você foi aprovado(a) no processo seletivo para a vaga de ${jobTitle} na ${companyName}!`,
       "",
-      "Our team will reach out shortly with the next steps, which may include documentation collection, background verification, and pre-onboarding activities before a formal offer letter is issued.",
+      "Nossa equipe de Recursos Humanos entrará em contato em breve para fornecer todas as orientações sobre os próximos passos, documentação necessária e instruções de comparecimento para a sua admissão.",
       "",
-      "Please keep an eye on your email and respond promptly to any requests from our HR team.",
+      "Fique atento(a) ao seu e-mail e WhatsApp para responder às solicitações da equipe.",
       "",
-      `Best regards,\nThe ${companyName} Hiring Team`,
+      "Seja muito bem-vindo(a) à nossa equipe!",
+      "",
+      `Atenciosamente,\nEquipe de Recursos Humanos — ${companyName}`,
     ].join("\n"),
   };
 }

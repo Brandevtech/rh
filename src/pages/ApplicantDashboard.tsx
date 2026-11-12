@@ -52,7 +52,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const statusColors: Record<string, string> = {
   new: 'bg-blue-100 text-blue-800',
   reviewing: 'bg-yellow-100 text-yellow-800',
-  shortlisted: 'bg-green-100 text-green-800',
+  shortlisted: 'bg-emerald-100 text-emerald-800',
+  hired: 'bg-emerald-100 text-emerald-800',
   rejected: 'bg-red-100 text-red-800',
   converted: 'bg-purple-100 text-purple-800',
   invited: 'bg-blue-100 text-blue-800',
@@ -65,7 +66,8 @@ const statusColors: Record<string, string> = {
 const statusLabels: Record<string, string> = {
   new: 'Enviada',
   reviewing: 'Em Análise',
-  shortlisted: 'Pré-selecionado',
+  shortlisted: 'Aprovado / Contratado',
+  hired: 'Aprovado / Contratado',
   rejected: 'Não Selecionado',
   converted: 'Etapa de Entrevistas',
   invited: 'Pendente',

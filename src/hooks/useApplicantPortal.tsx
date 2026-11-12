@@ -302,19 +302,19 @@ function buildApplicationTimeline(
     });
   }
 
-  if (application.status === 'shortlisted' || application.status === 'converted') {
+  if (application.status === 'converted') {
     events.push({
-      title: 'Pré-selecionado',
-      description: 'Você foi pré-selecionado para esta vaga.',
+      title: 'Etapa de Entrevistas',
+      description: 'Você avançou para a etapa de entrevistas.',
       date: application.updated_at,
       complete: true,
     });
   }
 
-  if (application.status === 'converted') {
+  if (application.status === 'shortlisted') {
     events.push({
-      title: 'Etapa de Entrevistas',
-      description: 'Você avançou para a etapa de entrevistas.',
+      title: 'Aprovado no Processo Seletivo 🎉',
+      description: 'Parabéns! Você foi aprovado e selecionado para a vaga. Em breve entraremos em contato com as instruções para admissão e comparecimento.',
       date: application.updated_at,
       complete: true,
     });

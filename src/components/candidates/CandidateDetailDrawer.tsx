@@ -54,6 +54,8 @@ import {
   Search,
   RefreshCw,
   Route,
+  UserCheck,
+  Send,
 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { useUserTimezone } from '@/hooks/useUserTimezone';
@@ -70,6 +72,7 @@ import { JobDetailsEmailSection } from '@/components/candidates/JobDetailsEmailS
 import { JobApplicationFormDialog } from '@/components/candidates/JobApplicationFormDialog';
 import { AssessmentSection } from '@/components/candidates/AssessmentSection';
 import { AssignAssessmentDialog } from '@/components/candidates/AssignAssessmentDialog';
+import { AttendanceInstructionsDialog } from '@/components/candidates/AttendanceInstructionsDialog';
 import { useJobAssessmentConfig } from '@/hooks/useJobAssessment';
 import type { Candidate, StructuredSkill } from '@/types/database';
 import { format, isValid, differenceInDays } from 'date-fns';
@@ -710,9 +713,10 @@ export function CandidateDetailDrawer({
   const [applicationFormDialogOpen, setApplicationFormDialogOpen] = useState(false);
   const [applicationFormId, setApplicationFormId] = useState<string | null>(null);
   const [assignAssessmentOpen, setAssignAssessmentOpen] = useState(false);
+  const [attendanceDialogOpen, setAttendanceDialogOpen] = useState(false);
   const [salaryCheck, setSalaryCheck] = useState<SalaryMarketResponse | null>(null);
   const [salaryChecking, setSalaryChecking] = useState(false);
-  const nestedDialogOpen = applicationFormDialogOpen || assignAssessmentOpen || feedbackDialogOpen;
+  const nestedDialogOpen = applicationFormDialogOpen || assignAssessmentOpen || feedbackDialogOpen || attendanceDialogOpen;
 
   const handleDrawerOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -727,6 +731,7 @@ export function CandidateDetailDrawer({
     setApplicationFormDialogOpen(false);
     setApplicationFormId(null);
     setAssignAssessmentOpen(false);
+    setAttendanceDialogOpen(false);
   }, [open]);
 
   useEffect(() => {
@@ -2111,6 +2116,29 @@ export function CandidateDetailDrawer({
                   />
                 )}
 
+                {(candidate?.id || candidate?.email) && (
+                  <div className="rounded-lg border bg-emerald-50/40 dark:bg-emerald-950/20 p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-medium flex items-center gap-2 text-emerald-900 dark:text-emerald-200">
+                        <UserCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+                        Instruções de Comparecimento & Admissão
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 text-xs gap-1 border-emerald-300 text-emerald-800 hover:bg-emerald-100 dark:border-emerald-700 dark:text-emerald-300 shrink-0"
+                        onClick={() => setAttendanceDialogOpen(true)}
+                      >
+                        <Send className="h-3.5 w-3.5" />
+                        Convocação / Instruções
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Gere e edite a mensagem personalizada de comparecimento com local, horário e lista de documentos para admissão.
+                    </p>
+                  </div>
+                )}
+
                 {(candidate?.id || candidate?.email) && candidateJobId && (
                   <JobApplicationFormSection
                     embedded
@@ -2615,6 +2643,16 @@ export function CandidateDetailDrawer({
         jobId={candidateJobId}
         defaultAssessmentId={jobAssessmentConfig?.defaultAssessmentId ?? null}
         deadlineDays={jobAssessmentConfig?.config.deadline_days ?? 7}
+      />
+    )}
+    {candidate && (
+      <AttendanceInstructionsDialog
+        open={attendanceDialogOpen}
+        onOpenChange={setAttendanceDialogOpen}
+        candidateName={candidate.name}
+        candidateEmail={candidate.email}
+        candidatePhone={candidate.phone}
+        jobTitle={candidate.role_applied || undefined}
       />
     )}
     </>
