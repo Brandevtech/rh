@@ -84,7 +84,7 @@ export function InterviewKitPanel({
                   onClick={() => onGenerate!(true)}
                 >
                   {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                  Regenerate with AI
+                  Regerar com IA
                 </Button>
               )}
             </>

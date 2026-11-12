@@ -84,7 +84,7 @@ function MobilePrepSwitcher({
               : 'text-muted-foreground hover:text-foreground',
           )}
         >
-          Questions
+          Perguntas
         </button>
         <button
           type="button"
@@ -96,7 +96,7 @@ function MobilePrepSwitcher({
               : 'text-muted-foreground hover:text-foreground',
           )}
         >
-          Profile
+          Perfil
         </button>
       </div>
       <div className="flex flex-col shrink-0">
@@ -138,8 +138,19 @@ const VERDICT_CARD_TINT: Record<InterviewVerdict, string> = {
   no_show: 'border-slate-200/60 bg-slate-50/50 dark:border-slate-700/50 dark:bg-slate-900/30',
 };
 
+const RATING_KEY_LABELS: Record<string, string> = {
+  technical: 'Conhecimento Técnico',
+  communication: 'Comunicação',
+  problem_solving: 'Resolução de Problemas',
+  culture_fit: 'Alinhamento Cultural',
+  role_fit: 'Adequação à Função',
+  motivation: 'Motivação',
+  leadership: 'Liderança',
+};
+
 function formatRatingKey(key: string): string {
-  return key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  const normalized = key.toLowerCase().trim();
+  return RATING_KEY_LABELS[normalized] || key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
 /**
@@ -164,11 +175,11 @@ function formatInterviewCountdown(scheduledAt: string, nowMs = Date.now()): stri
     }
     if (hours > 0) {
       return mins > 0 && hours < 6
-        ? `in ${hours}h ${mins}m`
-        : `in ${hours} hr${hours === 1 ? '' : 's'}`;
+        ? `em ${hours}h ${mins}min`
+        : `em ${hours} hora${hours === 1 ? '' : 's'}`;
     }
-    if (mins <= 1) return 'Starts in 1 min';
-    return `Starts in ${mins} min`;
+    if (mins <= 1) return 'Começa em 1 min';
+    return `Começa em ${mins} min`;
   }
 
   const msSinceStart = nowMs - start;
@@ -196,8 +207,8 @@ function EmptyState({ variant }: { variant: 'upcoming' | 'past' }) {
       </p>
       <p className="text-xs text-muted-foreground text-center max-w-sm">
         {variant === 'upcoming'
-          ? 'When an interview is scheduled with you, it will appear here.'
-          : 'Completed interviews and feedback you submit will show up here.'}
+          ? 'Quando uma entrevista for agendada com você, ela aparecerá aqui.'
+          : 'Entrevistas concluídas e pareceres enviados aparecerão aqui.'}
       </p>
       {variant === 'upcoming' && (
         <Button variant="outline" size="sm" asChild className="mt-2">
@@ -296,7 +307,7 @@ function InterviewMeta({
         {conflictBadge && (
           <Badge variant="outline" className="gap-1 text-xs bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-200 dark:border-amber-700">
             <AlertTriangle className="h-3 w-3" />
-            Conflict
+            Conflito
           </Badge>
         )}
       </div>
@@ -341,7 +352,7 @@ function InterviewMeta({
           onClick={() => onOpenCandidateProfile(interview)}
           className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground hover:underline"
         >
-          Candidate profile
+          Perfil do candidato
         </button>
       </div>
     </>
@@ -414,13 +425,13 @@ function UpcomingCard({
         <div className="flex shrink-0 flex-wrap items-end justify-end gap-2 sm:flex-col sm:items-stretch">
           <Button size="sm" variant="outline" className="gap-1.5" onClick={() => onViewKit(interview)}>
             <HelpCircle className="h-3.5 w-3.5" />
-            View question kit
+            Ver kit de perguntas
           </Button>
           {canJoin && (
             <Button size="sm" className="gap-1.5 btn-gradient text-primary-foreground" asChild>
               <a href={meetingHref!} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-3.5 w-3.5" />
-                Join meeting
+                Entrar na reunião
               </a>
             </Button>
           )}
@@ -497,7 +508,7 @@ function PastCard({
                 variant="outline"
                 className="text-xs bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400"
               >
-                Feedback pending
+                Feedback pendente
               </Badge>
             )}
             {interview.overall_score != null && (
@@ -516,12 +527,12 @@ function PastCard({
               onClick={() => onSubmitFeedback(interview)}
             >
               <ClipboardCheck className="h-3.5 w-3.5" />
-              Submit feedback
+              Enviar feedback
             </Button>
           ) : (
             <Button size="sm" variant="outline" className="gap-1.5" onClick={() => onViewKit(interview)}>
               <HelpCircle className="h-3.5 w-3.5" />
-              View question kit
+              Ver kit de perguntas
             </Button>
           )}
         </div>
@@ -702,8 +713,8 @@ function InterviewList({
         <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100">
           <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
           <p>
-            You have {conflictIds.size} interview{conflictIds.size !== 1 ? 's' : ''} with overlapping times.
-            Ask the recruiter or HR to reschedule so you are not double-booked.
+            Você tem {conflictIds.size} {conflictIds.size === 1 ? 'entrevista com conflito de horário' : 'entrevistas com conflito de horários'}.
+            Solicite ao recrutador ou ao RH para reagendar.
           </p>
         </div>
       )}
@@ -933,7 +944,7 @@ export default function MyInterviews() {
           <Button variant="outline" size="sm" asChild className="shrink-0">
             <Link to="/calendar">
               <CalendarDays className="h-4 w-4 mr-2" />
-              Calendar
+              Calendário
             </Link>
           </Button>
         </div>
@@ -944,13 +955,13 @@ export default function MyInterviews() {
           <Tabs defaultValue={pendingPastCount > 0 ? 'past' : 'upcoming'} className="w-full">
             <TabsList className="grid w-full max-w-md grid-cols-2">
               <TabsTrigger value="upcoming" className="gap-2">
-                Upcoming
+                Próximas
                 {!isLoadingUpcoming && upcoming.length > 0 && (
                   <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">{upcoming.length}</Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger value="past" className="gap-2">
-                Past
+                Anteriores
                 {!isLoadingPast && pastTotalCount > 0 && (
                   <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">{pastTotalCount}</Badge>
                 )}

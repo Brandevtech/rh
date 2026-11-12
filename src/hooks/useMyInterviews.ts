@@ -175,8 +175,8 @@ export function useMyInterviews() {
 }
 
 export const RATING_LABELS: { key: keyof RatingCategories; label: string }[] = [
-  { key: 'technical', label: 'Technical' },
-  { key: 'communication', label: 'Communication' },
-  { key: 'problem_solving', label: 'Problem Solving' },
-  { key: 'culture_fit', label: 'Culture Fit' },
+  { key: 'technical', label: 'Conhecimento Técnico' },
+  { key: 'communication', label: 'Comunicação' },
+  { key: 'problem_solving', label: 'Resolução de Problemas' },
+  { key: 'culture_fit', label: 'Alinhamento Cultural' },
 ];

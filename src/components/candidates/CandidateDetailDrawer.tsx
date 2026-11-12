@@ -1386,15 +1386,18 @@ export function CandidateDetailDrawer({
             </p>
             <div className="flex items-center gap-1.5">
               <span className="text-muted-foreground">Veredito:</span>
-              <span className={cn('font-semibold capitalize',
+              <span className={cn('font-semibold',
                 draftPreview.verdict_suggestion === 'proceeded' ? 'text-emerald-600' :
                 draftPreview.verdict_suggestion === 'rejected' ? 'text-red-600' : 'text-amber-600'
               )}>
-                {draftPreview.verdict_suggestion}
+                {draftPreview.verdict_suggestion === 'proceeded' ? 'Aprovar / Avançar' :
+                 draftPreview.verdict_suggestion === 'rejected' ? 'Reprovar' :
+                 draftPreview.verdict_suggestion === 'hold' ? 'Em Espera' :
+                 draftPreview.verdict_suggestion}
               </span>
             </div>
             <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
-              {([['Technical', draftPreview.technical], ['Communication', draftPreview.communication], ['Problem Solving', draftPreview.problem_solving], ['Culture Fit', draftPreview.culture_fit]] as [string, number][]).map(([lbl, score]) => (
+              {([['Conhecimento Técnico', draftPreview.technical], ['Comunicação', draftPreview.communication], ['Resolução de Problemas', draftPreview.problem_solving], ['Alinhamento Cultural', draftPreview.culture_fit]] as [string, number][]).map(([lbl, score]) => (
                 <div key={lbl} className="flex items-center justify-between">
                   <span className="text-muted-foreground text-[11px]">{lbl}</span>
                   <span className="font-medium text-[11px]">{score}/5</span>
@@ -1411,7 +1414,7 @@ export function CandidateDetailDrawer({
                 onClick={openFeedbackWithDraft}
               >
                 <Pencil className="h-3 w-3 mr-1" />
-                Edit
+                Editar
               </Button>
               <Button
                 type="button"
@@ -1563,7 +1566,7 @@ export function CandidateDetailDrawer({
                   {avgRating != null ? (
                     <>
                       <span className="font-semibold text-foreground">{avgRating}</span>
-                      <span className="text-muted-foreground">/ 5 · {completedInterviewsWithScore.length} iv{completedInterviewsWithScore.length !== 1 ? 's' : ''}</span>
+                      <span className="text-muted-foreground">/ 5 · {completedInterviewsWithScore.length} {completedInterviewsWithScore.length === 1 ? 'entrevista' : 'entrevistas'}</span>
                     </>
                   ) : (
                     <span className="text-muted-foreground">Sem avaliações ainda</span>
@@ -2347,7 +2350,7 @@ export function CandidateDetailDrawer({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">
-                          Round {iv.displayRound} · {stageLabel}
+                          Rodada {iv.displayRound} · {stageLabel}
                         </span>
                         {ModeIcon && <ModeIcon className="w-3.5 h-3.5 text-muted-foreground" />}
                       </div>

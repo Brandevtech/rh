@@ -688,7 +688,7 @@ export function InterviewFeedbackDialog({
                   onClick={handleAddLink}
                   disabled={!linkUrl.trim()}
                 >
-                  Add
+                  Adicionar
                 </Button>
                 <Button
                   type="button"
@@ -697,7 +697,7 @@ export function InterviewFeedbackDialog({
                   className="h-7 text-xs"
                   onClick={() => { setShowLinkForm(false); setLinkUrl(''); setLinkLabel(''); setLinkUrlError(null); }}
                 >
-                  Cancel
+                  Cancelar
                 </Button>
               </div>
             </div>
@@ -779,7 +779,7 @@ export function InterviewFeedbackDialog({
                   className="w-full text-muted-foreground"
                   onClick={() => setDidntHappenOpen(false)}
                 >
-                  Back
+                  Voltar
                 </Button>
               </div>
             )}
