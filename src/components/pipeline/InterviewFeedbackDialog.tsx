@@ -155,9 +155,8 @@ export function InterviewFeedbackDialog({
   const interviewIsPast = isPastInterview(interview?.scheduled_at);
   const { data: scorecardTemplate } = useScorecardTemplate(stageName);
   const criteria = scorecardTemplate?.criteria ?? [];
-  const { data: interviewKit, isLoading: kitLoading } = useInterviewKit(interview?.id);
+  const { data: interviewKit, isLoading: kitLoading } = useInterviewKit(interview?.id, stageName);
   const generateKit = useGenerateInterviewKit();
-  const kitLoadAttempted = useRef<string | null>(null);
 
   // Reset form when interview or template changes (notes loaded separately — avoid wiping)
   useEffect(() => {
@@ -234,15 +233,6 @@ export function InterviewFeedbackDialog({
     } catch { /* ignore malformed draft */ }
   }, [open, interview?.id, criteria.length]);
 
-  // Auto-load interview kit from template on first open (upcoming/current only)
-  useEffect(() => {
-    if (!interview?.id || !open || kitLoading || interviewKit || interviewIsPast) return;
-    if (kitLoadAttempted.current === interview.id) return;
-    kitLoadAttempted.current = interview.id;
-    generateKit.mutate({
-      interview_id: interview.id,
-    });
-  }, [interview?.id, open, kitLoading, interviewKit?.id, stageName, interviewIsPast]);
 
   // Auto-save notes 1s after user stops typing (skip seed / non-dirty)
   useEffect(() => {

@@ -78,6 +78,7 @@ export function useUpdateScorecardTemplate() {
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['scorecard-templates'] });
       qc.invalidateQueries({ queryKey: ['scorecard-template', data.stage_key] });
+      qc.invalidateQueries({ queryKey: ['interview-kit'] });
     },
   });
 }

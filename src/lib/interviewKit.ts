@@ -3,7 +3,7 @@ import type { InterviewKitDrawerInterview } from '@/components/pipeline/Intervie
 import { DEFAULT_INTERVIEW_DURATION_MINUTES } from '@/lib/interviewConflicts';
 
 const INTERVIEW_KIT_SELECT = `
-  id, candidate_id, scheduled_at,
+  id, candidate_id, scheduled_at, stage_name_snapshot,
   candidate:candidates!candidate_interviews_candidate_id_fkey(id, name, email, job_id, role_applied),
   job_interview_stage:job_interview_stages!candidate_interviews_job_interview_stage_id_fkey(stage_name, job_id)
 `;
