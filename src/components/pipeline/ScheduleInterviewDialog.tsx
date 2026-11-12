@@ -28,6 +28,7 @@ import {
   summarizeScheduleConflicts,
   type PanelistScheduleConflict,
 } from '@/lib/interviewConflicts';
+import { translateStageName } from '@/lib/scorecardTemplates';
 import { useToast } from '@/hooks/use-toast';
 import { cn, safeExternalUrl } from '@/lib/utils';
 
@@ -286,7 +287,7 @@ export function ScheduleInterviewDialog({
           {isRescheduling ? 'Reagendar Entrevista' : 'Agendar Entrevista'}
         </Title>
         <Desc>
-          {candidateName} — <span className="font-medium text-foreground">{stageName}</span>
+          {candidateName} — <span className="font-medium text-foreground">{translateStageName(stageName)}</span>
         </Desc>
       </Header>
 

@@ -61,6 +61,7 @@ import { formatDateTimeInTz } from '@/lib/formatTz';
 import { InterviewFeedbackDialog } from '@/components/pipeline/InterviewFeedbackDialog';
 import { useInterviewKit } from '@/hooks/useInterviewKit';
 import { isPastInterview } from '@/lib/interviewKit';
+import { translateStageName } from '@/lib/scorecardTemplates';
 import type { InterviewVerdict, InterviewMode, RatingCategories, InterviewArtifact } from '@/hooks/useInterviewPipeline';
 import { usePreScreen, type AcademicRecord } from '@/hooks/usePreScreen';
 import { useCandidateCoverLetter } from '@/hooks/useCandidates';
@@ -1781,7 +1782,7 @@ export function CandidateDetailDrawer({
                       {pipelineEnrollments.map((enrollment) => (
                         <div key={enrollment.jobId} className="flex items-center justify-between gap-2">
                           <span className="text-sm font-medium min-w-0 truncate">
-                            {enrollment.jobTitle} · {enrollment.stageName}
+                            {enrollment.jobTitle} · {translateStageName(enrollment.stageName)}
                           </span>
                           <Button variant="link" size="sm" className="h-auto shrink-0 px-0 text-xs" asChild>
                             <Link to={`/hiring?view=board&job=${enrollment.jobId}&candidate=${candidate.id}`}>

@@ -14,7 +14,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { InterviewVerdict, InterviewMode, RatingCategories, CandidateInterview, InterviewArtifact } from '@/hooks/useInterviewPipeline';
 import { useScorecardTemplate } from '@/hooks/useScorecardTemplate';
 import { useInterviewKit, useGenerateInterviewKit } from '@/hooks/useInterviewKit';
-import { defaultRatingsForCriteria, mapDraftRatingsToCriteria } from '@/lib/scorecardTemplates';
+import { defaultRatingsForCriteria, mapDraftRatingsToCriteria, translateStageName } from '@/lib/scorecardTemplates';
 import { InterviewKitPanel } from '@/components/pipeline/InterviewKitPanel';
 import { isPastInterview } from '@/lib/interviewKit';
 
@@ -430,7 +430,7 @@ export function InterviewFeedbackDialog({
           ) : (
             <span className="font-medium text-foreground">{candidateName}</span>
           )}
-          {' '}— <span className="font-medium text-foreground">{stageName}</span>
+          {' '}— <span className="font-medium text-foreground">{translateStageName(stageName)}</span>
         </p>
       </Header>
 

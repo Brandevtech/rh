@@ -30,6 +30,7 @@ import type { InterviewVerdict, InterviewMode, RatingCategories, InterviewArtifa
 import { InterviewFeedbackDialog } from '@/components/pipeline/InterviewFeedbackDialog';
 import { InterviewKitDrawer } from '@/components/pipeline/InterviewKitDrawer';
 import { fetchInterviewForKit } from '@/lib/interviewKit';
+import { translateStageName } from '@/lib/scorecardTemplates';
 import { openCandidateDetailWithFetch } from '@/lib/candidateDetail';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -318,7 +319,7 @@ function InterviewMeta({
 
       <div className="flex items-center gap-1.5 mt-1 flex-wrap text-xs text-muted-foreground">
         {interview.job_interview_stage?.stage_name && (
-          <span>{interview.job_interview_stage?.stage_name}</span>
+          <span>{translateStageName(interview.job_interview_stage?.stage_name)}</span>
         )}
         {interview.job_title && (
           <>

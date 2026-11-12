@@ -35,7 +35,7 @@ import {
   type PrescreenCategory,
 } from '@/hooks/usePrescreenQuestionBank';
 import { useScorecardTemplatesList, useUpdateScorecardTemplate, type ScorecardTemplateRow } from '@/hooks/useScorecardTemplatesAdmin';
-import { slugifyCriterionKey, type ScorecardCriterion } from '@/lib/scorecardTemplates';
+import { slugifyCriterionKey, translateStageName, type ScorecardCriterion } from '@/lib/scorecardTemplates';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { SecuritySettingsTab } from '@/components/settings/SecuritySettingsTab';
 import { resolveSettingsTab } from '@/lib/settingsTabs';
@@ -3287,7 +3287,7 @@ function ScorecardsTab() {
           <TableBody>
             {templates.map(t => (
               <TableRow key={t.id}>
-                <TableCell className="font-medium">{t.display_name}</TableCell>
+                <TableCell className="font-medium">{translateStageName(t.display_name)}</TableCell>
                 <TableCell><code className="text-xs bg-muted px-1.5 py-0.5 rounded">{t.stage_key}</code></TableCell>
                 <TableCell className="text-center">{t.criteria.length}</TableCell>
                 <TableCell className="text-center">{t.prompt_questions.length}</TableCell>

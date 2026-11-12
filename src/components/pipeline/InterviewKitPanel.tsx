@@ -74,19 +74,6 @@ export function InterviewKitPanel({
                   Gerado em {new Date(kit!.generated_at).toLocaleDateString('pt-BR')}
                 </p>
               )}
-              {canGenerate && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs gap-1.5"
-                  disabled={isGenerating}
-                  onClick={() => onGenerate!(true)}
-                >
-                  {isGenerating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-                  Regerar com IA
-                </Button>
-              )}
             </>
           ) : (
             <div className="space-y-2">

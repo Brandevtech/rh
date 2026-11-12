@@ -24,11 +24,24 @@ export interface InterviewKit {
 }
 
 const STAGE_KEY_PATTERNS: { key: string; patterns: RegExp[] }[] = [
-  { key: 'screening', patterns: [/screen/i, /phone/i, /initial/i, /recruiter/i, /prescreen/i] },
-  { key: 'technical', patterns: [/tech/i, /coding/i, /system/i, /engineering/i, /dev/i, /architect/i] },
-  { key: 'managerial', patterns: [/manager/i, /lead/i, /director/i, /panel/i, /leadership/i] },
-  { key: 'hr_final', patterns: [/\bhr\b/i, /culture/i, /final/i, /offer/i] },
+  { key: 'screening', patterns: [/screen/i, /phone/i, /initial/i, /recruiter/i, /prescreen/i, /triagem/i] },
+  { key: 'technical', patterns: [/tech/i, /coding/i, /system/i, /engineering/i, /dev/i, /architect/i, /t[eé]cnic/i] },
+  { key: 'managerial', patterns: [/manager/i, /lead/i, /director/i, /panel/i, /leadership/i, /gest[oõã]|gestor/i, /geren/i] },
+  { key: 'hr_final', patterns: [/\bhr\b/i, /culture/i, /final/i, /offer/i, /\brh\b/i] },
 ];
+
+export function translateStageName(stageName?: string | null): string {
+  if (!stageName) return '';
+  const trimmed = stageName.trim();
+  const lower = trimmed.toLowerCase();
+  if (lower === 'screening') return 'Triagem';
+  if (lower === 'phone screen' || lower === 'recruiter prescreen') return 'Triagem por Telefone';
+  if (lower === 'technical' || lower === 'technical round') return 'Entrevista Técnica';
+  if (lower === 'managerial' || lower === 'managerial / panel' || lower === 'managerial/panel') return 'Entrevista com Gestor / Painel';
+  if (lower === 'hr / final round' || lower === 'hr final' || lower === 'hr/final round' || lower === 'final round') return 'RH / Rodada Final';
+  if (lower === 'general' || lower === 'general interview') return 'Entrevista Geral';
+  return trimmed;
+}
 
 export function resolveStageKey(stageName?: string | null): string {
   if (!stageName) return 'general';

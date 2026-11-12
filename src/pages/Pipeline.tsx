@@ -890,8 +890,8 @@ export default function Pipeline({ embedded = false }: PipelineProps) {
       toast({ title: 'Candidato contratado!', description: 'Marcado como contratado e finalizado no pipeline.' });
     } catch (err: unknown) {
       toast({
-        title: 'Error',
-        description: err instanceof Error ? err.message : 'Failed to mark as hired',
+        title: 'Erro',
+        description: err instanceof Error ? err.message : 'Falha ao marcar como contratado',
         variant: 'destructive',
       });
     } finally {

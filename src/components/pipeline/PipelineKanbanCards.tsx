@@ -598,7 +598,7 @@ export function DraggablePipelineCard({
                 disabled={isMarkingHired}
                 onClick={(e) => { e.stopPropagation(); onMarkHired(); }}
               >
-                <UserCheck className="w-3 h-3 mr-1" /> Mark as Hired
+                <UserCheck className="w-3 h-3 mr-1" /> Marcar como Contratado
               </Button>
             )}
           </div>

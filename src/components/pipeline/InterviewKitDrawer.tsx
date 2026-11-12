@@ -3,6 +3,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { InterviewKitPanel } from '@/components/pipeline/InterviewKitPanel';
 import { useInterviewKit, useGenerateInterviewKit } from '@/hooks/useInterviewKit';
 import { isPastInterview } from '@/lib/interviewKit';
+import { translateStageName } from '@/lib/scorecardTemplates';
 
 export interface InterviewKitDrawerInterview {
   id: string;
@@ -67,7 +68,7 @@ export function InterviewKitDrawer({
             {stageName && (
               <>
                 <span className="text-muted-foreground font-normal"> — </span>
-                <span className="font-medium">{stageName}</span>
+                <span className="font-medium">{translateStageName(stageName)}</span>
               </>
             )}
           </SheetTitle>
