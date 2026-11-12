@@ -25,6 +25,60 @@ export function cleanMessage(message: string) {
   return message.replace(/\s*—\s*interview_ref:[a-f0-9-]+$/i, '');
 }
 
+export function translateNotificationTitle(title: string): string {
+  const map: Record<string, string> = {
+    'Interview Scheduled': 'Entrevista Agendada',
+    'Interview Rescheduled': 'Entrevista Reagendada',
+    'Interview Cancelled': 'Entrevista Cancelada',
+    'Interview Reminder': 'Lembrete de Entrevista',
+    'Feedback Submitted': 'Parecer / Feedback Enviado',
+    'New Application': 'Nova Candidatura',
+    'Candidate Assigned': 'Candidato Atribuído',
+    'Assessment Completed': 'Avaliação Concluída',
+    'Assessment Graded': 'Avaliação Corrigida',
+  };
+  return map[title] || title;
+}
+
+export function translateNotificationMessage(rawMessage: string): string {
+  let msg = cleanMessage(rawMessage);
+
+  msg = msg.replace(
+    /^You have been assigned to interview\s+(.+?)\s+on\s+(.+)$/i,
+    'Você foi designado para entrevistar $1 em $2',
+  );
+  msg = msg.replace(
+    /^You have been assigned to interview\s+(.+)$/i,
+    'Você foi designado para entrevistar $1',
+  );
+  msg = msg.replace(
+    /^Interview with\s+(.+?)\s+has been cancelled$/i,
+    'A entrevista com $1 foi cancelada',
+  );
+  msg = msg.replace(
+    /^Interview with\s+(.+?)\s+has been rescheduled to\s+(.+)$/i,
+    'A entrevista com $1 foi reagendada para $2',
+  );
+  msg = msg.replace(
+    /^(.+?)\s+has applied for\s+(.+)$/i,
+    '$1 se candidatou para a vaga de $2',
+  );
+  msg = msg.replace(
+    /^(.+?)\s+submitted feedback for\s+(.+)$/i,
+    '$1 enviou parecer para $2',
+  );
+  msg = msg.replace(
+    /^(.+?)\s+completed assessment for\s+(.+)$/i,
+    '$1 concluiu a avaliação para $2',
+  );
+  msg = msg.replace(
+    /^You have been assigned to\s+(.+?)\s+for\s+(.+)$/i,
+    'Você foi atribuído ao candidato $1 na vaga $2',
+  );
+
+  return msg;
+}
+
 let channelSeq = 0;
 
 /** A topic that is unique per subscription, so hook instances never share a channel. */

@@ -7,12 +7,13 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { useNotifications, cleanMessage, type AppNotification } from '@/hooks/useNotifications';
+import { useNotifications, cleanMessage, translateNotificationTitle, translateNotificationMessage, type AppNotification } from '@/hooks/useNotifications';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { cn, safeHref } from '@/lib/utils';
 
 // ── Notification type config ─────────────────────────────────────────────────
@@ -46,10 +47,10 @@ interface Announcement {
 }
 
 const ANNOUNCE_CONFIG: Record<AnnouncementType, { icon: React.ElementType; bg: string; fg: string; badge: string; label: string }> = {
-  info:        { icon: Megaphone,     bg: 'bg-blue-100 dark:bg-blue-900/30',     fg: 'text-blue-600 dark:text-blue-400',     badge: 'bg-blue-100 text-blue-700 border-blue-300',     label: 'Info' },
-  release:     { icon: Rocket,        bg: 'bg-emerald-100 dark:bg-emerald-900/30', fg: 'text-emerald-600 dark:text-emerald-400', badge: 'bg-emerald-100 text-emerald-700 border-emerald-300', label: 'Release' },
-  warning:     { icon: AlertTriangle, bg: 'bg-amber-100 dark:bg-amber-900/30',   fg: 'text-amber-600 dark:text-amber-400',   badge: 'bg-amber-100 text-amber-700 border-amber-300',   label: 'Warning' },
-  maintenance: { icon: Wrench,        bg: 'bg-red-100 dark:bg-red-900/30',       fg: 'text-red-600 dark:text-red-400',       badge: 'bg-red-100 text-red-700 border-red-300',       label: 'Maintenance' },
+  info:        { icon: Megaphone,     bg: 'bg-blue-100 dark:bg-blue-900/30',     fg: 'text-blue-600 dark:text-blue-400',     badge: 'bg-blue-100 text-blue-700 border-blue-300',     label: 'Informação' },
+  release:     { icon: Rocket,        bg: 'bg-emerald-100 dark:bg-emerald-900/30', fg: 'text-emerald-600 dark:text-emerald-400', badge: 'bg-emerald-100 text-emerald-700 border-emerald-300', label: 'Novidade' },
+  warning:     { icon: AlertTriangle, bg: 'bg-amber-100 dark:bg-amber-900/30',   fg: 'text-amber-600 dark:text-amber-400',   badge: 'bg-amber-100 text-amber-700 border-amber-300',   label: 'Aviso' },
+  maintenance: { icon: Wrench,        bg: 'bg-red-100 dark:bg-red-900/30',       fg: 'text-red-600 dark:text-red-400',       badge: 'bg-red-100 text-red-700 border-red-300',       label: 'Manutenção' },
 };
 
 // ── Shared panel content ─────────────────────────────────────────────────────
@@ -89,7 +90,7 @@ function NotificationTabBar({
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
-        Notifications
+        Notificações
         {unreadCount > 0 && (
           <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
             {unreadCount}
@@ -106,7 +107,7 @@ function NotificationTabBar({
             : 'text-muted-foreground hover:text-foreground',
         )}
       >
-        Announcements
+        Comunicados
         {announcementCount > 0 && (
           <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-blue-500 px-1 text-[10px] font-bold text-white leading-none">
             {announcementCount}
@@ -152,7 +153,7 @@ function NotificationPanelContent({
                 onClick={markAllRead}
               >
                 <CheckCheck className="h-3.5 w-3.5" />
-                Mark all read
+                Marcar todas como lidas
               </Button>
             </div>
           )}
@@ -161,7 +162,7 @@ function NotificationPanelContent({
               <div className="p-3 rounded-full bg-muted">
                 <Bell className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-sm text-muted-foreground">No notifications yet</p>
+              <p className="text-sm text-muted-foreground">Nenhuma notificação ainda</p>
             </div>
           ) : fullHeight ? (
             <div className={listClassName}>
@@ -200,7 +201,7 @@ function NotificationPanelContent({
               <div className="p-3 rounded-full bg-muted">
                 <Megaphone className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className="text-sm text-muted-foreground">No active announcements</p>
+              <p className="text-sm text-muted-foreground">Nenhum comunicado ativo</p>
             </div>
           ) : fullHeight ? (
             <div className={listClassName}>
@@ -254,10 +255,10 @@ function NotificationRow({
           <span className="text-[10px] font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wide">Chitra</span>
         )}
         <button type="button" onClick={() => onNotifClick(n.id, n.link, n.is_read)} className="w-full text-left">
-          <p className="text-xs font-semibold text-foreground leading-tight">{n.title}</p>
-          <p className="text-xs text-muted-foreground line-clamp-2 leading-snug mt-0.5">{cleanMessage(n.message)}</p>
+          <p className="text-xs font-semibold text-foreground leading-tight">{translateNotificationTitle(n.title)}</p>
+          <p className="text-xs text-muted-foreground line-clamp-2 leading-snug mt-0.5">{translateNotificationMessage(n.message)}</p>
           <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-            {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+            {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: ptBR })}
           </p>
         </button>
         {n.action_buttons && n.action_buttons.length > 0 && (
@@ -301,7 +302,7 @@ function AnnouncementRow({ announcement: a }: { announcement: Announcement }) {
           </Badge>
           <span className="text-[10px] text-muted-foreground/60">
             {a.created_at && !isNaN(new Date(a.created_at).getTime())
-              ? formatDistanceToNow(new Date(a.created_at), { addSuffix: true })
+              ? formatDistanceToNow(new Date(a.created_at), { addSuffix: true, locale: ptBR })
               : ''}
           </span>
         </div>
@@ -333,7 +334,7 @@ const BellButton = forwardRef<
       'relative flex h-10 w-10 md:h-9 md:w-9 shrink-0 items-center justify-center rounded-full bg-muted border-2 border-primary/20 text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors focus:outline-hidden',
       className,
     )}
-    aria-label="Notifications"
+    aria-label="Notificações"
     {...props}
   >
     <Bell className="h-5 w-5" />
@@ -411,7 +412,7 @@ export function NotificationBell() {
             className="flex h-full w-full max-w-none flex-col gap-0 p-0 inset-0 border-0"
           >
             <SheetHeader className="shrink-0 space-y-0 border-b px-4 py-3 pr-12 text-left">
-              <SheetTitle className="text-base font-semibold">Notifications</SheetTitle>
+              <SheetTitle className="text-base font-semibold">Notificações</SheetTitle>
             </SheetHeader>
             <NotificationPanelContent {...panelProps} fullHeight />
           </SheetContent>
